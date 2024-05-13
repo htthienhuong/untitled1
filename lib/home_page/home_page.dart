@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class HomePage extends StatefulWidget {
@@ -13,50 +11,39 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xffe2e9ff),
-        title: const Text(
-          'Home',
-          style:
-              TextStyle(fontWeight: FontWeight.w600, color: Color(0xff1b2794)),
-        ),
-        centerTitle: true,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: 50,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.black)),
-              child: Row(
-                children: [
-                  const Expanded(child: TextField()),
-                  const VerticalDivider(
-                    color: Colors.black,
-                  ),
-                  IconButton(onPressed: () {}, icon: const Icon(Icons.search))
-                ],
-              ),
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            height: 50,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.black)),
+            child: Row(
+              children: [
+                const Expanded(child: TextField()),
+                const VerticalDivider(
+                  color: Colors.black,
+                ),
+                IconButton(onPressed: () {}, icon: const Icon(Icons.search))
+              ],
             ),
-            const Text(
-              'Community',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
+          ),
+          const Text(
+            'Community',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: 3,
+              itemBuilder: (context, index) {
+                return _buildTopicItem(context, index);
+              },
             ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: 3,
-                itemBuilder: (context, index) {
-                  return _buildTopicItem(context, index);
-                },
-              ),
-            )
-          ],
-        ),
+          )
+        ],
       ),
     );
   }

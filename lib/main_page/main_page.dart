@@ -14,16 +14,39 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   late List<Widget> bottomBarPages;
+  late GlobalKey _folderPageKey;
+  late final List<FloatingActionButton?> floatingActionButtonList;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    _folderPageKey = GlobalKey();
+
     bottomBarPages = [
       const HomePage(),
       const TopicPage(),
-      const FolderPage(),
+      FolderPage(
+        key: _folderPageKey,
+      ),
       const ProfilePage(),
+    ];
+
+    floatingActionButtonList = [
+      null,
+      null,
+      FloatingActionButton(
+        backgroundColor: const Color(0xffd0d4ec),
+        shape: const CircleBorder(),
+        onPressed: () {
+          _folderPageKey.currentState?.setState(() {});
+        },
+        child: const Icon(
+          Icons.add,
+          color: Color(0xff647ebb),
+        ),
+      ),
+      null
     ];
   }
 
@@ -46,16 +69,54 @@ class _MainPageState extends State<MainPage> {
     Icons.person
   ];
 
+  final List<PreferredSizeWidget?> appBarList = [
+    AppBar(
+      backgroundColor: const Color(0xffe2e9ff),
+      title: const Text(
+        'Home',
+        style: TextStyle(fontWeight: FontWeight.w600, color: Color(0xff1b2794)),
+      ),
+      centerTitle: true,
+    ),
+    AppBar(
+      backgroundColor: const Color(0xffe2e9ff),
+      title: const Text(
+        'Topic',
+        style: TextStyle(fontWeight: FontWeight.w600, color: Color(0xff1b2794)),
+      ),
+      centerTitle: true,
+    ),
+    AppBar(
+      backgroundColor: const Color(0xffe2e9ff),
+      title: const Text(
+        'Folder',
+        style: TextStyle(fontWeight: FontWeight.w600, color: Color(0xff1b2794)),
+      ),
+      centerTitle: true,
+    ),
+    // AppBar(
+    //   backgroundColor: const Color(0xffe2e9ff),
+    //   title: const Text(
+    //     'Profile',
+    //     style: TextStyle(fontWeight: FontWeight.w600, color: Color(0xff1b2794)),
+    //   ),
+    //   centerTitle: true,
+    // ),
+    null,
+  ];
+
   @override
   Widget build(BuildContext context) {
     print('Build main');
     return Scaffold(
+      appBar: appBarList[_selectedIndex],
       body: PageView(
         controller: _pageController,
         physics: const NeverScrollableScrollPhysics(),
         children: List.generate(
             bottomBarPages.length, (index) => bottomBarPages[index]),
       ),
+      floatingActionButton: floatingActionButtonList[_selectedIndex],
       extendBody: true,
       bottomNavigationBar: (bottomBarPages.length <= maxCount)
           ? ClipRRect(

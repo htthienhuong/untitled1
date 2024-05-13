@@ -13,62 +13,54 @@ class _TopicPageState extends State<TopicPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xffe2e9ff),
-        title: const Text(
-          'Topic',
-          style:
-              TextStyle(fontWeight: FontWeight.w600, color: Color(0xff1b2794)),
-        ),
-        centerTitle: true,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: 50,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.black)),
-              child: Row(
-                children: [
-                  const Expanded(child: TextField()),
-                  const VerticalDivider(
-                    color: Colors.black,
-                  ),
-                  IconButton(onPressed: () {}, icon: const Icon(Icons.search))
-                ],
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            height: 50,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.black)),
+            child: Row(
               children: [
-                IconButton(
-                  onPressed: () {},
-                  icon: Icon(
-                    Icons.add_circle_outline,
-                    color: Colors.grey[700],
-                  ),
+                const Expanded(child: TextField()),
+                const VerticalDivider(
+                  color: Colors.black,
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(right: 8.0),
-                  child: MyDropdownButton(),
-                ),
+                IconButton(onPressed: () {}, icon: const Icon(Icons.search))
               ],
             ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: 3,
-                itemBuilder: (context, index) {
-                  return _buildTopicItem(context, index);
-                },
+          ),
+          const SizedBox(
+            height: 8,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+                onPressed: () {},
+                icon: Icon(
+                  Icons.add_circle_outline,
+                  color: Colors.grey[700],
+                ),
               ),
-            )
-          ],
-        ),
+              const Padding(
+                padding: EdgeInsets.only(right: 8.0),
+                child: MyDropdownButton(),
+              ),
+            ],
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: 3,
+              itemBuilder: (context, index) {
+                return _buildTopicItem(context, index);
+              },
+            ),
+          )
+        ],
       ),
     );
   }
@@ -104,6 +96,7 @@ class _TopicPageState extends State<TopicPage> {
                   const PopupMenuItem<String>(
                     value: 'Edit',
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
                           'Edit',
