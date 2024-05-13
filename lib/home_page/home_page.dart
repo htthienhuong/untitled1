@@ -51,64 +51,70 @@ class _HomePageState extends State<HomePage> {
               child: ListView.builder(
                 itemCount: 3,
                 itemBuilder: (context, index) {
-                  return Container(
-                    margin: const EdgeInsets.only(top: 8),
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: const Color(0xffdce1ef),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              'Topic Name',
-                              style: TextStyle(fontSize: 20),
-                            ),
-                            Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                  color: const Color(0xffacbdd0),
-                                  borderRadius: BorderRadius.circular(8)),
-                              child: const Text('0 words'),
-                            ),
-                          ],
-                        ),
-                        const Text('Description'),
-                        const SizedBox(
-                          height: 8,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              height: 50,
-                              width: 50,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(50),
-                                child: FadeInImage(
-                                  placeholder:
-                                      AssetImage('assets/images/htth_avt.png'),
-                                  image: NetworkImage('xxx'),
-                                  imageErrorBuilder: (context, error,
-                                          stackTrace) =>
-                                      Image.asset('assets/images/htth_avt.png'),
-                                ),
-                              ),
-                            )
-                          ],
-                        )
-                      ],
-                    ),
-                  );
+                  return _buildTopicItem(context, index);
                 },
               ),
             )
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildTopicItem(BuildContext context, int index) {
+    return Container(
+      margin: const EdgeInsets.only(top: 8),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xffdce1ef),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Topic Name $index',
+                style: const TextStyle(fontSize: 20),
+              ),
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                    color: const Color(0xffacbdd0),
+                    borderRadius: BorderRadius.circular(8)),
+                child: const Text('0 words'),
+              ),
+            ],
+          ),
+          const Text('Description'),
+          const SizedBox(
+            height: 8,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 40,
+                width: 40,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(50),
+                  child: FadeInImage(
+                    placeholder: const AssetImage('assets/images/htth_avt.png'),
+                    image: const NetworkImage('xxx'),
+                    imageErrorBuilder: (context, error, stackTrace) =>
+                        Image.asset('assets/images/htth_avt.png'),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                width: 8,
+              ),
+              const Text('Thien Huong'),
+            ],
+          )
+        ],
       ),
     );
   }
