@@ -1,8 +1,13 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:untitled1/Models/UserModel.dart';
+import 'package:untitled1/Services/UserServices.dart';
 import 'package:untitled1/main_page/main_page.dart';
+import 'package:untitled1/router/router_manager.dart';
 
+import '../app_data/app_data.dart';
 import '../widgets/button.dart';
 import '../widgets/textfield.dart';
 import 'auth_service.dart';
@@ -76,10 +81,8 @@ class _LoginScreenState extends State<LoginScreen> {
         MaterialPageRoute(builder: (context) => const SignupScreen()),
       );
 
-  goToHome(BuildContext context) => Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const MainPage()),
-      );
+  goToHome(BuildContext context) =>
+      Navigator.pushReplacementNamed(context, Routes.mainPage);
 
   _login() async {
     final user =
@@ -87,7 +90,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (user != null) {
       log("User Logged In");
-      goToHome(context);
+      AppData.userModel = (await UserService().getUserById(user.uid))!;
+      if (mounted) {
+        goToHome(context);
+      }
     }
   }
 }

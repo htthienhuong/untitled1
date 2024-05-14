@@ -12,7 +12,7 @@ class AuthService {
           email: email, password: password);
       return cred.user;
     } catch (e) {
-      log("Something went wrong");
+      log("Something went wrong: ${e.toString()}");
     }
     return null;
   }
@@ -24,7 +24,7 @@ class AuthService {
           email: email, password: password);
       return cred.user;
     } catch (e) {
-      log("Something went wrong");
+      log("Something went wrong: ");
     }
     return null;
   }

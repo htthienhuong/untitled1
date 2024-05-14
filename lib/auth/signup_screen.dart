@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:untitled1/Services/UserServices.dart';
+import 'package:untitled1/app_data/app_data.dart';
 import 'package:untitled1/main_page/main_page.dart';
 
 import '../widgets/button.dart';
@@ -96,7 +98,11 @@ class _SignupScreenState extends State<SignupScreen> {
         await _auth.createUserWithEmailAndPassword(_email.text, _password.text);
     if (user != null) {
       log("User Created Succesfully");
-      goToHome(context);
+      await UserService().createUser(user, _name.text);
+      AppData.userModel = (await UserService().getUserById(user.uid))!;
+      if (mounted) {
+        goToHome(context);
+      }
     }
   }
 }

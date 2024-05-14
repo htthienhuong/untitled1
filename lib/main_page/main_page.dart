@@ -3,6 +3,7 @@ import 'package:untitled1/profile_page/profile_page.dart';
 
 import '../folder_page/folder_page.dart';
 import '../home_page/home_page.dart';
+import '../router/router_manager.dart';
 import '../topic_page/topic_page.dart';
 
 class MainPage extends StatefulWidget {
@@ -15,6 +16,7 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   late List<Widget> bottomBarPages;
   late GlobalKey _folderPageKey;
+  late GlobalKey _topicPageKey;
   late final List<FloatingActionButton?> floatingActionButtonList;
 
   @override
@@ -22,10 +24,13 @@ class _MainPageState extends State<MainPage> {
     // TODO: implement initState
     super.initState();
     _folderPageKey = GlobalKey();
+    _topicPageKey = GlobalKey();
 
     bottomBarPages = [
       const HomePage(),
-      const TopicPage(),
+      TopicPage(
+        key: _topicPageKey,
+      ),
       FolderPage(
         key: _folderPageKey,
       ),
@@ -34,7 +39,19 @@ class _MainPageState extends State<MainPage> {
 
     floatingActionButtonList = [
       null,
-      null,
+      FloatingActionButton(
+        backgroundColor: const Color(0xffd0d4ec),
+        shape: const CircleBorder(),
+        onPressed: () async {
+          await Navigator.pushNamed(context, Routes.addTopicPage);
+
+          _topicPageKey.currentState?.setState(() {});
+        },
+        child: const Icon(
+          Icons.add,
+          color: Color(0xff647ebb),
+        ),
+      ),
       FloatingActionButton(
         backgroundColor: const Color(0xffd0d4ec),
         shape: const CircleBorder(),

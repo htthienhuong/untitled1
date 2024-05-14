@@ -1,5 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:untitled1/Services/TopicServices.dart';
+import 'package:untitled1/router/router_manager.dart';
+
+import '../Models/TopicModel.dart';
+import '../app_data/app_data.dart';
 
 class TopicPage extends StatefulWidget {
   const TopicPage({super.key});
@@ -36,36 +40,96 @@ class _TopicPageState extends State<TopicPage> {
           const SizedBox(
             height: 8,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              IconButton(
-                onPressed: () {},
-                icon: Icon(
-                  Icons.add_circle_outline,
-                  color: Colors.grey[700],
-                ),
-              ),
-              const Padding(
+              Padding(
                 padding: EdgeInsets.only(right: 8.0),
                 child: MyDropdownButton(),
               ),
             ],
           ),
           Expanded(
-            child: ListView.builder(
-              itemCount: 3,
-              itemBuilder: (context, index) {
-                return _buildTopicItem(context, index);
-              },
-            ),
+            child: FutureBuilder(
+                future: TopicService().getTopicsByUserId(AppData.userModel.id),
+                builder: (BuildContext context,
+                    AsyncSnapshot<List<TopicModel>> snapshot) {
+                  if (snapshot.hasData) {
+                    List<TopicModel> topicModelList = snapshot.data!;
+                    print(topicModelList.length);
+                    return ListView.builder(
+                      itemCount: topicModelList.length,
+                      itemBuilder: (context, index) {
+                        return Dismissible(
+                            direction: DismissDirection.endToStart,
+                            onDismissed: (direction) async {
+                              await TopicService().deleteTopicWithUserReference(
+                                  topicModelList[index].id!,
+                                  AppData.userModel.id);
+                              topicModelList.removeAt(index);
+                            },
+                            confirmDismiss: (direction) async {
+                              return await showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text("Confirm"),
+                                    content: const Text(
+                                        "Are you sure you wish to delete this word?"),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.of(context).pop(true),
+                                        child: const Text(
+                                          "DELETE",
+                                          style: TextStyle(color: Colors.red),
+                                        ),
+                                      ),
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.of(context).pop(false),
+                                        child: const Text(
+                                          "CANCEL",
+                                          style: TextStyle(color: Colors.grey),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                            background: Container(
+                              color: Colors.red,
+                              alignment: Alignment.centerRight,
+                              child: const Padding(
+                                padding: EdgeInsets.only(right: 40.0),
+                                child: Icon(
+                                  Icons.delete,
+                                  size: 40,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                            key: UniqueKey(),
+                            child: _buildTopicItem(
+                                context, topicModelList[index]));
+                      },
+                    );
+                  } else if (snapshot.hasData) {
+                    return const Text('Error');
+                  } else {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                }),
           )
         ],
       ),
     );
   }
 
-  Widget _buildTopicItem(BuildContext context, int index) {
+  Widget _buildTopicItem(BuildContext context, TopicModel topicModel) {
     print('selectedItem: $selectedItem');
     return Container(
       margin: const EdgeInsets.only(top: 8),
@@ -81,7 +145,7 @@ class _TopicPageState extends State<TopicPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Topic Name $index',
+                topicModel.topicName,
                 style: const TextStyle(fontSize: 20),
               ),
               PopupMenuButton<String>(
@@ -131,7 +195,6 @@ class _TopicPageState extends State<TopicPage> {
               ),
             ],
           ),
-          const Text('Description'),
           const SizedBox(
             height: 8,
           ),
@@ -166,7 +229,7 @@ class _TopicPageState extends State<TopicPage> {
                 decoration: BoxDecoration(
                     color: const Color(0xffacbdd0),
                     borderRadius: BorderRadius.circular(8)),
-                child: const Text('0 words'),
+                child: Text('${topicModel.wordReferences?.length ?? 0} words'),
               ),
             ],
           )
