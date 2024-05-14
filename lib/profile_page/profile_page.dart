@@ -21,7 +21,9 @@ class _ProfilePageState extends State<ProfilePage> {
               width: double.maxFinite,
               height: 300,
               decoration: const BoxDecoration(
-                color: Colors.red,
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(12),
+                    bottomRight: Radius.circular(12)),
                 image: DecorationImage(
                     image: AssetImage('assets/images/bg.png'),
                     fit: BoxFit.cover),

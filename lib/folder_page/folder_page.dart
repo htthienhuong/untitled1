@@ -7,18 +7,47 @@ class FolderPage extends StatefulWidget {
   State<FolderPage> createState() => _FolderPageState();
 }
 
-class _FolderPageState extends State<FolderPage> {
+class _FolderPageState extends State<FolderPage>
+    with SingleTickerProviderStateMixin {
   String? selectedItem;
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: ListView.builder(
-        itemCount: 3,
-        itemBuilder: (context, index) {
-          return _buildFolderItem(context, index);
-        },
+      child: Column(
+        children: [
+          TabBar(
+            labelColor: Colors.green,
+            indicatorColor: Colors.green,
+            controller: _tabController,
+            tabs: const <Tab>[
+              Tab(text: "Folder"),
+              Tab(text: "Starred"),
+            ],
+          ),
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              children: <Widget>[
+                ListView.builder(
+                  itemCount: 3,
+                  itemBuilder: (context, index) {
+                    return _buildFolderItem(context, index);
+                  },
+                ),
+                Container(color: Colors.green),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

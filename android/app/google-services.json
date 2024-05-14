@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "241445299241",
+    "project_id": "cmad-englishstudyapp",
+    "storage_bucket": "cmad-englishstudyapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:241445299241:android:752a9ccb46e354c6442838",
+        "android_client_info": {
+          "package_name": "com.example.untitled1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "241445299241-vk91f5b49i2113lo7ckvfnj5gc5efv0m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC54R0BoU5NMCPV4weJHzvVwA96JmzZ98E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "241445299241-vk91f5b49i2113lo7ckvfnj5gc5efv0m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
