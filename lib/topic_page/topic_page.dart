@@ -60,59 +60,7 @@ class _TopicPageState extends State<TopicPage> {
                     return ListView.builder(
                       itemCount: topicModelList.length,
                       itemBuilder: (context, index) {
-                        return Dismissible(
-                            direction: DismissDirection.endToStart,
-                            onDismissed: (direction) async {
-                              await TopicService().deleteTopicWithUserReference(
-                                  topicModelList[index].id!,
-                                  AppData.userModel.id);
-                              topicModelList.removeAt(index);
-                            },
-                            confirmDismiss: (direction) async {
-                              return await showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: const Text("Confirm"),
-                                    content: const Text(
-                                        "Are you sure you wish to delete this word?"),
-                                    actions: <Widget>[
-                                      TextButton(
-                                        onPressed: () =>
-                                            Navigator.of(context).pop(true),
-                                        child: const Text(
-                                          "DELETE",
-                                          style: TextStyle(color: Colors.red),
-                                        ),
-                                      ),
-                                      TextButton(
-                                        onPressed: () =>
-                                            Navigator.of(context).pop(false),
-                                        child: const Text(
-                                          "CANCEL",
-                                          style: TextStyle(color: Colors.grey),
-                                        ),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            },
-                            background: Container(
-                              color: Colors.red,
-                              alignment: Alignment.centerRight,
-                              child: const Padding(
-                                padding: EdgeInsets.only(right: 40.0),
-                                child: Icon(
-                                  Icons.delete,
-                                  size: 40,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                            key: UniqueKey(),
-                            child: _buildTopicItem(
-                                context, topicModelList[index]));
+                        return _buildTopicItem(context, topicModelList[index]);
                       },
                     );
                   } else if (snapshot.hasData) {
@@ -131,109 +79,128 @@ class _TopicPageState extends State<TopicPage> {
 
   Widget _buildTopicItem(BuildContext context, TopicModel topicModel) {
     print('selectedItem: $selectedItem');
-    return Container(
-      margin: const EdgeInsets.only(top: 8),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xffdce1ef),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                topicModel.topicName,
-                style: const TextStyle(fontSize: 20),
-              ),
-              PopupMenuButton<String>(
-                color: const Color(0xffbcc1d0),
-                initialValue: selectedItem,
-                onSelected: (String item) {
-                  setState(() {
-                    selectedItem = item;
-                  });
-                },
-                itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                  const PopupMenuItem<String>(
-                    value: 'Edit',
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Edit',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        Icon(
-                          Icons.edit_note_outlined,
-                          color: Colors.white,
-                        )
-                      ],
-                    ),
-                  ),
-                  const PopupMenuDivider(
-                    height: 1,
-                  ),
-                  const PopupMenuItem<String>(
-                    value: 'Delete',
-                    child: Row(
-                      children: [
-                        Text(
-                          'Delete',
-                          style: TextStyle(color: Colors.red),
-                        ),
-                        Icon(
-                          Icons.remove_circle_outline,
-                          color: Colors.red,
-                        )
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 8,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: 50,
-                    width: 50,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(50),
-                      child: FadeInImage(
-                        placeholder:
-                            const AssetImage('assets/images/htth_avt.png'),
-                        image: const NetworkImage('xxx'),
-                        imageErrorBuilder: (context, error, stackTrace) =>
-                            Image.asset('assets/images/htth_avt.png'),
+    return GestureDetector(
+      onTap: () {
+        Navigator.pushNamed(context, Routes.topicDetailPage,
+            arguments: topicModel);
+      },
+      child: Container(
+        margin: const EdgeInsets.only(top: 8),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: const Color(0xffdce1ef),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  topicModel.topicName!,
+                  style: const TextStyle(fontSize: 20),
+                ),
+                PopupMenuButton<String>(
+                  color: const Color(0xffbcc1d0),
+                  initialValue: selectedItem,
+                  onSelected: (String item) {
+                    setState(() {
+                      selectedItem = item;
+                    });
+                  },
+                  itemBuilder: (BuildContext context) =>
+                      <PopupMenuEntry<String>>[
+                    PopupMenuItem<String>(
+                      onTap: () async {
+                        await Navigator.pushNamed(
+                            context, Routes.updateTopicPage,
+                            arguments: topicModel);
+                        setState(() {});
+                      },
+                      value: 'Edit',
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Edit',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          Icon(
+                            Icons.edit_note_outlined,
+                            color: Colors.white,
+                          )
+                        ],
                       ),
                     ),
-                  ),
-                  const SizedBox(
-                    width: 8,
-                  ),
-                  const Text('Thien Huong'),
-                ],
-              ),
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                    color: const Color(0xffacbdd0),
-                    borderRadius: BorderRadius.circular(8)),
-                child: Text('${topicModel.wordReferences?.length ?? 0} words'),
-              ),
-            ],
-          )
-        ],
+                    const PopupMenuDivider(
+                      height: 1,
+                    ),
+                    PopupMenuItem<String>(
+                      onTap: () async {
+                        await TopicService().deleteTopicWithUserReference(
+                            topicModel, AppData.userModel.id);
+                        setState(() {});
+                      },
+                      value: 'Delete',
+                      child: const Row(
+                        children: [
+                          Text(
+                            'Delete',
+                            style: TextStyle(color: Colors.red),
+                          ),
+                          Icon(
+                            Icons.remove_circle_outline,
+                            color: Colors.red,
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 8,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 50,
+                      width: 50,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(50),
+                        child: FadeInImage(
+                          placeholder:
+                              const AssetImage('assets/images/htth_avt.png'),
+                          image: NetworkImage(topicModel.userAvatarUrl ?? ''),
+                          imageErrorBuilder: (context, error, stackTrace) =>
+                              Image.asset('assets/images/htth_avt.png'),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 8,
+                    ),
+                    const Text('Thien Huong'),
+                  ],
+                ),
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                      color: const Color(0xffacbdd0),
+                      borderRadius: BorderRadius.circular(8)),
+                  child:
+                      Text('${topicModel.wordReferences?.length ?? 0} words'),
+                ),
+              ],
+            )
+          ],
+        ),
       ),
     );
   }

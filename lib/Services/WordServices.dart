@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:untitled1/Models/word_model.dart';
 
 class WordService {
   final CollectionReference Topics =
@@ -28,12 +29,28 @@ class WordService {
     return wordsStream;
   }
 
+  Future<List<WordModel>> getWordListFromRef(
+      List<DocumentReference> wordReferences) async {
+    print('wordReferences: ${wordReferences.length}');
+    List<WordModel> wordModelList = [];
+    for (DocumentReference wordRef in wordReferences) {
+      print('wordRef: $wordRef');
+      DocumentSnapshot wordSnap = await wordRef.get();
+      print('wordSnap: ${wordSnap}');
+
+      WordModel wordModel = WordModel.fromFirestore(wordSnap);
+      print('wordModel: $wordModel');
+      wordModelList.add(wordModel);
+    }
+    return wordModelList;
+  }
+
   Future<void> addWord(String english, String vietnam, String topicId) async {
     try {
       DocumentReference wordRef = await Words.add({
         'english': english,
         'vietnam': vietnam,
-        'topicId': Topics.doc(topicId),
+        'topicId': topicId,
       });
       Topics.doc(topicId).update({
         'wordReferences': FieldValue.arrayUnion([wordRef])
@@ -45,24 +62,27 @@ class WordService {
   }
 
   // Xóa từ
-  Future<void> deleteWord(String wordId) async {
+  Future<void> deleteWord(WordModel wordModel) async {
     try {
-      await Words.doc(wordId).delete();
+      DocumentReference wordRef = Words.doc(wordModel.id);
+      await wordRef.delete();
+      DocumentReference topicRef = Topics.doc(wordModel.topicId);
+      print('topicRef: $topicRef');
+      print('wordRef: $wordRef');
+      await topicRef.update({
+        'wordReferences': FieldValue.arrayRemove([wordRef])
+      });
     } catch (error) {
       print('Error deleting word: $error');
-      throw error;
     }
   }
 
-  // Cập nhật từ
-  Future<void> updateWord(
-      String wordId, String english, String vietnam, String topicId) async {
+  Future<void> updateWord(WordModel wordModel) async {
     try {
-      await Words.doc(wordId).update({
-        'english': english,
-        'vietnam': vietnam,
-        'topicId':
-            Topics.doc(topicId), // Tham chiếu đến chủ đề (topic) tương ứng
+      await Words.doc(wordModel.id).update({
+        'english': wordModel.english,
+        'vietnam': wordModel.vietnam,
+        'topicId': wordModel.topicId,
       });
     } catch (error) {
       print('Error updating word: $error');

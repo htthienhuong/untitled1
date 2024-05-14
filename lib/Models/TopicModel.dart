@@ -1,23 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class TopicModel {
-  final String? id;
-  final String? topicImageUrl;
-  final String topicName;
-  final String? folderId;
-  final String? userId;
-  final bool isPublic;
-  final String? userAvatarUrl;
-  final String? userName;
+  String? id;
+  String? topicImageUrl;
+  String? topicName;
+  String? folderId;
+  String? userId;
+  bool? isPublic;
+  String? userAvatarUrl;
+  String? userName;
   List<DocumentReference>? wordReferences;
 
   TopicModel({
     this.id,
     this.topicImageUrl,
-    required this.topicName,
+    this.topicName,
     this.folderId,
     this.userId,
-    required this.isPublic,
+    this.isPublic,
     this.userAvatarUrl,
     this.userName,
     wordReferences,

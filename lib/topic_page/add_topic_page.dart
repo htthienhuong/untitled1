@@ -1,7 +1,5 @@
-import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:csv/csv.dart';
 import 'package:file_picker/file_picker.dart';
@@ -79,11 +77,11 @@ class _AddTopicPageState extends State<AddTopicPage> {
                 _formKey.currentState!.save();
                 topicId = await TopicService().addTopicWithUserReference(
                   topic: TopicModel(
-                    topicName: topicName,
-                    isPublic: public,
-                    userId: AppData.userModel.id,
-                    userAvatarUrl: AppData.userModel.avatarUrl,
-                  ),
+                      topicName: topicName,
+                      isPublic: public,
+                      userId: AppData.userModel.id,
+                      userAvatarUrl: AppData.userModel.avatarUrl,
+                      userName: AppData.userModel.name),
                 );
 
                 for (WordModel word in wordModelList) {

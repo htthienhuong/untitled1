@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class WordModel {
   String? id;
   String? english;
@@ -12,4 +14,15 @@ class WordModel {
     this.topicId,
     this.isFavorite = false,
   });
+
+  factory WordModel.fromFirestore(DocumentSnapshot doc) {
+    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+    print('data: $data');
+    return WordModel(
+      id: doc.id,
+      english: data['english'],
+      vietnam: data['vietnam'],
+      topicId: data['topicId'],
+    );
+  }
 }

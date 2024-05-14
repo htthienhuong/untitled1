@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:untitled1/Models/TopicModel.dart';
 import 'package:untitled1/auth/login_screen.dart';
 import 'package:untitled1/topic_page/add_topic_page.dart';
+import 'package:untitled1/topic_page/topic_detail_page.dart';
+import 'package:untitled1/topic_page/update_topic_page.dart';
 
 import '../main_page/main_page.dart';
 
 class Routes {
   static const String mainPage = "/mainPage";
   static const String addTopicPage = "/addTopicPage";
+  static const String updateTopicPage = "/updateTopicPage";
+  static const String topicDetailPage = "/topicDetailPage";
   static const String loginPage = "/";
 }
 
@@ -20,6 +25,16 @@ class RouteGenerator {
         return MaterialPageRoute(
             settings: routeSettings,
             builder: (context) => const AddTopicPage());
+      case Routes.updateTopicPage:
+        return MaterialPageRoute(
+            settings: routeSettings,
+            builder: (context) => UpdateTopicPage(
+                topicModel: routeSettings.arguments as TopicModel));
+      case Routes.topicDetailPage:
+        return MaterialPageRoute(
+            settings: routeSettings,
+            builder: (context) => TopicDetailPage(
+                topicModel: routeSettings.arguments as TopicModel));
       case Routes.loginPage:
         return MaterialPageRoute(
             settings: routeSettings, builder: (context) => const LoginScreen());

@@ -139,17 +139,12 @@ class TopicService {
   }
 
   Future<void> deleteTopicWithUserReference(
-      String topicId, String userId) async {
+      TopicModel topicModel, String userId) async {
     try {
-      DocumentReference topicRef = _db.collection('Topics').doc(topicId);
+      DocumentReference topicRef = _db.collection('Topics').doc(topicModel.id);
 
-      QuerySnapshot wordsSnapshot = await _db
-          .collection('Words')
-          .where('topicId', isEqualTo: topicRef)
-          .get();
-
-      for (DocumentSnapshot doc in wordsSnapshot.docs) {
-        await doc.reference.delete();
+      for (DocumentReference wordRef in topicModel.wordReferences!) {
+        await wordRef.delete();
       }
 
       await topicRef.delete();
@@ -162,7 +157,7 @@ class TopicService {
     } catch (error) {
       print("Error deleting topic with user reference: $error");
     }
-  } // lấy ra các topic public
+  }
 
   Future<List<TopicModel>> getAllPublicTopics() async {
     try {
