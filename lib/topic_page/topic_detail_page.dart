@@ -1,17 +1,20 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:csv/csv.dart';
 import 'package:external_path/external_path.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:untitled1/Services/WordServices.dart';
+import 'package:untitled1/app_data/app_data.dart';
 
 import '../Models/TopicModel.dart';
 import '../Models/word_model.dart';
+import '../router/router_manager.dart';
 import '../utilities/tts_uti.dart';
 
 class TopicDetailPage extends StatefulWidget {
@@ -27,6 +30,8 @@ class TopicDetailPage extends StatefulWidget {
 
 class _TopicDetailPageState extends State<TopicDetailPage> {
   List<WordModel> wordModelList = [];
+  bool isBack = false;
+  int size = 1;
 
   final pageController = PageController(viewportFraction: 0.85);
   final TextStyle listTileTextStyle =
@@ -198,7 +203,44 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                     ],
                   ),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      if (wordModelList.isNotEmpty) {
+                        AwesomeDialog(
+                          context: context,
+                          animType: AnimType.scale,
+                          dialogType: DialogType.info,
+                          body: Column(
+                            children: [
+                              const Text(
+                                'Setting for FlashCard',
+                                style: TextStyle(
+                                    fontStyle: FontStyle.italic,
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              const Text('Choose the number of words to learn'),
+                              MySlider(
+                                getSize: _getSize,
+                                max: wordModelList.length.toDouble(),
+                              ),
+                              MyRBtn(getValue: _getSide),
+                            ],
+                          ),
+                          btnOkOnPress: () async {
+                            await Navigator.pushNamed(
+                                context, Routes.flashCardPage,
+                                arguments: [
+                                  _getRandomWordList(
+                                    size,
+                                  ),
+                                  isBack
+                                ]);
+                            setState(() {});
+                          },
+                          btnCancelOnPress: () {},
+                        ).show();
+                      }
+                    },
                     child: Card(
                       color: wordModelList.isEmpty
                           ? Colors.grey.withOpacity(0.3)
@@ -215,7 +257,36 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      if (wordModelList.isNotEmpty) {}
+                      if (wordModelList.isNotEmpty) {
+                        AwesomeDialog(
+                          context: context,
+                          animType: AnimType.scale,
+                          dialogType: DialogType.info,
+                          body: Column(
+                            children: [
+                              const Text(
+                                'Setting for Learning',
+                                style: TextStyle(
+                                    fontStyle: FontStyle.italic,
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              const Text('Choose the number of words to learn'),
+                              MySlider(
+                                getSize: _getSize,
+                                max: wordModelList.length.toDouble(),
+                              ),
+                            ],
+                          ),
+                          btnOkOnPress: () async {
+                            await Navigator.pushNamed(
+                                context, Routes.learningPage,
+                                arguments: _getRandomWordList(size));
+                            setState(() {});
+                          },
+                          btnCancelOnPress: () {},
+                        ).show();
+                      }
                     },
                     child: Card(
                       color: wordModelList.isEmpty
@@ -253,6 +324,55 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
             );
           }
         });
+  }
+
+  List<WordModel> _getRandomWordList(int size) {
+    List<WordModel> randomWordList = [];
+    Random random = Random();
+    int maxAnswer = wordModelList.length < size ? wordModelList.length : size;
+
+    while (randomWordList.length != maxAnswer) {
+      bool isExist = false;
+      print('randomWordList.length: ${randomWordList.length}');
+      var rd = random.nextInt(wordModelList.length);
+      for (int i = 0; i < randomWordList.length; i++) {
+        if (randomWordList[i].id == wordModelList[rd].id) {
+          isExist = true;
+          break;
+        }
+      }
+      if (!isExist) {
+        randomWordList.add(wordModelList[rd]);
+      }
+    }
+    return randomWordList;
+  }
+
+  void _getSide(bool value) {
+    isBack = value;
+  }
+
+  void _getSize(int value) {
+    size = value;
+  }
+
+  Widget _getStatus(double num) {
+    if (num < 25) {
+      return Text(
+        'Not learned',
+        style: TextStyle(color: Colors.pinkAccent, fontSize: 12),
+      );
+    }
+    if (num < 75) {
+      return Text(
+        'Learned',
+        style: TextStyle(color: Colors.orange, fontSize: 12),
+      );
+    }
+    return Text(
+      'Memorized',
+      style: TextStyle(color: Colors.green, fontSize: 12),
+    );
   }
 
   Widget _buildCardWords(WordModel wordModel) {
@@ -310,6 +430,33 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
               ),
             ),
           ),
+          Align(
+            alignment: Alignment.center,
+            child: FutureBuilder(
+              future: WordService()
+                  .getWordLearnCount(wordModel.id!, AppData.userModel.id),
+              builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+                if (snapshot.hasData) {
+                  int count = snapshot.data!;
+                  return CircularPercentIndicator(
+                    radius: 40.0,
+                    lineWidth: 2.0,
+                    percent: count < 20 ? (count / 20) : 1,
+                    center: _getStatus(
+                      (count / 20) * 100,
+                    ),
+                    progressColor: Colors.green,
+                  );
+                } else if (snapshot.hasError) {
+                  return const Text('error');
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              },
+            ),
+          )
         ],
       ),
     );
@@ -394,6 +541,91 @@ class _MyCardWordState extends State<MyCardWord> {
               },
             ),
           ),
+        ),
+      ],
+    );
+  }
+}
+
+class MySlider extends StatefulWidget {
+  final Function getSize;
+  final double max;
+
+  const MySlider({super.key, required this.max, required this.getSize});
+
+  @override
+  State<MySlider> createState() => MySliderState();
+}
+
+class MySliderState extends State<MySlider> {
+  double currentSliderValue = 1;
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.only(right: 20),
+          alignment: Alignment.centerRight,
+          child: Text(
+            '${currentSliderValue.toInt()}/${widget.max.toInt()}',
+          ),
+        ),
+        Slider(
+          value: currentSliderValue,
+          max: widget.max,
+          divisions: widget.max.toInt(),
+          label: currentSliderValue.round().toString(),
+          onChanged: (double value) {
+            if (value < 1) {
+              currentSliderValue = 1;
+            } else {
+              setState(() {
+                currentSliderValue = value;
+                widget.getSize(value.toInt());
+              });
+            }
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class MyRBtn extends StatefulWidget {
+  final Function getValue;
+  const MyRBtn({super.key, required this.getValue});
+
+  @override
+  State<MyRBtn> createState() => _MyRBtnState();
+}
+
+class _MyRBtnState extends State<MyRBtn> {
+  bool selectedValue = false;
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        RadioListTile(
+          title: const Text('FRONT'),
+          value: false,
+          groupValue: selectedValue,
+          onChanged: (value) {
+            setState(() {
+              selectedValue = value!;
+            });
+            widget.getValue(selectedValue);
+          },
+        ),
+        RadioListTile(
+          title: const Text('BACK'),
+          value: true,
+          groupValue: selectedValue,
+          onChanged: (value) {
+            setState(() {
+              selectedValue = value!;
+            });
+            widget.getValue(selectedValue);
+          },
         ),
       ],
     );

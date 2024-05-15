@@ -13,7 +13,7 @@ class UserService {
   final CollectionReference usersCollection =
   FirebaseFirestore.instance.collection('User');
   final CollectionReference foldersCollection =
-  FirebaseFirestore.instance.collection('Folders');
+  FirebaseFirestore.instance.collection('Folder');
   final CollectionReference topicsCollection =
   FirebaseFirestore.instance.collection('Topics');
   final FirebaseStorage storage = FirebaseStorage.instance;

@@ -5,9 +5,9 @@ import '../Models/TopicModel.dart';
 
 class FolderService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
-  final String _collectionName = 'Folders';
+  final String _collectionName = 'Folder';
   final CollectionReference folderCollection =
-      FirebaseFirestore.instance.collection('Folders');
+      FirebaseFirestore.instance.collection('Folder');
   final CollectionReference usersCollection =
   FirebaseFirestore.instance.collection('User');
   // Hàm để lấy ra tất cả các folder của một user
