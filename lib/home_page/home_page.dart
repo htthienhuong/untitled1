@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../Models/TopicModel.dart';
 import '../Services/TopicServices.dart';
-import '../app_data/app_data.dart';
 import '../router/router_manager.dart';
 
 class HomePage extends StatefulWidget {
@@ -14,6 +12,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  String search = '';
+  TextEditingController searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -28,11 +28,25 @@ class _HomePageState extends State<HomePage> {
                 border: Border.all(color: Colors.black)),
             child: Row(
               children: [
-                const Expanded(child: TextField()),
+                Expanded(
+                    child: TextField(
+                  controller: searchController,
+                  onSubmitted: (value) {
+                    setState(() {
+                      search = value;
+                    });
+                  },
+                )),
                 const VerticalDivider(
                   color: Colors.black,
                 ),
-                IconButton(onPressed: () {}, icon: const Icon(Icons.search))
+                IconButton(
+                    onPressed: () {
+                      setState(() {
+                        search = searchController.text;
+                      });
+                    },
+                    icon: const Icon(Icons.search))
               ],
             ),
           ),
@@ -42,7 +56,7 @@ class _HomePageState extends State<HomePage> {
           ),
           Expanded(
             child: FutureBuilder(
-                future: TopicService().getAllPublicTopics(),
+                future: TopicService().searchPublicTopics(search),
                 builder: (BuildContext context,
                     AsyncSnapshot<List<TopicModel>> snapshot) {
                   if (snapshot.hasData) {
@@ -85,9 +99,15 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Text(
-                topicModel.topicName!,
-                style: const TextStyle(fontSize: 20),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.85,
+                height: 50,
+                child: Text(
+                  topicModel.topicName!,
+                  style: const TextStyle(fontSize: 20),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                ),
               ),
             ]),
             const SizedBox(

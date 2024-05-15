@@ -132,45 +132,14 @@ class TopicService {
     }
   }
 
-  // Hàm để lấy tất cả các chủ đề chưa có trong một thư mục với userId trùng với userId của thư mục đó
-  Future<List<TopicModel>> getTopicsNotInFolder(
-      String userId, String folderId) async {
-    try {
-      // Lấy danh sách các chủ đề đã có trong thư mục
-      DocumentSnapshot folderSnapshot =
-          await _db.collection('Folder').doc(folderId).get();
-      List<DocumentReference> topicReferences =
-          List<DocumentReference>.from(folderSnapshot['Topics']);
-
-      // Lấy danh sách các chủ đề có userId trùng với userId của thư mục
-      QuerySnapshot querySnapshot = await _db
-          .collection(_collectionName)
-          .where('userId', isEqualTo: userId)
-          .get();
-
-      // Lọc ra các chủ đề chưa có trong thư mục
-      List<TopicModel> topicsNotInFolder = [];
-      for (DocumentSnapshot doc in querySnapshot.docs) {
-        if (!topicReferences.contains(doc.reference)) {
-          topicsNotInFolder.add(TopicModel.fromFirestore(doc));
-        }
-      }
-
-      return topicsNotInFolder;
-    } catch (error) {
-      print("Error getting topics not in folder: $error");
-      throw error;
-    }
-  }
-
   // Hàm để tìm kiếm các chủ đề công khai dựa trên một từ khóa
   Future<List<TopicModel>> searchPublicTopics(String keyword) async {
     try {
       QuerySnapshot querySnapshot = await _db
           .collection(_collectionName)
           .where('isPublic', isEqualTo: true)
-          .where('name', isGreaterThanOrEqualTo: keyword)
-          .where('name', isLessThanOrEqualTo: keyword + '\uf8ff')
+          .where('topicName', isGreaterThanOrEqualTo: keyword)
+          .where('topicName', isLessThanOrEqualTo: keyword + '\uf8ff')
           .get();
       List<TopicModel> publicTopics = querySnapshot.docs
           .map((doc) => TopicModel.fromFirestore(doc))

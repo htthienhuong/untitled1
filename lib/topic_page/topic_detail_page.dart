@@ -2,10 +2,12 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:csv/csv.dart';
+import 'package:external_path/external_path.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:untitled1/Services/WordServices.dart';
 
 import '../Models/TopicModel.dart';
@@ -24,6 +26,8 @@ class TopicDetailPage extends StatefulWidget {
 }
 
 class _TopicDetailPageState extends State<TopicDetailPage> {
+  List<WordModel> wordModelList = [];
+
   final pageController = PageController(viewportFraction: 0.85);
   final TextStyle listTileTextStyle =
       const TextStyle(fontWeight: FontWeight.w500, fontSize: 16);
@@ -66,7 +70,7 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                         ),
                         child: const Text('Yes'),
                         onPressed: () async {
-                          // await _exportCsv();
+                          await _exportCsv();
                           if (context.mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
@@ -89,6 +93,42 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
     );
   }
 
+  Future<void> _exportCsv() async {
+    Map<Permission, PermissionStatus> statuses = await [
+      Permission.storage,
+    ].request();
+
+    List<dynamic> associateList = [];
+    for (WordModel wordModel in wordModelList) {
+      associateList
+          .add({'Word': wordModel.english, "Definition": wordModel.vietnam});
+    }
+
+    List<List<dynamic>> rows = [];
+
+    List<dynamic> row = [];
+    row.add("Word");
+    row.add("Definition");
+    rows.add(row);
+    for (int i = 0; i < associateList.length; i++) {
+      List<dynamic> row = [];
+      row.add(associateList[i]["Word"]);
+      row.add(associateList[i]["Definition"]);
+      rows.add(row);
+    }
+
+    String csv = const ListToCsvConverter().convert(rows);
+
+    String dir = await ExternalPath.getExternalStoragePublicDirectory(
+        ExternalPath.DIRECTORY_DOWNLOADS);
+    print("dir $dir");
+    String file = "$dir";
+
+    File f = File("$file/${widget.topicModel.topicName}.csv");
+
+    f.writeAsString(csv);
+  }
+
   Widget _buildBody() {
     return FutureBuilder(
         future:
@@ -96,7 +136,7 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
         builder:
             (BuildContext context, AsyncSnapshot<List<WordModel>> snapshot) {
           if (snapshot.hasData) {
-            List<WordModel> wordModelList = snapshot.data!;
+            wordModelList = snapshot.data!;
             return SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
