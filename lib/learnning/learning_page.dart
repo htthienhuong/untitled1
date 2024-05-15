@@ -1,17 +1,24 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:untitled1/Services/RecordService.dart';
 import 'package:untitled1/Services/WordServices.dart';
 import 'package:untitled1/app_data/app_data.dart';
+import 'package:linear_progress_bar/linear_progress_bar.dart';
 
 import '../Models/word_model.dart';
 import 'multiple_choice_game.dart';
 
+int _timeRemaining = 100;
+
 class LearningPage extends StatefulWidget {
+  final String topicId;
   final List<WordModel> wordModels;
 
-  const LearningPage({super.key, required this.wordModels});
+  const LearningPage(
+      {super.key, required this.wordModels, required this.topicId});
 
   @override
   State<LearningPage> createState() => _LearningPageState();
@@ -76,6 +83,7 @@ class _LearningPageState extends State<LearningPage> {
       ),
       body: Column(
         children: [
+          const MyProgress(),
           MultipleChoiceGame(
             currentWord: widget.wordModels[currentItem],
             answerList: randomWordList,
@@ -99,6 +107,10 @@ class _LearningPageState extends State<LearningPage> {
       for (String wordId in wordIdList) {
         await WordService().updateWordLearnCount(wordId, AppData.userModel.id);
       }
+      await RecordService().saveRecord(
+          userId: AppData.userModel.id,
+          topicId: widget.topicId,
+          point: _timeRemaining + wordIdList.length * 5);
       if (mounted) {
         Navigator.pop(context, true);
       }
@@ -107,5 +119,75 @@ class _LearningPageState extends State<LearningPage> {
         currentItem++;
       });
     }
+  }
+}
+
+class MyProgress extends StatefulWidget {
+  const MyProgress({super.key});
+
+  @override
+  State<MyProgress> createState() => _MyProgressState();
+}
+
+class _MyProgressState extends State<MyProgress> {
+  late Timer timer;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _timeRemaining = 100;
+    _startTimer();
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Stack(
+          children: [
+            SizedBox(
+              height: 16,
+              width: MediaQuery.of(context).size.width,
+              child: LinearProgressIndicator(
+                color: Colors.blue,
+                value: _timeRemaining / 100,
+              ),
+            ),
+            Container(
+                alignment: Alignment.topCenter,
+                child: Text(
+                  '$_timeRemaining',
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold),
+                )),
+          ],
+        ),
+      ],
+    );
+  }
+
+  void _startTimer() {
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (mounted) {
+        setState(() {
+          if (_timeRemaining < 1) {
+            timer.cancel();
+            Navigator.pop(context);
+          } else {
+            _timeRemaining--;
+          }
+        });
+      }
+      print(_timeRemaining);
+    });
   }
 }

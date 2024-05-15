@@ -66,8 +66,10 @@ class _UpdateTopicPageState extends State<UpdateTopicPage> {
                     await WordService().deleteWord(word);
                   }
                 }
-                await TopicService().updateTopicName(widget.topicModel.id!,
-                    {'topicName': widget.topicModel.topicName});
+                await TopicService().updateTopicName(widget.topicModel.id!, {
+                  'topicName': widget.topicModel.topicName,
+                  'isPublic': public
+                });
                 if (context.mounted) {
                   Navigator.pop(context);
                 }

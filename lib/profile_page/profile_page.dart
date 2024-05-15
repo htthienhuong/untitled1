@@ -35,12 +35,12 @@ class _ProfilePageState extends State<ProfilePage> {
                 alignment: Alignment.center,
                 width: double.maxFinite,
                 height: 300,
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.only(
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.only(
                       bottomLeft: Radius.circular(12),
                       bottomRight: Radius.circular(12)),
                   image: DecorationImage(
-                      image: AssetImage('assets/images/bg.png'),
+                      image: NetworkImage(AppData.userModel.avatarUrl!),
                       fit: BoxFit.cover),
                 ),
                 child: Column(
@@ -50,25 +50,34 @@ class _ProfilePageState extends State<ProfilePage> {
                       onTap: () async {
                         FilePickerResult? image = await pickImage();
                         if (image != null) {
-                          await UserService().updateUserAvatar(
+                          String newUrl = await UserService().updateUserAvatar(
                               AppData.userModel.id, image.files.first.bytes!);
-                          setState(() {});
+                          setState(() {
+                            AppData.userModel.avatarUrl = newUrl;
+                          });
                         }
                       },
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(300),
-                        child: SizedBox(
-                          height: 100,
-                          width: 100,
-                          child: FadeInImage(
-                            placeholder:
-                                const AssetImage('assets/images/htth_avt.png'),
-                            image:
-                                NetworkImage(AppData.userModel.avatarUrl ?? ''),
-                            imageErrorBuilder: (context, error, stackTrace) =>
-                                Image.asset(
-                              'assets/images/htth_avt.png',
+                      child: Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.white, width: 1),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(300),
+                          child: SizedBox(
+                            height: 100,
+                            width: 100,
+                            child: FadeInImage(
                               fit: BoxFit.cover,
+                              placeholder: const AssetImage(
+                                  'assets/images/htth_avt.png'),
+                              image: NetworkImage(
+                                  AppData.userModel.avatarUrl ?? ''),
+                              imageErrorBuilder: (context, error, stackTrace) =>
+                                  Image.asset(
+                                'assets/images/htth_avt.png',
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
                         ),
@@ -137,56 +146,66 @@ class _ProfilePageState extends State<ProfilePage> {
                                     color:
                                         Color.fromRGBO(179, 179, 179, 1.0)))),
                         child: GestureDetector(
-                          onTap: () {},
-                          child: GestureDetector(
-                            onTap: () async {
-                              TextEditingController textController =
-                                  TextEditingController();
-                              await showDialog(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                  title: const Text('Change Username'),
-                                  content: TextField(
-                                    controller: textController,
-                                    autofocus: true,
-                                    decoration: const InputDecoration(
-                                        hintText: "Enter your new name"),
-                                  ),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      style: TextButton.styleFrom(
-                                        textStyle: Theme.of(context)
-                                            .textTheme
-                                            .labelLarge,
-                                      ),
-                                      child: const Text('Cancel'),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                    TextButton(
-                                      style: TextButton.styleFrom(
-                                        textStyle: Theme.of(context)
-                                            .textTheme
-                                            .labelLarge,
-                                      ),
-                                      child: const Text('Confirm'),
-                                      onPressed: () async {},
-                                    ),
-                                  ],
+                          onTap: () async {
+                            TextEditingController textController =
+                                TextEditingController();
+                            await showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: const Text('Change Username'),
+                                content: TextField(
+                                  controller: textController,
+                                  autofocus: true,
+                                  decoration: const InputDecoration(
+                                      hintText: "Enter your new name"),
                                 ),
-                              );
-                            },
-                            child: ListTile(
-                              title: const Text(
-                                'Username',
-                                style: TextStyle(fontWeight: FontWeight.bold),
+                                actions: <Widget>[
+                                  TextButton(
+                                    style: TextButton.styleFrom(
+                                      textStyle: Theme.of(context)
+                                          .textTheme
+                                          .labelLarge,
+                                    ),
+                                    child: const Text('Cancel'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                  TextButton(
+                                    style: TextButton.styleFrom(
+                                      textStyle: Theme.of(context)
+                                          .textTheme
+                                          .labelLarge,
+                                    ),
+                                    child: const Text('Confirm'),
+                                    onPressed: () async {
+                                      if (textController.text.isNotEmpty) {
+                                        await UserService().updateUserName(
+                                            AppData.userModel.id,
+                                            textController.text);
+                                        setState(() {
+                                          AppData.userModel.name =
+                                              textController.text;
+                                        });
+                                        if (context.mounted) {
+                                          Navigator.pop(context);
+                                        }
+                                      }
+                                    },
+                                  ),
+                                ],
                               ),
-                              subtitle: Text(
-                                AppData.userModel.name,
-                              ),
-                              trailing: const Icon(Icons.navigate_next),
+                            );
+                          },
+                          child: ListTile(
+                            title: const Text(
+                              'Username',
+                              style: TextStyle(fontWeight: FontWeight.bold),
                             ),
+                            subtitle: Text(
+                              AppData.userModel.name,
+                            ),
+                            trailing: const Icon(Icons.navigate_next),
                           ),
                         ),
                       ),
@@ -203,93 +222,9 @@ class _ProfilePageState extends State<ProfilePage> {
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                           subtitle: Text(
-                            '${AppData.userModel.email}',
+                            AppData.userModel.email,
                           ),
                           trailing: const Icon(Icons.navigate_next),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                const Text(
-                  'Introduce',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      color: Colors.grey,
-                      fontSize: 20),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(top: 8),
-                  padding: const EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.8),
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                          color: const Color.fromRGBO(179, 179, 179, 1.0)),
-                      boxShadow: const [
-                        BoxShadow(
-                            color: Color.fromRGBO(188, 185, 185, 1.0),
-                            blurRadius: 20.0,
-                            offset: Offset(0, 10))
-                      ]),
-                  child: Column(
-                    children: <Widget>[
-                      Container(
-                        padding: const EdgeInsets.all(8.0),
-                        decoration: const BoxDecoration(
-                            border: Border(
-                                bottom: BorderSide(
-                                    color:
-                                        Color.fromRGBO(179, 179, 179, 1.0)))),
-                        child: const ListTile(
-                          title: Text(
-                            'Privacy',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          trailing: Icon(Icons.navigate_next),
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.all(8.0),
-                        decoration: const BoxDecoration(
-                            border: Border(
-                                bottom: BorderSide(
-                                    color:
-                                        Color.fromRGBO(179, 179, 179, 1.0)))),
-                        child: const ListTile(
-                          title: Text(
-                            'Terms of service',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          trailing: Icon(Icons.navigate_next),
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.all(8.0),
-                        decoration: const BoxDecoration(
-                            border: Border(
-                                bottom: BorderSide(
-                                    color:
-                                        Color.fromRGBO(179, 179, 179, 1.0)))),
-                        child: const ListTile(
-                          title: Text(
-                            'Open source license',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          trailing: Icon(Icons.navigate_next),
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.all(8.0),
-                        child: const ListTile(
-                          title: Text(
-                            'Support center',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          trailing: Icon(Icons.navigate_next),
                         ),
                       ),
                     ],
