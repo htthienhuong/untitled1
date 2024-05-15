@@ -186,7 +186,7 @@ class _TopicPageState extends State<TopicPage> {
                     const SizedBox(
                       width: 8,
                     ),
-                    const Text('Thien Huong'),
+                    Text(topicModel.userName!),
                   ],
                 ),
                 Container(

@@ -1,12 +1,4 @@
-import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
-import 'dart:typed_data';
-
-import 'package:csv/csv.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:untitled1/Services/TopicServices.dart';
 import 'package:untitled1/Services/WordServices.dart';
 
@@ -58,11 +50,6 @@ class _UpdateTopicPageState extends State<UpdateTopicPage> {
         ),
         actions: [
           IconButton(
-              onPressed: () {
-                _pickFile();
-              },
-              icon: const Icon(FontAwesomeIcons.fileCsv)),
-          IconButton(
             onPressed: () async {
               if (_formKey.currentState!.validate()) {
                 _formKey.currentState!.save();
@@ -72,9 +59,6 @@ class _UpdateTopicPageState extends State<UpdateTopicPage> {
                         word.english!, word.vietnam!, widget.topicModel.id!);
                   }
                 }
-                // List<WordModel> deleteList = oldWordModelList
-                //     .where((element) => !wordModelList.contains(element))
-                //     .toList();
                 for (WordModel word in oldWordModelList) {
                   if (wordModelList.contains(word)) {
                     await WordService().updateWord(word);
@@ -82,11 +66,11 @@ class _UpdateTopicPageState extends State<UpdateTopicPage> {
                     await WordService().deleteWord(word);
                   }
                 }
-                // for (WordModel word in deleteList) {
-                //   await WordService().deleteWord(word);
-                // }
                 await TopicService().updateTopicName(widget.topicModel.id!,
                     {'topicName': widget.topicModel.topicName});
+                if (context.mounted) {
+                  Navigator.pop(context);
+                }
               }
             },
             icon: const Icon(
@@ -311,45 +295,5 @@ class _UpdateTopicPageState extends State<UpdateTopicPage> {
         ],
       ),
     );
-  }
-
-  void _pickFile() async {
-    setState(() {
-      wordModelList.clear();
-    });
-    final result = await FilePicker.platform.pickFiles(
-      allowMultiple: false,
-      type: FileType.custom,
-      allowedExtensions: ['csv'],
-    );
-
-    // if no file is picked
-    if (result == null || !result.files.first.name.endsWith('.csv')) return;
-    // we will log the name, size and path of the
-    // first picked file (if multiple are selected)
-    print(result.files.first.name);
-    filePath = result.files.first.path!;
-
-    final input = File(filePath!).openRead();
-    final fields = await input
-        .transform(utf8.decoder)
-        .transform(const CsvToListConverter())
-        .toList();
-    print(fields);
-    if (fields[0][0] == 'Word' && fields[0][1] == 'Definition') {
-      print('length: ${wordModelList.length}');
-
-      for (int i = 1; i < fields.length; i++) {
-        wordModelList.add(WordModel());
-
-        setState(() {
-          wordModelList[wordModelList.length - 1].english = fields[i][0];
-          wordModelList[wordModelList.length - 1].vietnam = fields[i][1];
-        });
-
-        print('field: ${fields[i]}');
-        print('wordModelList: ${wordModelList[i - 1].english}');
-      }
-    }
   }
 }

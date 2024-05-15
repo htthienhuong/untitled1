@@ -33,35 +33,6 @@ class TopicService {
     }
   }
 
-// sửa trạng thái của topic
-  Future<void> toggleTopicStatus(String topicId) async {
-    try {
-      // Lấy thông tin của topic từ Firestore
-      DocumentSnapshot topicDoc =
-          await _db.collection(_collectionName).doc(topicId).get();
-
-      // Kiểm tra xem topic có tồn tại không
-      if (topicDoc.exists) {
-        // Lấy trạng thái hiện tại của topic
-        bool currentStatus = topicDoc['isPublic'] ?? false;
-
-        // Đảo ngược trạng thái
-        bool newStatus = !currentStatus;
-
-        // Cập nhật trạng thái mới của topic trong Firestore
-        await _db
-            .collection(_collectionName)
-            .doc(topicId)
-            .update({'isPublic': newStatus});
-      } else {
-        throw ('Topic not found');
-      }
-    } catch (error) {
-      print("Error toggling topic status: $error");
-      throw error;
-    }
-  }
-
   Future<TopicModel> getTopicById(String topicId) async {
     try {
       DocumentSnapshot documentSnapshot =
@@ -103,38 +74,6 @@ class TopicService {
       return topicRef.id;
     } catch (error) {
       print("Error adding topic with user reference: $error");
-      throw error;
-    }
-  }
-
-  //
-  Future<void> incrementView(String topicId) async {
-    try {
-      // Lấy thông tin của topic từ Firestore
-      DocumentSnapshot topicDoc =
-          await _db.collection(_collectionName).doc(topicId).get();
-
-      // Kiểm tra xem topic có tồn tại không
-      if (topicDoc.exists) {
-        // Lấy giá trị hiện tại của trường 'view'
-        String currentView = topicDoc['view'] ?? '0';
-
-        // Chuyển đổi giá trị hiện tại thành kiểu int và tăng giá trị lên 1
-        int newView = int.parse(currentView) + 1;
-
-        // Chuyển đổi giá trị mới thành kiểu String
-        String newViewString = newView.toString();
-
-        // Cập nhật trường 'view' mới của topic trong Firestore
-        await _db
-            .collection(_collectionName)
-            .doc(topicId)
-            .update({'view': newViewString});
-      } else {
-        throw Exception('Topic not found');
-      }
-    } catch (error) {
-      print("Error incrementing view for topic: $error");
       throw error;
     }
   }
