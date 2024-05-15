@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:untitled1/folder_page/add_folder_dialog.dart';
 import 'package:untitled1/profile_page/profile_page.dart';
 
 import '../folder_page/folder_page.dart';
@@ -55,7 +56,11 @@ class _MainPageState extends State<MainPage> {
       FloatingActionButton(
         backgroundColor: const Color(0xffd0d4ec),
         shape: const CircleBorder(),
-        onPressed: () {
+        onPressed: () async{
+          await showDialog(
+            context: context,
+            builder: (_) => AddFolderDialog(),
+          );
           _folderPageKey.currentState?.setState(() {});
         },
         child: const Icon(

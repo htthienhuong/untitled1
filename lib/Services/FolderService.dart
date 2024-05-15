@@ -4,8 +4,12 @@ import '../Models/Folder.dart';
 import '../Models/TopicModel.dart';
 
 class FolderService {
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final String _collectionName = 'Folders';
   final CollectionReference folderCollection =
-      FirebaseFirestore.instance.collection('Folder');
+      FirebaseFirestore.instance.collection('Folders');
+  final CollectionReference usersCollection =
+  FirebaseFirestore.instance.collection('User');
   // Hàm để lấy ra tất cả các folder của một user
   Future<List<Folder>> getAllFoldersOfUser(String userId) async {
     try {
@@ -199,6 +203,48 @@ class FolderService {
     } catch (error) {
       print("Error removing topic from folder: $error");
       throw error;
+    }
+  }
+
+  Future<String> addFolderWithUserReference({required Folder folder}) async {
+    try {
+      DocumentReference folderRef =
+      await _db.collection(_collectionName).add(folder.toMap());
+
+      DocumentReference userRef = usersCollection.doc(folder.userId);
+      await userRef.update({
+        'Folders': FieldValue.arrayUnion([folderRef])
+      });
+      return folderRef.id;
+    } catch (error) {
+      print("Error adding topic with user reference: $error");
+      throw error;
+    }
+  }
+
+  Future<void> deleteFolderWithUserReference(
+      Folder folder, String userId) async {
+    try {
+      DocumentReference folderRef = folderCollection.doc(folder.documentId);
+
+      await folderRef.delete();
+
+      DocumentReference userRef = usersCollection.doc(userId);
+
+      await userRef.update({
+        'Folder': FieldValue.arrayRemove([folderRef])
+      });
+    } catch (error) {
+      print("Error deleting topic with user reference: $error");
+    }
+  }
+
+  Future<void> updateFolder(
+      String folderId, Map<String, dynamic> data) async {
+    try {
+      await folderCollection.doc(folderId).update(data);
+    } catch (error) {
+      print("Error updating topic: $error");
     }
   }
 }

@@ -3,31 +3,13 @@ import 'package:untitled1/Models/word_model.dart';
 
 class WordService {
   final CollectionReference Topics =
-      FirebaseFirestore.instance.collection('Topics');
+  FirebaseFirestore.instance.collection('Topics');
   final CollectionReference Words =
-      FirebaseFirestore.instance.collection('Words');
+  FirebaseFirestore.instance.collection('Words');
   final CollectionReference Folder =
-      FirebaseFirestore.instance.collection('Folder');
+  FirebaseFirestore.instance.collection('Folders');
   final CollectionReference User =
-      FirebaseFirestore.instance.collection('User');
-
-  // lay all topic
-  Stream<QuerySnapshot> getTopicStream() {
-    final wordsStream =
-        Topics.orderBy('topicName', descending: true).snapshots();
-    return wordsStream;
-  }
-
-  // lay word voi topicId
-  Stream<QuerySnapshot> getWordsByTopicId(String topicId) {
-    return Words.where('topicId', isEqualTo: Topics.doc(topicId)).snapshots();
-  }
-
-// lay all word
-  Stream<QuerySnapshot> getWordsStream() {
-    final wordsStream = Words.orderBy('english', descending: true).snapshots();
-    return wordsStream;
-  }
+  FirebaseFirestore.instance.collection('User');
 
   Future<List<WordModel>> getWordListFromRef(
       List<DocumentReference> wordReferences) async {
@@ -61,7 +43,6 @@ class WordService {
     }
   }
 
-  // Xóa từ
   Future<void> deleteWord(WordModel wordModel) async {
     try {
       DocumentReference wordRef = Words.doc(wordModel.id);

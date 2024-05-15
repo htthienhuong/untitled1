@@ -110,7 +110,7 @@ class _TopicPageState extends State<TopicPage> {
                     });
                   },
                   itemBuilder: (BuildContext context) =>
-                      <PopupMenuEntry<String>>[
+                  <PopupMenuEntry<String>>[
                     PopupMenuItem<String>(
                       onTap: () async {
                         await Navigator.pushNamed(
@@ -176,7 +176,7 @@ class _TopicPageState extends State<TopicPage> {
                         borderRadius: BorderRadius.circular(50),
                         child: FadeInImage(
                           placeholder:
-                              const AssetImage('assets/images/htth_avt.png'),
+                          const AssetImage('assets/images/htth_avt.png'),
                           image: NetworkImage(topicModel.userAvatarUrl ?? ''),
                           imageErrorBuilder: (context, error, stackTrace) =>
                               Image.asset('assets/images/htth_avt.png'),
@@ -186,7 +186,7 @@ class _TopicPageState extends State<TopicPage> {
                     const SizedBox(
                       width: 8,
                     ),
-                    const Text('Thien Huong'),
+                    Text(topicModel.userName!),
                   ],
                 ),
                 Container(
@@ -195,7 +195,7 @@ class _TopicPageState extends State<TopicPage> {
                       color: const Color(0xffacbdd0),
                       borderRadius: BorderRadius.circular(8)),
                   child:
-                      Text('${topicModel.wordReferences?.length ?? 0} words'),
+                  Text('${topicModel.wordReferences?.length ?? 0} words'),
                 ),
               ],
             )
