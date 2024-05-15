@@ -6,6 +6,8 @@ class WordService {
       FirebaseFirestore.instance.collection('Topics');
   final CollectionReference Words =
       FirebaseFirestore.instance.collection('Words');
+  final CollectionReference WordLearnCount =
+      FirebaseFirestore.instance.collection('WordLearnCount');
   final CollectionReference Folder =
       FirebaseFirestore.instance.collection('Folder');
   final CollectionReference User =
@@ -37,6 +39,60 @@ class WordService {
       Topics.doc(topicId).update({
         'wordReferences': FieldValue.arrayUnion([wordRef])
       });
+    } catch (error) {
+      print('Error adding word: $error');
+      throw error;
+    }
+  }
+
+  Future<void> updateWordLearnCount(String wordId, String userId) async {
+    try {
+      QuerySnapshot querySnapshot =
+          await WordLearnCount.where('userId', isEqualTo: userId)
+              .where('wordId', isEqualTo: wordId)
+              .get();
+
+      if (querySnapshot.size == 0) {
+        await WordLearnCount.doc().set(
+            {'wordId': wordId, 'userId': userId, 'count': 0, 'starred': false});
+      } else {
+        await querySnapshot.docs.first.reference
+            .update({'count': FieldValue.increment(1)});
+      }
+    } catch (error) {
+      print('Error adding word: $error');
+      throw error;
+    }
+  }
+
+  Future<void> updateWordStatus(
+      String wordId, String userId, bool status) async {
+    try {
+      QuerySnapshot querySnapshot =
+          await WordLearnCount.where('userId', isEqualTo: userId)
+              .where('wordId', isEqualTo: wordId)
+              .get();
+
+      if (querySnapshot.size == 0) {
+        await WordLearnCount.doc().set(
+            {'wordId': wordId, 'userId': userId, 'count': 0, 'starred': false});
+      } else {
+        await querySnapshot.docs.first.reference.update({'starred': status});
+      }
+    } catch (error) {
+      print('Error adding word: $error');
+      throw error;
+    }
+  }
+
+  Future<int> getWordLearnCount(String wordId, String userId) async {
+    try {
+      QuerySnapshot querySnapshot =
+          await WordLearnCount.where('userId', isEqualTo: userId)
+              .where('wordId', isEqualTo: wordId)
+              .get();
+
+      return querySnapshot.docs.first.get('count');
     } catch (error) {
       print('Error adding word: $error');
       throw error;

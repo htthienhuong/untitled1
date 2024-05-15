@@ -5,6 +5,9 @@ import 'package:untitled1/topic_page/add_topic_page.dart';
 import 'package:untitled1/topic_page/topic_detail_page.dart';
 import 'package:untitled1/topic_page/update_topic_page.dart';
 
+import '../Models/word_model.dart';
+import '../learnning/flash_card_page.dart';
+import '../learnning/learning_page.dart';
 import '../main_page/main_page.dart';
 
 class Routes {
@@ -12,6 +15,9 @@ class Routes {
   static const String addTopicPage = "/addTopicPage";
   static const String updateTopicPage = "/updateTopicPage";
   static const String topicDetailPage = "/topicDetailPage";
+  static const String flashCardPage = '/flashCardPage';
+  static const String learningPage = '/learningPage';
+
   static const String loginPage = "/";
 }
 
@@ -35,9 +41,25 @@ class RouteGenerator {
             settings: routeSettings,
             builder: (context) => TopicDetailPage(
                 topicModel: routeSettings.arguments as TopicModel));
+      case Routes.flashCardPage:
+        List<dynamic> args = routeSettings.arguments as List<dynamic>;
+        return MaterialPageRoute(
+            settings: routeSettings,
+            builder: (context) => FlashCardPage(
+                  wordModels: args[0],
+                  isBack: args[1],
+                ));
+
       case Routes.loginPage:
         return MaterialPageRoute(
             settings: routeSettings, builder: (context) => const LoginScreen());
+      case Routes.learningPage:
+        return MaterialPageRoute(
+            settings: routeSettings,
+            builder: (context) => LearningPage(
+                  wordModels: routeSettings.arguments as List<WordModel>,
+                ));
+
       default:
         return unDefinedRoute();
     }
