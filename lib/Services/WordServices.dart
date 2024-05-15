@@ -72,6 +72,7 @@ class WordService {
       await topicRef.update({
         'wordReferences': FieldValue.arrayRemove([wordRef])
       });
+      print('delete ref done');
     } catch (error) {
       print('Error deleting word: $error');
     }

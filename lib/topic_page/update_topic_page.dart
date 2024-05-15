@@ -39,6 +39,7 @@ class _UpdateTopicPageState extends State<UpdateTopicPage> {
         child: FloatingActionButton(
           backgroundColor: Colors.black,
           onPressed: () {
+            _formKey.currentState?.save();
             setState(() {
               wordModelList.add(WordModel());
             });
@@ -67,18 +68,25 @@ class _UpdateTopicPageState extends State<UpdateTopicPage> {
                 _formKey.currentState!.save();
                 for (WordModel word in wordModelList) {
                   if (word.id == null) {
-                    WordService()
-                        .addWord(word.english!, word.vietnam!, word.topicId!);
-                  } else {}
+                    WordService().addWord(
+                        word.english!, word.vietnam!, widget.topicModel.id!);
+                  }
                 }
-                List<WordModel> deleteList = oldWordModelList
-                    .where((element) => !wordModelList.contains(element))
-                    .toList();
-                for (WordModel word in deleteList) {
-                  await WordService().deleteWord(word);
+                // List<WordModel> deleteList = oldWordModelList
+                //     .where((element) => !wordModelList.contains(element))
+                //     .toList();
+                for (WordModel word in oldWordModelList) {
+                  if (wordModelList.contains(word)) {
+                    await WordService().updateWord(word);
+                  } else {
+                    await WordService().deleteWord(word);
+                  }
                 }
-                await TopicService().updateTopic(
-                    widget.topicModel.id!, widget.topicModel.toMap());
+                // for (WordModel word in deleteList) {
+                //   await WordService().deleteWord(word);
+                // }
+                await TopicService().updateTopicName(widget.topicModel.id!,
+                    {'topicName': widget.topicModel.topicName});
               }
             },
             icon: const Icon(
@@ -162,6 +170,7 @@ class _UpdateTopicPageState extends State<UpdateTopicPage> {
                             return Dismissible(
                                 direction: DismissDirection.endToStart,
                                 onDismissed: (direction) {
+                                  _formKey.currentState?.save();
                                   setState(() {
                                     wordModelList.removeAt(index);
                                   });
