@@ -5,6 +5,9 @@ import 'package:untitled1/topic_page/add_topic_page.dart';
 import 'package:untitled1/topic_page/topic_detail_page.dart';
 import 'package:untitled1/topic_page/update_topic_page.dart';
 
+import 'package:untitled1/folder_page/folder_detail_page.dart';
+
+import '../Models/Folder.dart';
 import '../Models/word_model.dart';
 import '../learnning/flash_card_page.dart';
 import '../learnning/learning_page.dart';
@@ -17,6 +20,7 @@ class Routes {
   static const String topicDetailPage = "/topicDetailPage";
   static const String flashCardPage = '/flashCardPage';
   static const String learningPage = '/learningPage';
+  static const String folderDetailPage = '/folderDetailPage';
 
   static const String loginPage = "/";
 }
@@ -59,7 +63,11 @@ class RouteGenerator {
             builder: (context) => LearningPage(
               wordModels: routeSettings.arguments as List<WordModel>,
             ));
-
+      case Routes.folderDetailPage:
+        return MaterialPageRoute(
+            settings: routeSettings,
+            builder: (context) => FolderDetailPage(
+                folder: routeSettings.arguments as Folder));
       default:
         return unDefinedRoute();
     }

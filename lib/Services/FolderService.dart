@@ -247,4 +247,20 @@ class FolderService {
       print("Error updating topic: $error");
     }
   }
+
+  Future<List<TopicModel>> getTopicByFolderId(String folderId) async {
+    try {
+      QuerySnapshot querySnapshot = await folderCollection
+          .where('folderId', isEqualTo: folderId)
+          .get();
+
+    List<TopicModel> topics = querySnapshot.docs
+        .map((doc) => TopicModel.fromFirestore(doc))
+        .toList();
+        return topics;
+    } catch (error) {
+      print("Error getting topic by ID: $folderId");
+      throw error;
+    }
+  }
 }

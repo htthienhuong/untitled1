@@ -73,7 +73,13 @@ class _FolderPageState extends State<FolderPage>
 
   Widget _buildFolderItem(BuildContext context, Folder folder) {
     print('selectedItem: $selectedItem');
-    return Container(
+    return GestureDetector(
+        onTap: () {
+      Navigator.pushNamed(context, Routes.folderDetailPage,
+          arguments: folder);
+    },
+    child:
+      Container(
       margin: const EdgeInsets.only(top: 8),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -191,6 +197,7 @@ class _FolderPageState extends State<FolderPage>
           )
         ],
       ),
+    ),
     );
   }
 }

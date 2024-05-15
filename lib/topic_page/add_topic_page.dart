@@ -84,11 +84,13 @@ class _AddTopicPageState extends State<AddTopicPage> {
                       userAvatarUrl: AppData.userModel.avatarUrl,
                       userName: AppData.userModel.name),
                 );
+                await TopicService().updateTopicName(topicId!, {"id": topicId});
 
                 for (WordModel word in wordModelList) {
                   await WordService()
                       .addWord(word.english!, word.vietnam!, topicId!);
                 }
+
                 if (context.mounted) {
                   Navigator.pop(context);
                 }

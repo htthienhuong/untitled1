@@ -19,8 +19,8 @@ class _EditFolderDialogState extends State<EditFolderDialog> {
   final _formKey = GlobalKey<FormState>();
   String? folderId;
 
-  TextEditingController _folderNameController = TextEditingController();
-  TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _folderNameController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class _EditFolderDialogState extends State<EditFolderDialog> {
 
     return
       AlertDialog(
-        title: Text(
+        title: const Text(
           'Edit Folder',
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, fontFamily: "Epilogue"),
@@ -38,7 +38,7 @@ class _EditFolderDialogState extends State<EditFolderDialog> {
           key: _formKey,
           child:
           ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: 500, maxHeight: 300, minWidth: 500, minHeight: 100),
+              constraints: const BoxConstraints(maxWidth: 500, maxHeight: 300, minWidth: 500, minHeight: 100),
               child:       Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -52,7 +52,7 @@ class _EditFolderDialogState extends State<EditFolderDialog> {
                   ),
                   TextFormField(
                     controller: _folderNameController,
-                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, fontFamily: "Epilogue"),
+                    style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold, fontFamily: "Epilogue"),
                     decoration: const InputDecoration.collapsed(
                         hintText: 'Folder Name',
                         border: UnderlineInputBorder(),
@@ -103,7 +103,7 @@ class _EditFolderDialogState extends State<EditFolderDialog> {
                         return null;
                       },
                       onSaved: (newValue) {
-                        print('add folder done');
+                        print('update folder done');
                       },
                     ),
                   )
@@ -114,18 +114,18 @@ class _EditFolderDialogState extends State<EditFolderDialog> {
         ),
         actions: <Widget>[
           TextButton(
-            child: Text('CANCEL'),
+            child: const Text('CANCEL'),
             onPressed: () {
               Navigator.pop(context);
             },
           ),
           TextButton(
-            child: Text('UPDATE'),
+            child: const Text('UPDATE'),
             onPressed: () async{
               print(_folderNameController.text);
               if (_formKey.currentState!.validate()) {
                 await FolderService().updateFolder(widget.folder.documentId!,
-                    {'folderName': widget.folder.folderName, "description": widget.folder.description},);
+                    {'folderName': _folderNameController.text, "description": _descriptionController.text},);
                 if(context.mounted){
                   Navigator.pop(context);
                 }

@@ -8,6 +8,7 @@ class TopicService {
   final CollectionReference usersCollection =
   FirebaseFirestore.instance.collection('User');
 
+
   Future<void> updateTopicName(
       String topicId, Map<String, dynamic> data) async {
     try {
@@ -150,4 +151,5 @@ class TopicService {
       throw error;
     }
   }
+
 }
