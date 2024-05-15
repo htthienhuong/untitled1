@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:untitled1/Models/TopicModel.dart';
 import 'package:untitled1/auth/login_screen.dart';
 import 'package:untitled1/leader_boad_page/leading_board_page.dart';
+import 'package:untitled1/learnning/typing_page.dart';
 import 'package:untitled1/topic_page/add_topic_page.dart';
 import 'package:untitled1/topic_page/starred_word_page.dart';
 import 'package:untitled1/topic_page/topic_detail_page.dart';
@@ -19,6 +20,7 @@ class Routes {
   static const String topicDetailPage = "/topicDetailPage";
   static const String starredWordPage = "/starredWordPage";
   static const String flashCardPage = '/flashCardPage';
+  static const String typingPage = '/typingPage';
   static const String learningPage = '/learningPage';
   static const String leaderBoardPage = "/leaderBoardPage";
 
@@ -61,6 +63,13 @@ class RouteGenerator {
             builder: (context) => FlashCardPage(
                   wordModels: args[0],
                   isBack: args[1],
+                ));
+      case Routes.typingPage:
+        List<dynamic> args = routeSettings.arguments as List<dynamic>;
+        return MaterialPageRoute(
+            settings: routeSettings,
+            builder: (context) => TypingPage(
+                  wordModels: routeSettings.arguments as List<WordModel>,
                 ));
 
       case Routes.loginPage:

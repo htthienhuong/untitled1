@@ -29,7 +29,7 @@ class AuthService {
     return null;
   }
 
-  Future<void> signout() async {
+  Future<void> signOut() async {
     try {
       await _auth.signOut();
     } catch (e) {

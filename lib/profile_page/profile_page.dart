@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:untitled1/Services/UserServices.dart';
 import 'package:untitled1/app_data/app_data.dart';
+import 'package:untitled1/router/router_manager.dart';
 
 import '../Models/UserModel.dart';
+import '../auth/auth_service.dart';
 import '../utilities/pick_upload_image.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -252,7 +254,11 @@ class _ProfilePageState extends State<ProfilePage> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                      onPressed: () async {},
+                      onPressed: () async {
+                        await AuthService().signOut();
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, Routes.loginPage, (route) => false);
+                      },
                       child: const Padding(
                         padding: EdgeInsets.all(8.0),
                         child: Text(

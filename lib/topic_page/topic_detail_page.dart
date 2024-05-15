@@ -308,6 +308,55 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                       ),
                     ),
                   ),
+                  GestureDetector(
+                    onTap: () {
+                      if (wordModelList.isNotEmpty) {
+                        AwesomeDialog(
+                          context: context,
+                          animType: AnimType.scale,
+                          dialogType: DialogType.info,
+                          body: Column(
+                            children: [
+                              const Text(
+                                'Setting for Typing',
+                                style: TextStyle(
+                                    fontStyle: FontStyle.italic,
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              const Text('Choose the number of words to learn'),
+                              MySlider(
+                                getSize: _getSize,
+                                max: wordModelList.length.toDouble(),
+                              ),
+                            ],
+                          ),
+                          btnOkOnPress: () async {
+                            await Navigator.pushNamed(
+                              context,
+                              Routes.typingPage,
+                              arguments: _getRandomWordList(size),
+                            );
+                            setState(() {});
+                          },
+                          btnCancelOnPress: () {},
+                        ).show();
+                      }
+                    },
+                    child: Card(
+                      color: wordModelList.isEmpty
+                          ? Colors.grey.withOpacity(0.3)
+                          : null,
+                      child: ListTile(
+                        title: Text(
+                          'Typing',
+                          style: listTileTextStyle,
+                        ),
+                        leading: Image.asset('assets/images/typing_icon.png',
+                            height: 20),
+                      ),
+                    ),
+                  ),
                   widget.topicModel.isPublic!
                       ? GestureDetector(
                           onTap: () {
