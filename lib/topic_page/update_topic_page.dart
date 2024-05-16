@@ -96,7 +96,7 @@ class _UpdateTopicPageState extends State<UpdateTopicPage> {
       ),
       body: FutureBuilder(
         future:
-            WordService().getWordListFromRef(widget.topicModel.wordReferences!),
+        WordService().getWordListFromRef(widget.topicModel.wordReferences!),
         builder:
             (BuildContext context, AsyncSnapshot<List<WordModel>> snapshot) {
           if (snapshot.hasData) {
@@ -134,7 +134,7 @@ class _UpdateTopicPageState extends State<UpdateTopicPage> {
                     const Text(
                       'Topic',
                       style:
-                          TextStyle(fontSize: 8, fontWeight: FontWeight.bold),
+                      TextStyle(fontSize: 8, fontWeight: FontWeight.bold),
                     ),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -144,12 +144,12 @@ class _UpdateTopicPageState extends State<UpdateTopicPage> {
                         value: dropDownValue, // this
                         items: ["Private", "Public"]
                             .map<DropdownMenuItem<String>>((String value) =>
-                                DropdownMenuItem<String>(
-                                    value:
-                                        value, // add this property an pass the _value to it
-                                    child: Text(
-                                      value,
-                                    )))
+                            DropdownMenuItem<String>(
+                                value:
+                                value, // add this property an pass the _value to it
+                                child: Text(
+                                  value,
+                                )))
                             .toList(),
                         onChanged: (value) {
                           if (value == 'Public') {
@@ -189,7 +189,7 @@ class _UpdateTopicPageState extends State<UpdateTopicPage> {
                                             child: const Text(
                                               "DELETE",
                                               style:
-                                                  TextStyle(color: Colors.red),
+                                              TextStyle(color: Colors.red),
                                             ),
                                           ),
                                           TextButton(
@@ -199,7 +199,7 @@ class _UpdateTopicPageState extends State<UpdateTopicPage> {
                                             child: const Text(
                                               "CANCEL",
                                               style:
-                                                  TextStyle(color: Colors.grey),
+                                              TextStyle(color: Colors.grey),
                                             ),
                                           ),
                                         ],
@@ -241,9 +241,9 @@ class _UpdateTopicPageState extends State<UpdateTopicPage> {
 
   Widget _buildItemWord(int index) {
     TextEditingController defController =
-        TextEditingController(text: wordModelList[index].vietnam);
+    TextEditingController(text: wordModelList[index].vietnam);
     TextEditingController wordController =
-        TextEditingController(text: wordModelList[index].english);
+    TextEditingController(text: wordModelList[index].english);
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),

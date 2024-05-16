@@ -3,11 +3,11 @@ import 'package:untitled1/leader_boad_page/leading_board_model.dart';
 
 class RecordService {
   final CollectionReference RecordCollection =
-      FirebaseFirestore.instance.collection('Record');
+  FirebaseFirestore.instance.collection('Record');
   final CollectionReference WordCollection =
-      FirebaseFirestore.instance.collection('Words');
+  FirebaseFirestore.instance.collection('Words');
   final CollectionReference UserCollection =
-      FirebaseFirestore.instance.collection('User');
+  FirebaseFirestore.instance.collection('User');
 
   Future<void> saveRecord({
     required String userId,
@@ -16,9 +16,9 @@ class RecordService {
   }) async {
     try {
       QuerySnapshot querySnapshot =
-          await RecordCollection.where('topicId', isEqualTo: topicId)
-              .where('userId', isEqualTo: userId)
-              .get();
+      await RecordCollection.where('topicId', isEqualTo: topicId)
+          .where('userId', isEqualTo: userId)
+          .get();
       if (querySnapshot.docs.isEmpty) {
         await RecordCollection.add({
           'userId': userId,
@@ -40,9 +40,9 @@ class RecordService {
     List<LeadingBoardModel> list = [];
     try {
       final querySnapshot =
-          await RecordCollection.where('topicId', isEqualTo: topicId)
-              .orderBy('point')
-              .get();
+      await RecordCollection.where('topicId', isEqualTo: topicId)
+          .orderBy('point')
+          .get();
       print('querySnapshot.docs: ${querySnapshot.docs}');
       for (DocumentSnapshot doc in querySnapshot.docs) {
         String userId = doc.get('userId');

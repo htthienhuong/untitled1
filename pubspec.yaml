@@ -76,6 +76,11 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  fonts:
+    - family: Epilogue
+      fonts:
+        - asset: assets/fonts/Epilogue.ttf
+
   assets:
     - assets/images/
 

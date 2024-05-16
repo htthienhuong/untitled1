@@ -77,9 +77,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                   AppData.userModel.avatarUrl ?? ''),
                               imageErrorBuilder: (context, error, stackTrace) =>
                                   Image.asset(
-                                'assets/images/htth_avt.png',
-                                fit: BoxFit.cover,
-                              ),
+                                    'assets/images/htth_avt.png',
+                                    fit: BoxFit.cover,
+                                  ),
                             ),
                           ),
                         ),
@@ -146,11 +146,11 @@ class _ProfilePageState extends State<ProfilePage> {
                             border: Border(
                                 bottom: BorderSide(
                                     color:
-                                        Color.fromRGBO(179, 179, 179, 1.0)))),
+                                    Color.fromRGBO(179, 179, 179, 1.0)))),
                         child: GestureDetector(
                           onTap: () async {
                             TextEditingController textController =
-                                TextEditingController();
+                            TextEditingController();
                             await showDialog(
                               context: context,
                               builder: (context) => AlertDialog(
@@ -217,7 +217,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             border: Border(
                                 bottom: BorderSide(
                                     color:
-                                        Color.fromRGBO(179, 179, 179, 1.0)))),
+                                    Color.fromRGBO(179, 179, 179, 1.0)))),
                         child: ListTile(
                           title: const Text(
                             'Email',
@@ -241,7 +241,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         spreadRadius: 2,
                         blurRadius: 5,
                         offset:
-                            const Offset(10, 10), // changes position of shadow
+                        const Offset(10, 10), // changes position of shadow
                       ),
                     ],
                   ),

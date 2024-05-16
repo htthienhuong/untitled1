@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-
+import 'package:untitled1/router/router_manager.dart';
+import 'package:untitled1/folder_page/edit_folder_dialog.dart';
+import '../app_data/app_data.dart';
+import '../Services/FolderService.dart';
+import '../Models/Folder.dart';
 class FolderPage extends StatefulWidget {
   const FolderPage({super.key});
 
@@ -37,12 +41,27 @@ class _FolderPageState extends State<FolderPage>
             child: TabBarView(
               controller: _tabController,
               children: <Widget>[
-                ListView.builder(
-                  itemCount: 3,
-                  itemBuilder: (context, index) {
-                    return _buildFolderItem(context, index);
-                  },
-                ),
+                FutureBuilder(
+                    future: FolderService().getAllFoldersOfUser(AppData.userModel.id),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<List<Folder>> snapshot) {
+                      if (snapshot.hasData) {
+                        List<Folder> folderList = snapshot.data!;
+                        print(folderList.length);
+                        return ListView.builder(
+                          itemCount: folderList.length,
+                          itemBuilder: (context, index) {
+                            return _buildFolderItem(context, folderList[index]);
+                          },
+                        );
+                      } else if (snapshot.hasData) {
+                        return const Text('Error');
+                      } else {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                    }),
                 Container(color: Colors.green),
               ],
             ),
@@ -52,9 +71,15 @@ class _FolderPageState extends State<FolderPage>
     );
   }
 
-  Widget _buildFolderItem(BuildContext context, int index) {
+  Widget _buildFolderItem(BuildContext context, Folder folder) {
     print('selectedItem: $selectedItem');
-    return Container(
+    return GestureDetector(
+        onTap: () {
+      Navigator.pushNamed(context, Routes.folderDetailPage,
+          arguments: folder);
+    },
+    child:
+      Container(
       margin: const EdgeInsets.only(top: 8),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -68,7 +93,7 @@ class _FolderPageState extends State<FolderPage>
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Folder Name $index',
+                folder.folderName,
                 style: const TextStyle(fontSize: 20),
               ),
               PopupMenuButton<String>(
@@ -79,10 +104,18 @@ class _FolderPageState extends State<FolderPage>
                     selectedItem = item;
                   });
                 },
-                itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                  const PopupMenuItem<String>(
+                itemBuilder: (BuildContext context) =>
+                <PopupMenuEntry<String>>[
+                  PopupMenuItem<String>(
+                    onTap: () async {
+                      await showDialog(
+                        context: context,
+                        builder: (_) => EditFolderDialog(folder: folder,),
+                      );
+                      setState(() {});
+                    },
                     value: 'Edit',
-                    child: Row(
+                    child: const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
@@ -99,9 +132,14 @@ class _FolderPageState extends State<FolderPage>
                   const PopupMenuDivider(
                     height: 1,
                   ),
-                  const PopupMenuItem<String>(
+                  PopupMenuItem<String>(
+                    onTap: () async {
+                      await FolderService().deleteFolderWithUserReference(
+                          folder, AppData.userModel.id);
+                      setState(() {});
+                    },
                     value: 'Delete',
-                    child: Row(
+                    child: const Row(
                       children: [
                         Text(
                           'Delete',
@@ -118,7 +156,7 @@ class _FolderPageState extends State<FolderPage>
               ),
             ],
           ),
-          const Text('Description'),
+          Text(folder.description!),
           const SizedBox(
             height: 8,
           ),
@@ -159,6 +197,7 @@ class _FolderPageState extends State<FolderPage>
           )
         ],
       ),
+    ),
     );
   }
 }

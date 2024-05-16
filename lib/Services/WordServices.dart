@@ -3,15 +3,15 @@ import 'package:untitled1/Models/word_model.dart';
 
 class WordService {
   final CollectionReference Topics =
-      FirebaseFirestore.instance.collection('Topics');
+  FirebaseFirestore.instance.collection('Topics');
   final CollectionReference Words =
-      FirebaseFirestore.instance.collection('Words');
+  FirebaseFirestore.instance.collection('Words');
   final CollectionReference WordLearnCount =
-      FirebaseFirestore.instance.collection('WordLearnCount');
+  FirebaseFirestore.instance.collection('WordLearnCount');
   final CollectionReference Folder =
-      FirebaseFirestore.instance.collection('Folder');
+  FirebaseFirestore.instance.collection('Folder');
   final CollectionReference User =
-      FirebaseFirestore.instance.collection('User');
+  FirebaseFirestore.instance.collection('User');
 
   Future<List<WordModel>> getWordListFromRef(
       List<DocumentReference> wordReferences) async {
@@ -48,9 +48,9 @@ class WordService {
   Future<void> updateWordLearnCount(String wordId, String userId) async {
     try {
       QuerySnapshot querySnapshot =
-          await WordLearnCount.where('userId', isEqualTo: userId)
-              .where('wordId', isEqualTo: wordId)
-              .get();
+      await WordLearnCount.where('userId', isEqualTo: userId)
+          .where('wordId', isEqualTo: wordId)
+          .get();
 
       if (querySnapshot.size == 0) {
         await WordLearnCount.doc().set(
@@ -69,9 +69,9 @@ class WordService {
       String wordId, String userId, bool status) async {
     try {
       QuerySnapshot querySnapshot =
-          await WordLearnCount.where('userId', isEqualTo: userId)
-              .where('wordId', isEqualTo: wordId)
-              .get();
+      await WordLearnCount.where('userId', isEqualTo: userId)
+          .where('wordId', isEqualTo: wordId)
+          .get();
 
       if (querySnapshot.size == 0) {
         await WordLearnCount.doc().set(
@@ -88,9 +88,9 @@ class WordService {
   Future<int> getWordLearnCount(String wordId, String userId) async {
     try {
       QuerySnapshot querySnapshot =
-          await WordLearnCount.where('userId', isEqualTo: userId)
-              .where('wordId', isEqualTo: wordId)
-              .get();
+      await WordLearnCount.where('userId', isEqualTo: userId)
+          .where('wordId', isEqualTo: wordId)
+          .get();
 
       return querySnapshot.docs.first.get('count');
     } catch (error) {
@@ -102,9 +102,9 @@ class WordService {
   Future<bool> getWordStar(String wordId, String userId) async {
     try {
       QuerySnapshot querySnapshot =
-          await WordLearnCount.where('userId', isEqualTo: userId)
-              .where('wordId', isEqualTo: wordId)
-              .get();
+      await WordLearnCount.where('userId', isEqualTo: userId)
+          .where('wordId', isEqualTo: wordId)
+          .get();
 
       if (querySnapshot.size == 0) {
         await WordLearnCount.doc().set(
@@ -123,12 +123,12 @@ class WordService {
     List<WordModel> wordModelList = [];
     try {
       QuerySnapshot querySnapshot =
-          await WordLearnCount.where('userId', isEqualTo: userId)
-              .where('starred', isEqualTo: true)
-              .get();
+      await WordLearnCount.where('userId', isEqualTo: userId)
+          .where('starred', isEqualTo: true)
+          .get();
       for (DocumentSnapshot documentSnapshot in querySnapshot.docs) {
         Map<String, dynamic> data =
-            documentSnapshot.data() as Map<String, dynamic>;
+        documentSnapshot.data() as Map<String, dynamic>;
         DocumentSnapshot wordSnap = await Words.doc(data['wordId']).get();
         WordModel wordModel = WordModel.fromFirestore(wordSnap);
         wordModelList.add(wordModel);

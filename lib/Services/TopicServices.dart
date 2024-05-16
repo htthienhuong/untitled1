@@ -6,7 +6,7 @@ class TopicService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final String _collectionName = 'Topics';
   final CollectionReference usersCollection =
-      FirebaseFirestore.instance.collection('User');
+  FirebaseFirestore.instance.collection('User');
 
   Future<void> updateTopicName(
       String topicId, Map<String, dynamic> data) async {
@@ -36,7 +36,7 @@ class TopicService {
   Future<TopicModel> getTopicById(String topicId) async {
     try {
       DocumentSnapshot documentSnapshot =
-          await _db.collection(_collectionName).doc(topicId).get();
+      await _db.collection(_collectionName).doc(topicId).get();
       if (documentSnapshot.exists) {
         TopicModel topic = TopicModel.fromFirestore(documentSnapshot);
         return topic;
@@ -65,7 +65,7 @@ class TopicService {
   Future<String> addTopicWithUserReference({required TopicModel topic}) async {
     try {
       DocumentReference topicRef =
-          await _db.collection(_collectionName).add(topic.toMap());
+      await _db.collection(_collectionName).add(topic.toMap());
 
       DocumentReference userRef = _db.collection('User').doc(topic.userId);
       await userRef.update({

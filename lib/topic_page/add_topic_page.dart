@@ -10,6 +10,7 @@ import 'package:untitled1/Services/WordServices.dart';
 import '../Models/TopicModel.dart';
 import '../Models/word_model.dart';
 import '../Services/TopicServices.dart';
+import '../Services/WordServices.dart';
 import '../app_data/app_data.dart';
 
 class AddTopicPage extends StatefulWidget {
@@ -48,7 +49,6 @@ class _AddTopicPageState extends State<AddTopicPage> {
           backgroundColor: Colors.black,
           onPressed: () {
             wordModelList.add(WordModel());
-
             setState(() {
               itemWordCount++;
             });
@@ -88,6 +88,7 @@ class _AddTopicPageState extends State<AddTopicPage> {
                   await WordService()
                       .addWord(word.english!, word.vietnam!, topicId!);
                 }
+
                 if (context.mounted) {
                   Navigator.pop(context);
                 }
@@ -102,117 +103,138 @@ class _AddTopicPageState extends State<AddTopicPage> {
       ),
       body: Form(
         key: _formKey,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextFormField(
-                decoration: const InputDecoration.collapsed(
-                  hintText: 'Topic',
-                  border: UnderlineInputBorder(),
+        child:
+        Padding(
+            padding: const EdgeInsets.all(15.0),
+            child:
+            Container(
+                padding: EdgeInsets.all(15.0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  color: Color.fromARGB(150, 255, 204, 204),
+
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter some text';
-                  }
-                  return null;
-                },
-                onSaved: (newValue) {
-                  topicName = newValue!;
-                  print('add topic done');
-                },
-              ),
-              const SizedBox(
-                height: 8,
-              ),
-              const Text(
-                'Topic',
-                style: TextStyle(fontSize: 8, fontWeight: FontWeight.bold),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                height: 50,
-                width: double.maxFinite,
-                child: DropdownButtonFormField(
-                  value: dropDownValue, // this
-                  items: ["Private", "Public"]
-                      .map<DropdownMenuItem<String>>((String value) =>
-                          DropdownMenuItem<String>(
-                              value:
-                                  value, // add this property an pass the _value to it
-                              child: Text(
-                                value,
-                              )))
-                      .toList(),
-                  onChanged: (value) {
-                    if (value == 'Public') {
-                      public = true;
-                    } else {
-                      public = false;
-                    }
-                    print("public: $public");
-                  },
-                ),
-              ),
-              Expanded(
-                child: ListView.builder(
-                    shrinkWrap: false,
-                    itemCount: wordModelList.length,
-                    itemBuilder: (context, index) {
-                      return Dismissible(
-                          direction: DismissDirection.endToStart,
-                          onDismissed: (direction) {
-                            wordModelList.removeAt(index);
-                          },
-                          confirmDismiss: (direction) async {
-                            return await showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: const Text("Confirm"),
-                                  content: const Text(
-                                      "Are you sure you wish to delete this word?"),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () =>
-                                          Navigator.of(context).pop(true),
-                                      child: const Text(
-                                        "DELETE",
-                                        style: TextStyle(color: Colors.red),
-                                      ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextFormField(
+                      style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, fontFamily: "Epilogue"),
+                      decoration: const InputDecoration.collapsed(
+                          hintText: 'Topic',
+                          border: UnderlineInputBorder(),
+                          hintStyle: TextStyle(height: 2.5, fontFamily: "Epilogue")
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter some text';
+                        }
+                        return null;
+                      },
+                      onSaved: (newValue) {
+                        topicName = newValue!;
+                        print('add topic done');
+                      },
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    const Text(
+                      'Topic',
+                      style: TextStyle(fontSize: 10, fontWeight: FontWeight.w600),
+                    ),
+
+                    const SizedBox(
+                      height: 12,
+                    ),
+
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      height: 50,
+                      width: double.maxFinite,
+                      child: DropdownButtonFormField(
+                        value: dropDownValue, // this
+                        items: ["Private", "Public"]
+                            .map<DropdownMenuItem<String>>((String value) =>
+                            DropdownMenuItem<String>(
+                                value:
+                                value, // add this property an pass the _value to it
+                                child: Text(
+                                  value,
+                                )))
+                            .toList(),
+                        onChanged: (value) {
+                          if (value == 'Public') {
+                            public = true;
+                          } else {
+                            public = false;
+                          }
+                          print("public: $public");
+                        },
+                      ),
+                    ),
+
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Expanded(
+                      child: ListView.builder(
+                          shrinkWrap: false,
+                          itemCount: wordModelList.length,
+                          itemBuilder: (context, index) {
+                            return Dismissible(
+                                direction: DismissDirection.endToStart,
+                                onDismissed: (direction) {
+                                  wordModelList.removeAt(index);
+                                },
+                                confirmDismiss: (direction) async {
+                                  return await showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: const Text("Confirm"),
+                                        content: const Text(
+                                            "Are you sure you wish to delete this word?"),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            onPressed: () =>
+                                                Navigator.of(context).pop(true),
+                                            child: const Text(
+                                              "DELETE",
+                                              style: TextStyle(color: Colors.red),
+                                            ),
+                                          ),
+                                          TextButton(
+                                            onPressed: () =>
+                                                Navigator.of(context).pop(false),
+                                            child: const Text(
+                                              "CANCEL",
+                                              style: TextStyle(color: Colors.grey),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                },
+                                background: Container(
+                                  color: Colors.red,
+                                  alignment: Alignment.centerRight,
+                                  child: const Padding(
+                                    padding: EdgeInsets.only(right: 40.0),
+                                    child: Icon(
+                                      Icons.delete,
+                                      size: 40,
+                                      color: Colors.white,
                                     ),
-                                    TextButton(
-                                      onPressed: () =>
-                                          Navigator.of(context).pop(false),
-                                      child: const Text(
-                                        "CANCEL",
-                                        style: TextStyle(color: Colors.grey),
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          },
-                          background: Container(
-                            color: Colors.red,
-                            alignment: Alignment.centerRight,
-                            child: const Padding(
-                              padding: EdgeInsets.only(right: 40.0),
-                              child: Icon(
-                                Icons.delete,
-                                size: 40,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                          key: UniqueKey(),
-                          child: _buildItemWord(index));
-                    }),
-              ),
-            ],
-          ),
+                                  ),
+                                ),
+                                key: UniqueKey(),
+                                child: _buildItemWord(index));
+                          }),
+                    ),
+                  ],
+                )
+            )
         ),
       ),
     );
@@ -220,23 +242,32 @@ class _AddTopicPageState extends State<AddTopicPage> {
 
   Widget _buildItemWord(int index) {
     TextEditingController defController =
-        TextEditingController(text: wordModelList[index].vietnam);
+    TextEditingController(text: wordModelList[index].vietnam);
     TextEditingController wordController =
-        TextEditingController(text: wordModelList[index].english);
+    TextEditingController(text: wordModelList[index].english);
 
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 10),
+      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
       decoration: BoxDecoration(
-          color: Colors.white, borderRadius: BorderRadius.circular(10)),
+        color: Color.fromARGB(255, 189, 205, 255), borderRadius: BorderRadius.circular(10),
+      ),
+
       padding: const EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const SizedBox(
+            height: 10,
+          ),
+
           TextFormField(
             controller: wordController,
+            style: TextStyle(fontSize: 20, height: 2, fontWeight: FontWeight.w500, fontFamily: "Epilogue"),
+
             decoration: const InputDecoration.collapsed(
               hintText: 'Word',
               border: UnderlineInputBorder(),
+              hintStyle: TextStyle(fontSize: 20, height: 2, fontWeight: FontWeight.w500, fontFamily: "Epilogue"),
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -250,22 +281,33 @@ class _AddTopicPageState extends State<AddTopicPage> {
               }
             },
           ),
+
           const SizedBox(
-            height: 8,
+            height: 6,
           ),
+
           const Text(
             'Word',
-            style: TextStyle(fontSize: 8, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, fontFamily: "Epilogue"),
           ),
+
+          const SizedBox(
+            height: 25,
+          ),
+
           TextFormField(
             controller: defController,
+            style: TextStyle(fontSize: 20, height: 2, fontWeight: FontWeight.w500, fontFamily: "Epilogue"),
+
             onTap: () {
               defController.selection = TextSelection(
                   baseOffset: 0, extentOffset: defController.value.text.length);
             },
             decoration: const InputDecoration.collapsed(
-              hintText: 'Definition',
-              border: UnderlineInputBorder(),
+                hintText: 'Definition',
+                border: UnderlineInputBorder(),
+                hintStyle: TextStyle(fontSize: 20, height: 2, fontWeight: FontWeight.w500, fontFamily: "Epilogue")
+
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -280,11 +322,12 @@ class _AddTopicPageState extends State<AddTopicPage> {
             },
           ),
           const SizedBox(
-            height: 8,
+            height: 6,
           ),
           const Text(
             'Definition',
-            style: TextStyle(fontSize: 8, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, fontFamily: "Epilogue"),
+
           ),
         ],
       ),
