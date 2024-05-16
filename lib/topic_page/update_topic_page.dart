@@ -29,7 +29,8 @@ class _UpdateTopicPageState extends State<UpdateTopicPage> {
       floatingActionButton: Container(
         margin: const EdgeInsets.only(bottom: 50),
         child: FloatingActionButton(
-          backgroundColor: Colors.black,
+          backgroundColor: const Color(0xff1b2794),
+          shape: const CircleBorder(),
           onPressed: () {
             _formKey.currentState?.save();
             setState(() {
@@ -96,7 +97,7 @@ class _UpdateTopicPageState extends State<UpdateTopicPage> {
       ),
       body: FutureBuilder(
         future:
-        WordService().getWordListFromRef(widget.topicModel.wordReferences!),
+            WordService().getWordListFromRef(widget.topicModel.wordReferences!),
         builder:
             (BuildContext context, AsyncSnapshot<List<WordModel>> snapshot) {
           if (snapshot.hasData) {
@@ -108,122 +109,130 @@ class _UpdateTopicPageState extends State<UpdateTopicPage> {
               key: _formKey,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TextFormField(
-                      maxLines: null,
-                      initialValue: widget.topicModel.topicName,
-                      decoration: const InputDecoration.collapsed(
-                        hintText: 'Topic',
-                        border: UnderlineInputBorder(),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter some text';
-                        }
-                        return null;
-                      },
-                      onSaved: (newValue) {
-                        widget.topicModel.topicName = newValue!;
-                      },
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    const Text(
-                      'Topic',
-                      style:
-                      TextStyle(fontSize: 8, fontWeight: FontWeight.bold),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      height: 50,
-                      width: double.maxFinite,
-                      child: DropdownButtonFormField(
-                        value: dropDownValue, // this
-                        items: ["Private", "Public"]
-                            .map<DropdownMenuItem<String>>((String value) =>
-                            DropdownMenuItem<String>(
-                                value:
-                                value, // add this property an pass the _value to it
-                                child: Text(
-                                  value,
-                                )))
-                            .toList(),
-                        onChanged: (value) {
-                          if (value == 'Public') {
-                            public = true;
-                          } else {
-                            public = false;
+                child: Container(
+                  padding: EdgeInsets.all(15.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    color: Color.fromARGB(150, 255, 204, 204),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TextFormField(
+                        maxLines: null,
+                        initialValue: widget.topicModel.topicName,
+                        decoration: const InputDecoration.collapsed(
+                          hintText: 'Topic',
+                          border: UnderlineInputBorder(),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter some text';
                           }
-                          print("public: $public");
+                          return null;
+                        },
+                        onSaved: (newValue) {
+                          widget.topicModel.topicName = newValue!;
                         },
                       ),
-                    ),
-                    Expanded(
-                      child: ListView.builder(
-                          shrinkWrap: false,
-                          itemCount: wordModelList.length,
-                          itemBuilder: (context, index) {
-                            return Dismissible(
-                                direction: DismissDirection.endToStart,
-                                onDismissed: (direction) {
-                                  _formKey.currentState?.save();
-                                  setState(() {
-                                    wordModelList.removeAt(index);
-                                  });
-                                },
-                                confirmDismiss: (direction) async {
-                                  return await showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        title: const Text("Confirm"),
-                                        content: const Text(
-                                            "Are you sure you wish to delete this word?"),
-                                        actions: <Widget>[
-                                          TextButton(
-                                            onPressed: () =>
-                                                Navigator.of(context).pop(true),
-                                            child: const Text(
-                                              "DELETE",
-                                              style:
-                                              TextStyle(color: Colors.red),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      const Text(
+                        'Topic',
+                        style:
+                            TextStyle(fontSize: 8, fontWeight: FontWeight.bold),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        height: 50,
+                        width: double.maxFinite,
+                        child: DropdownButtonFormField(
+                          value: dropDownValue, // this
+                          items: ["Private", "Public"]
+                              .map<DropdownMenuItem<String>>((String value) =>
+                                  DropdownMenuItem<String>(
+                                      value:
+                                          value, // add this property an pass the _value to it
+                                      child: Text(
+                                        value,
+                                      )))
+                              .toList(),
+                          onChanged: (value) {
+                            if (value == 'Public') {
+                              public = true;
+                            } else {
+                              public = false;
+                            }
+                            print("public: $public");
+                          },
+                        ),
+                      ),
+                      Expanded(
+                        child: ListView.builder(
+                            shrinkWrap: false,
+                            itemCount: wordModelList.length,
+                            itemBuilder: (context, index) {
+                              return Dismissible(
+                                  direction: DismissDirection.endToStart,
+                                  onDismissed: (direction) {
+                                    _formKey.currentState?.save();
+                                    setState(() {
+                                      wordModelList.removeAt(index);
+                                    });
+                                  },
+                                  confirmDismiss: (direction) async {
+                                    return await showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: const Text("Confirm"),
+                                          content: const Text(
+                                              "Are you sure you wish to delete this word?"),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              onPressed: () =>
+                                                  Navigator.of(context)
+                                                      .pop(true),
+                                              child: const Text(
+                                                "DELETE",
+                                                style: TextStyle(
+                                                    color: Colors.red),
+                                              ),
                                             ),
-                                          ),
-                                          TextButton(
-                                            onPressed: () =>
-                                                Navigator.of(context)
-                                                    .pop(false),
-                                            child: const Text(
-                                              "CANCEL",
-                                              style:
-                                              TextStyle(color: Colors.grey),
+                                            TextButton(
+                                              onPressed: () =>
+                                                  Navigator.of(context)
+                                                      .pop(false),
+                                              child: const Text(
+                                                "CANCEL",
+                                                style: TextStyle(
+                                                    color: Colors.grey),
+                                              ),
                                             ),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                },
-                                background: Container(
-                                  color: Colors.red,
-                                  alignment: Alignment.centerRight,
-                                  child: const Padding(
-                                    padding: EdgeInsets.only(right: 40.0),
-                                    child: Icon(
-                                      Icons.delete,
-                                      size: 40,
-                                      color: Colors.white,
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                  background: Container(
+                                    color: Colors.red,
+                                    alignment: Alignment.centerRight,
+                                    child: const Padding(
+                                      padding: EdgeInsets.only(right: 40.0),
+                                      child: Icon(
+                                        Icons.delete,
+                                        size: 40,
+                                        color: Colors.white,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                key: UniqueKey(),
-                                child: _buildItemWord(index));
-                          }),
-                    ),
-                  ],
+                                  key: UniqueKey(),
+                                  child: _buildItemWord(index));
+                            }),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             );
@@ -241,14 +250,16 @@ class _UpdateTopicPageState extends State<UpdateTopicPage> {
 
   Widget _buildItemWord(int index) {
     TextEditingController defController =
-    TextEditingController(text: wordModelList[index].vietnam);
+        TextEditingController(text: wordModelList[index].vietnam);
     TextEditingController wordController =
-    TextEditingController(text: wordModelList[index].english);
+        TextEditingController(text: wordModelList[index].english);
 
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 10),
+      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
       decoration: BoxDecoration(
-          color: Colors.white, borderRadius: BorderRadius.circular(10)),
+        color: const Color.fromARGB(255, 189, 205, 255),
+        borderRadius: BorderRadius.circular(10),
+      ),
       padding: const EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

@@ -25,7 +25,7 @@ class _HomePageState extends State<HomePage> {
             height: 50,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Color(0xff647ebb))),
+                border: Border.all(color: const Color(0xff647ebb))),
             child: Row(
               children: [
                 Expanded(
