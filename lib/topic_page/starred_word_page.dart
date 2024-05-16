@@ -18,6 +18,9 @@ import '../Models/TopicModel.dart';
 import '../Models/word_model.dart';
 import '../router/router_manager.dart';
 import '../utilities/tts_uti.dart';
+import '../widgets/my_card_word_widget.dart';
+import '../widgets/my_slider_widget.dart';
+import '../widgets/my_switch_widget.dart';
 
 class StarredWordPage extends StatefulWidget {
   const StarredWordPage({
@@ -173,7 +176,7 @@ class _StarredWordPageState extends State<StarredWordPage> {
                     child: PageView.builder(
                       controller: pageController,
                       itemBuilder: (context, index) =>
-                          MyCardWord(wordModel: wordModelList[index]),
+                          CardWordWidget(wordModel: wordModelList[index]),
                       itemCount: wordModelList.length,
                       scrollDirection: Axis.horizontal,
                     ),
@@ -207,11 +210,11 @@ class _StarredWordPageState extends State<StarredWordPage> {
                                     fontSize: 24,
                                     fontWeight: FontWeight.bold),
                               ),
-                              MySlider(
+                              SliderWidget(
                                 getSize: _getSize,
                                 max: wordModelList.length.toDouble(),
                               ),
-                              MySwitchWidget(getValue: _getSide),
+                              SwitchWidget(getValue: _getSide),
                             ],
                           ),
                           btnOkOnPress: () async {
@@ -265,7 +268,7 @@ class _StarredWordPageState extends State<StarredWordPage> {
                                     fontSize: 24,
                                     fontWeight: FontWeight.bold),
                               ),
-                              MySlider(
+                              SliderWidget(
                                 getSize: _getSize,
                                 max: wordModelList.length.toDouble(),
                               ),
@@ -317,7 +320,7 @@ class _StarredWordPageState extends State<StarredWordPage> {
                                     fontSize: 24,
                                     fontWeight: FontWeight.bold),
                               ),
-                              MySlider(
+                              SliderWidget(
                                 getSize: _getSize,
                                 max: wordModelList.length.toDouble(),
                               ),
@@ -546,162 +549,6 @@ class _StarredWordPageState extends State<StarredWordPage> {
             )
           ],
         ),
-      ),
-    );
-  }
-}
-
-class MyCardWord extends StatefulWidget {
-  final WordModel wordModel;
-  const MyCardWord({super.key, required this.wordModel});
-
-  @override
-  State<MyCardWord> createState() => _MyCardWordState();
-}
-
-class _MyCardWordState extends State<MyCardWord> {
-  bool isEnglish = true;
-
-  @override
-  Widget build(BuildContext context) {
-    return _buildCardWordItem(widget.wordModel);
-  }
-
-  Widget _buildCardWordItem(WordModel wordModel) {
-    return FlipCard(
-      // fill: Fill
-      //     .fillBack, // Fill the back side of the card to make in the same size as the front.
-      direction: FlipDirection.HORIZONTAL, // default
-      onFlip: () {
-        setState(() {
-          isEnglish = !isEnglish;
-        });
-      },
-      side: CardSide.FRONT, // The side to initially display.
-      front: Container(
-        padding: const EdgeInsets.only(top: 10, left: 10),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15.0),
-        ),
-        child: _buildCardWord(wordModel.english!, isEnglish),
-      ),
-      back: _buildCardWord(wordModel.vietnam!, isEnglish),
-    );
-  }
-
-  Widget _buildCardWord(String word, bool isEnglish) {
-    return Align(
-      alignment: Alignment.topLeft,
-      child: Card(
-        color: const Color(0xffd0d4ec),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            IconButton(
-              icon: const Icon(
-                Icons.volume_up,
-                color: Color(0xff647ebb),
-                size: 40,
-              ),
-              onPressed: () async {
-                await speak(word, isEnglish);
-              },
-            ),
-            const SizedBox(
-              height: 8,
-            ),
-            Container(
-                alignment: Alignment.center,
-                child: Text(
-                  word,
-                  style: const TextStyle(color: Colors.white, fontSize: 30),
-                )),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class MySlider extends StatefulWidget {
-  final Function getSize;
-  final double max;
-
-  const MySlider({super.key, required this.max, required this.getSize});
-
-  @override
-  State<MySlider> createState() => MySliderState();
-}
-
-class MySliderState extends State<MySlider> {
-  double currentSliderValue = 1;
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.only(right: 20),
-          alignment: Alignment.centerRight,
-          child: Text(
-            '${currentSliderValue.toInt()}/${widget.max.toInt()}',
-          ),
-        ),
-        Slider(
-          inactiveColor: const Color(0xffd0d4ec),
-          activeColor: const Color(0xff647ebb),
-          value: currentSliderValue,
-          max: widget.max,
-          divisions: widget.max.toInt(),
-          label: currentSliderValue.round().toString(),
-          onChanged: (double value) {
-            if (value < 1) {
-              currentSliderValue = 1;
-            } else {
-              setState(() {
-                currentSliderValue = value;
-                widget.getSize(value.toInt());
-              });
-            }
-          },
-        ),
-      ],
-    );
-  }
-}
-
-class MySwitchWidget extends StatefulWidget {
-  final Function getValue;
-  const MySwitchWidget({super.key, required this.getValue});
-
-  @override
-  State<MySwitchWidget> createState() => _MySwitchWidgetState();
-}
-
-class _MySwitchWidgetState extends State<MySwitchWidget> {
-  bool selectedValue = false;
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 20.0),
-      child: Row(
-        children: [
-          Text(selectedValue ? 'Back Side' : 'Front Side'),
-          const SizedBox(
-            width: 8,
-          ),
-          Switch(
-            activeColor: Colors.blueAccent,
-            value: selectedValue,
-            onChanged: (value) {
-              setState(() {
-                setState(() {
-                  selectedValue = value;
-                });
-                widget.getValue(selectedValue);
-              });
-            },
-          ),
-        ],
       ),
     );
   }

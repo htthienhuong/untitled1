@@ -16,12 +16,23 @@ class _LeadingBoardPageState extends State<LeadingBoardPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: const Color(0xffe2e9ff),
         elevation: 4,
         title: const Text(
           'Leading Board',
-          style: TextStyle(fontFamily: 'Pacifico'),
+          style:
+              TextStyle(fontWeight: FontWeight.w600, color: Color(0xff1b2794)),
         ),
         centerTitle: true,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Color(0xff647ebb),
+          ),
+        ),
       ),
       body: FutureBuilder<List<LeadingBoardModel>>(
         future: RecordService().getRecordsByTopicId(widget.id),
@@ -29,6 +40,8 @@ class _LeadingBoardPageState extends State<LeadingBoardPage> {
             AsyncSnapshot<List<LeadingBoardModel>> snapshot) {
           if (snapshot.hasData) {
             List<LeadingBoardModel> leadingBoardModelList = snapshot.data!;
+            print('data: $leadingBoardModelList');
+
             return MyBoard(leadingBoardModelList: leadingBoardModelList);
           } else if (snapshot.hasError) {
             print(snapshot.error);
@@ -59,6 +72,7 @@ class MyBoard extends StatefulWidget {
 class _MyBoardState extends State<MyBoard> {
   @override
   Widget build(BuildContext context) {
+    print('leadingBoardModelList: ${widget.leadingBoardModelList}');
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: const BoxDecoration(
