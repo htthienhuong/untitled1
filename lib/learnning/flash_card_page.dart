@@ -163,12 +163,16 @@ class _FlashCardPageState extends State<FlashCardPage> {
                     for (String wordId in memoriedWordIdList) {
                       await WordService()
                           .updateWordLearnCount(wordId, AppData.userModel.id);
+                    }
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text("Stack Finished"),
+                        duration: Duration(milliseconds: 500),
+                      ));
+                    }
+                    if (context.mounted) {
                       Navigator.pop(context);
                     }
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text("Stack Finished"),
-                      duration: Duration(milliseconds: 500),
-                    ));
                   },
                   itemChanged: (SwipeItem item, int index) {
                     setState(() {

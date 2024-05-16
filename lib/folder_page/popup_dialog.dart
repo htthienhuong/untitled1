@@ -15,24 +15,26 @@ class _PopupMessageDialogState extends State<PopupMessageDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-    title: Text(
-      widget.message,
-      textAlign: TextAlign.center,
-      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.normal, fontFamily: "Epilogue"),
+      title: Text(
+        widget.message,
+        textAlign: TextAlign.center,
+        style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.normal,
+            fontFamily: "Epilogue"),
       ),
       content: null,
-
-     actions: <Widget>[
+      actions: <Widget>[
         TextButton(
-          style: const ButtonStyle(
-            fixedSize: WidgetStatePropertyAll(Size(50, 50)),
+          style: ButtonStyle(
+            fixedSize: MaterialStateProperty.all(const Size(50, 50)),
           ),
           onPressed: () {
-          Navigator.pop(context);
+            Navigator.pop(context);
           },
           child: const Text('OK'),
         ),
-    ],
+      ],
     );
   }
 }

@@ -36,7 +36,7 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
 
   final pageController = PageController(viewportFraction: 0.85);
   final TextStyle listTileTextStyle =
-  const TextStyle(fontWeight: FontWeight.w500, fontSize: 16);
+      const TextStyle(fontWeight: FontWeight.w500, fontSize: 16);
 
   @override
   void initState() {
@@ -51,50 +51,66 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(actions: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: IconButton(
-              onPressed: () async {
-                await showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: const Text('Do you want export csv file'),
-                    actions: <Widget>[
-                      TextButton(
-                        style: TextButton.styleFrom(
-                          textStyle: Theme.of(context).textTheme.labelLarge,
-                        ),
-                        child: const Text('No'),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                      TextButton(
-                        style: TextButton.styleFrom(
-                          textStyle: Theme.of(context).textTheme.labelLarge,
-                        ),
-                        child: const Text('Yes'),
-                        onPressed: () async {
-                          await _exportCsv();
-                          if (context.mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Csv was exported to Download'),
-                              ),
-                            );
+      backgroundColor: const Color(0xffe2e9ff),
+      appBar: AppBar(
+          backgroundColor: const Color(0xffe2e9ff),
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Color(0xff647ebb),
+            ),
+          ),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: IconButton(
+                  onPressed: () async {
+                    await showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text('Do you want export csv file'),
+                        actions: <Widget>[
+                          TextButton(
+                            style: TextButton.styleFrom(
+                              textStyle: Theme.of(context).textTheme.labelLarge,
+                            ),
+                            child: const Text('No'),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                          TextButton(
+                            style: TextButton.styleFrom(
+                              textStyle: Theme.of(context).textTheme.labelLarge,
+                            ),
+                            child: const Text('Yes'),
+                            onPressed: () async {
+                              await _exportCsv();
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content:
+                                        Text('Csv was exported to Download'),
+                                  ),
+                                );
 
-                            Navigator.of(context).pop();
-                          }
-                        },
+                                Navigator.of(context).pop();
+                              }
+                            },
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                );
-              },
-              icon: const Icon(CupertinoIcons.share)),
-        ),
-      ]),
+                    );
+                  },
+                  icon: const Icon(
+                    CupertinoIcons.share,
+                    color: Color(0xff647ebb),
+                  )),
+            ),
+          ]),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: _buildBody(),
@@ -141,7 +157,7 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
   Widget _buildBody() {
     return FutureBuilder(
         future:
-        WordService().getWordListFromRef(widget.topicModel.wordReferences!),
+            WordService().getWordListFromRef(widget.topicModel.wordReferences!),
         builder:
             (BuildContext context, AsyncSnapshot<List<WordModel>> snapshot) {
           if (snapshot.hasData) {
@@ -176,7 +192,7 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                           borderRadius: BorderRadius.circular(50),
                           child: FadeInImage(
                             placeholder:
-                            const AssetImage('assets/images/htth_avt.png'),
+                                const AssetImage('assets/images/htth_avt.png'),
                             image: const NetworkImage('xxx'),
                             imageErrorBuilder: (context, error, stackTrace) =>
                                 Image.asset('assets/images/htth_avt.png'),
@@ -359,28 +375,28 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                   ),
                   widget.topicModel.isPublic!
                       ? GestureDetector(
-                    onTap: () {
-                      if (wordModelList.isNotEmpty) {
-                        Navigator.pushNamed(
-                            context, Routes.leaderBoardPage,
-                            arguments: widget.topicModel.id);
-                      }
-                    },
-                    child: Card(
-                      color: wordModelList.isEmpty
-                          ? Colors.grey.withOpacity(0.3)
-                          : null,
-                      child: ListTile(
-                        title: Text(
-                          'Leading Board',
-                          style: listTileTextStyle,
-                        ),
-                        leading: Image.asset(
-                            'assets/images/leading_board_icon.png',
-                            height: 20),
-                      ),
-                    ),
-                  )
+                          onTap: () {
+                            if (wordModelList.isNotEmpty) {
+                              Navigator.pushNamed(
+                                  context, Routes.leaderBoardPage,
+                                  arguments: widget.topicModel.id);
+                            }
+                          },
+                          child: Card(
+                            color: wordModelList.isEmpty
+                                ? Colors.grey.withOpacity(0.3)
+                                : null,
+                            child: ListTile(
+                              title: Text(
+                                'Leading Board',
+                                style: listTileTextStyle,
+                              ),
+                              leading: Image.asset(
+                                  'assets/images/leading_board_icon.png',
+                                  height: 20),
+                            ),
+                          ),
+                        )
                       : const SizedBox(),
                   const SizedBox(
                     height: 8,
@@ -440,7 +456,7 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
     if (num < 25) {
       return const Text(
         'Not learned',
-        style: TextStyle(color: Colors.pinkAccent, fontSize: 12),
+        style: TextStyle(color: Colors.redAccent, fontSize: 12),
       );
     }
     if (num < 50) {
@@ -463,10 +479,10 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
           Align(
             alignment: Alignment.center,
             child: Card(
-              color: Colors.white,
+              color: const Color(0xffd0d4ec),
               child: Padding(
                 padding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -475,7 +491,8 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                       children: [
                         Text(
                           '${wordModel.english}',
-                          style: const TextStyle(fontSize: 20),
+                          style: const TextStyle(
+                              fontSize: 20, color: Color(0xff647ebb)),
                         ),
                         Row(
                           children: [
@@ -483,7 +500,10 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                               onPressed: () async {
                                 await speak(wordModel.english, true);
                               },
-                              icon: const Icon(Icons.volume_up),
+                              icon: const Icon(
+                                Icons.volume_up,
+                                color: Colors.white,
+                              ),
                             ),
                             FutureBuilder(
                               future: WordService().getWordStar(
@@ -502,14 +522,17 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                                       },
                                       icon: starred
                                           ? const Icon(
-                                        Icons.star,
-                                        color: Colors.yellow,
-                                      )
-                                          : const Icon(Icons.star_outline));
+                                              Icons.star,
+                                              color: Colors.yellow,
+                                            )
+                                          : const Icon(
+                                              Icons.star_outline,
+                                              color: Colors.white,
+                                            ));
                                 } else if (snapshot.hasError) {
-                                  return Text('error');
+                                  return const Text('error');
                                 } else {
-                                  return Center(
+                                  return const Center(
                                     child: CircularProgressIndicator(),
                                   );
                                 }
@@ -521,7 +544,8 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                     ),
                     Text(
                       '${wordModel.vietnam}',
-                      style: const TextStyle(fontSize: 20),
+                      style: const TextStyle(
+                          fontSize: 20, color: Color(0xff647ebb)),
                     )
                   ],
                 ),
@@ -537,6 +561,7 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                 if (snapshot.hasData) {
                   int count = snapshot.data!;
                   return CircularPercentIndicator(
+                    backgroundColor: Colors.white,
                     radius: 40.0,
                     lineWidth: 2.0,
                     percent: count < 20 ? (count / 20) : 1,
@@ -606,22 +631,13 @@ class _MyCardWordState extends State<MyCardWord> {
         Align(
           alignment: Alignment.topLeft,
           child: Card(
-            color: Colors.white,
-            child: Container(alignment: Alignment.center, child: Text(word)),
-          ),
-        ),
-        Align(
-          alignment: Alignment.bottomRight,
-          child: Padding(
-            padding: const EdgeInsets.all(10),
-            child: IconButton(
-              icon: const Icon(
-                Icons.zoom_out_map,
-                color: Colors.grey,
-                size: 25,
-              ),
-              onPressed: () {},
-            ),
+            color: const Color(0xffd0d4ec),
+            child: Container(
+                alignment: Alignment.center,
+                child: Text(
+                  word,
+                  style: TextStyle(color: Colors.white, fontSize: 30),
+                )),
           ),
         ),
         Align(
@@ -631,8 +647,8 @@ class _MyCardWordState extends State<MyCardWord> {
             child: IconButton(
               icon: const Icon(
                 Icons.volume_up,
-                color: Colors.grey,
-                size: 25,
+                color: Color(0xff647ebb),
+                size: 30,
               ),
               onPressed: () async {
                 await speak(word, isEnglish);
