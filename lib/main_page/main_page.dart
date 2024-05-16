@@ -20,6 +20,7 @@ class _MainPageState extends State<MainPage> {
   late GlobalKey _folderPageKey;
   late GlobalKey _topicPageKey;
   late final List<FloatingActionButton?> floatingActionButtonList;
+  late final List<PreferredSizeWidget?> appBarList;
 
   @override
   void initState() {
@@ -71,6 +72,54 @@ class _MainPageState extends State<MainPage> {
       ),
       null
     ];
+    appBarList = [
+      AppBar(
+        backgroundColor: const Color(0xffe2e9ff),
+        title: const Text(
+          'Home',
+          style:
+              TextStyle(fontWeight: FontWeight.w600, color: Color(0xff1b2794)),
+        ),
+        centerTitle: true,
+      ),
+      AppBar(
+        backgroundColor: const Color(0xffe2e9ff),
+        title: const Text(
+          'Topic',
+          style:
+              TextStyle(fontWeight: FontWeight.w600, color: Color(0xff1b2794)),
+        ),
+        centerTitle: true,
+        actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.pushNamed(context, Routes.starredWordPage);
+              },
+              icon: const Icon(
+                Icons.star,
+                color: Colors.orange,
+              ))
+        ],
+      ),
+      AppBar(
+        backgroundColor: const Color(0xffe2e9ff),
+        title: const Text(
+          'Folder',
+          style:
+              TextStyle(fontWeight: FontWeight.w600, color: Color(0xff1b2794)),
+        ),
+        centerTitle: true,
+      ),
+      // AppBar(
+      //   backgroundColor: const Color(0xffe2e9ff),
+      //   title: const Text(
+      //     'Profile',
+      //     style: TextStyle(fontWeight: FontWeight.w600, color: Color(0xff1b2794)),
+      //   ),
+      //   centerTitle: true,
+      // ),
+      null,
+    ];
   }
 
   final _pageController = PageController(initialPage: 0);
@@ -90,42 +139,6 @@ class _MainPageState extends State<MainPage> {
     Icons.topic,
     Icons.folder_outlined,
     Icons.person
-  ];
-
-  final List<PreferredSizeWidget?> appBarList = [
-    AppBar(
-      backgroundColor: const Color(0xffe2e9ff),
-      title: const Text(
-        'Home',
-        style: TextStyle(fontWeight: FontWeight.w600, color: Color(0xff1b2794)),
-      ),
-      centerTitle: true,
-    ),
-    AppBar(
-      backgroundColor: const Color(0xffe2e9ff),
-      title: const Text(
-        'Topic',
-        style: TextStyle(fontWeight: FontWeight.w600, color: Color(0xff1b2794)),
-      ),
-      centerTitle: true,
-    ),
-    AppBar(
-      backgroundColor: const Color(0xffe2e9ff),
-      title: const Text(
-        'Folder',
-        style: TextStyle(fontWeight: FontWeight.w600, color: Color(0xff1b2794)),
-      ),
-      centerTitle: true,
-    ),
-    // AppBar(
-    //   backgroundColor: const Color(0xffe2e9ff),
-    //   title: const Text(
-    //     'Profile',
-    //     style: TextStyle(fontWeight: FontWeight.w600, color: Color(0xff1b2794)),
-    //   ),
-    //   centerTitle: true,
-    // ),
-    null,
   ];
 
   @override

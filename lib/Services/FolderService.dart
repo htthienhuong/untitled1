@@ -318,7 +318,13 @@ class FolderService {
       List<DocumentReference> topicReferences =
       List<DocumentReference>.from(folderSnapshot['Topics']);
 
-      List<DocumentSnapshot> topicsInFolder = topicReferences.map<DocumentSnapshot>((e) => e.get() as DocumentSnapshot<Map<String, dynamic>>).toList();
+      List<DocumentSnapshot> topicsInFolder = [];
+
+      for(DocumentReference documentRef in topicReferences){
+        topicsInFolder.add(await documentRef.get());
+      }
+
+      print("topics in folder: " + topicsInFolder.length.toString());
 
       // Lấy danh sách các chủ đề có userId trùng với userId của thư mục
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
@@ -334,12 +340,15 @@ class FolderService {
             .any((topicInFolder) => topicInFolder.id == topicDoc.id);
       }).toList();
 
+      print("topics not in folder: " + topicsNotInFolder.length.toString());
+
+
       List<TopicModel> topics = [];
       for(DocumentSnapshot documentSnapshot in topicsNotInFolder){
         topics.add(TopicModel.fromFirestore(documentSnapshot));
       }
 
-      return topics;
+      return Future<List<TopicModel>>.value(topics);
     } catch (error) {
       print(error.toString());
       print("Error getting topics not in folder: $folderId");

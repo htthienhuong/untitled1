@@ -18,25 +18,23 @@ import '../Models/word_model.dart';
 import '../router/router_manager.dart';
 import '../utilities/tts_uti.dart';
 
-class TopicDetailPage extends StatefulWidget {
-  final TopicModel topicModel;
-  const TopicDetailPage({
+class StarredWordPage extends StatefulWidget {
+  const StarredWordPage({
     super.key,
-    required this.topicModel,
   });
 
   @override
-  State<TopicDetailPage> createState() => _TopicDetailPageState();
+  State<StarredWordPage> createState() => _StarredWordPageState();
 }
 
-class _TopicDetailPageState extends State<TopicDetailPage> {
+class _StarredWordPageState extends State<StarredWordPage> {
   List<WordModel> wordModelList = [];
   bool isBack = false;
   int size = 1;
 
   final pageController = PageController(viewportFraction: 0.85);
   final TextStyle listTileTextStyle =
-  const TextStyle(fontWeight: FontWeight.w500, fontSize: 16);
+      const TextStyle(fontWeight: FontWeight.w500, fontSize: 16);
 
   @override
   void initState() {
@@ -95,10 +93,7 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
               icon: const Icon(CupertinoIcons.share)),
         ),
       ]),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: _buildBody(),
-      ),
+      body: _buildBody(),
     );
   }
 
@@ -133,19 +128,19 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
     print("dir $dir");
     String file = "$dir";
 
-    File f = File("$file/${widget.topicModel.topicName}.csv");
+    File f = File("$file/${'My Starred Word'}.csv");
 
     f.writeAsString(csv);
   }
 
   Widget _buildBody() {
     return FutureBuilder(
-        future:
-        WordService().getWordListFromRef(widget.topicModel.wordReferences!),
+        future: WordService().getWordStarList(AppData.userModel.id),
         builder:
             (BuildContext context, AsyncSnapshot<List<WordModel>> snapshot) {
           if (snapshot.hasData) {
             wordModelList = snapshot.data!;
+            print('wordModelList: $wordModelList');
             return SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -160,9 +155,9 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                       scrollDirection: Axis.horizontal,
                     ),
                   ),
-                  Text(
-                    widget.topicModel.topicName!,
-                    style: const TextStyle(
+                  const Text(
+                    "My Starred List",
+                    style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 24,
                         color: Colors.black87),
@@ -176,7 +171,7 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                           borderRadius: BorderRadius.circular(50),
                           child: FadeInImage(
                             placeholder:
-                            const AssetImage('assets/images/htth_avt.png'),
+                                const AssetImage('assets/images/htth_avt.png'),
                             image: const NetworkImage('xxx'),
                             imageErrorBuilder: (context, error, stackTrace) =>
                                 Image.asset('assets/images/htth_avt.png'),
@@ -187,7 +182,7 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                         width: 8,
                       ),
                       Text(
-                        widget.topicModel.userName!,
+                        AppData.userModel.name,
                         style: const TextStyle(
                             fontWeight: FontWeight.w500, color: Colors.black87),
                       ),
@@ -200,7 +195,7 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                         ),
                       ),
                       Text(
-                        '${widget.topicModel.wordReferences!.length} words',
+                        '${wordModelList.length} words',
                         style: const TextStyle(
                             color: Colors.black38, fontWeight: FontWeight.w500),
                       )
@@ -284,10 +279,8 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                           ),
                           btnOkOnPress: () async {
                             await Navigator.pushNamed(
-                                context, Routes.learningPage, arguments: [
-                              _getRandomWordList(size),
-                              widget.topicModel.id
-                            ]);
+                                context, Routes.learningPage,
+                                arguments: _getRandomWordList(size));
                             setState(() {});
                           },
                           btnCancelOnPress: () {},
@@ -308,80 +301,6 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                       ),
                     ),
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      if (wordModelList.isNotEmpty) {
-                        AwesomeDialog(
-                          context: context,
-                          animType: AnimType.scale,
-                          dialogType: DialogType.info,
-                          body: Column(
-                            children: [
-                              const Text(
-                                'Setting for Typing',
-                                style: TextStyle(
-                                    fontStyle: FontStyle.italic,
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              const Text('Choose the number of words to learn'),
-                              MySlider(
-                                getSize: _getSize,
-                                max: wordModelList.length.toDouble(),
-                              ),
-                            ],
-                          ),
-                          btnOkOnPress: () async {
-                            await Navigator.pushNamed(
-                              context,
-                              Routes.typingPage,
-                              arguments: _getRandomWordList(size),
-                            );
-                            setState(() {});
-                          },
-                          btnCancelOnPress: () {},
-                        ).show();
-                      }
-                    },
-                    child: Card(
-                      color: wordModelList.isEmpty
-                          ? Colors.grey.withOpacity(0.3)
-                          : null,
-                      child: ListTile(
-                        title: Text(
-                          'Typing',
-                          style: listTileTextStyle,
-                        ),
-                        leading: Image.asset('assets/images/typing_icon.png',
-                            height: 20),
-                      ),
-                    ),
-                  ),
-                  widget.topicModel.isPublic!
-                      ? GestureDetector(
-                    onTap: () {
-                      if (wordModelList.isNotEmpty) {
-                        Navigator.pushNamed(
-                            context, Routes.leaderBoardPage,
-                            arguments: widget.topicModel.id);
-                      }
-                    },
-                    child: Card(
-                      color: wordModelList.isEmpty
-                          ? Colors.grey.withOpacity(0.3)
-                          : null,
-                      child: ListTile(
-                        title: Text(
-                          'Leading Board',
-                          style: listTileTextStyle,
-                        ),
-                        leading: Image.asset(
-                            'assets/images/leading_board_icon.png',
-                            height: 20),
-                      ),
-                    ),
-                  )
-                      : const SizedBox(),
                   const SizedBox(
                     height: 8,
                   ),
@@ -438,18 +357,18 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
 
   Widget _getStatus(double num) {
     if (num < 25) {
-      return const Text(
+      return Text(
         'Not learned',
         style: TextStyle(color: Colors.pinkAccent, fontSize: 12),
       );
     }
-    if (num < 50) {
-      return const Text(
+    if (num < 75) {
+      return Text(
         'Learned',
         style: TextStyle(color: Colors.orange, fontSize: 12),
       );
     }
-    return const Text(
+    return Text(
       'Memorized',
       style: TextStyle(color: Colors.green, fontSize: 12),
     );
@@ -466,7 +385,7 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
               color: Colors.white,
               child: Padding(
                 padding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -502,14 +421,14 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                                       },
                                       icon: starred
                                           ? const Icon(
-                                        Icons.star,
-                                        color: Colors.yellow,
-                                      )
+                                              Icons.star,
+                                              color: Colors.yellow,
+                                            )
                                           : const Icon(Icons.star_outline));
                                 } else if (snapshot.hasError) {
-                                  return Text('error');
+                                  return const Text('error');
                                 } else {
-                                  return Center(
+                                  return const Center(
                                     child: CircularProgressIndicator(),
                                   );
                                 }
@@ -578,6 +497,7 @@ class _MyCardWordState extends State<MyCardWord> {
   }
 
   Widget _buildCardWordItem(WordModel wordModel) {
+    print("mywordModel: ${wordModel.english}");
     return FlipCard(
       // fill: Fill
       //     .fillBack, // Fill the back side of the card to make in the same size as the front.

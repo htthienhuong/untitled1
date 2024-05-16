@@ -125,6 +125,7 @@ class _HomePageState extends State<HomePage> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(50),
                         child: FadeInImage(
+                          fit: BoxFit.cover,
                           placeholder:
                           const AssetImage('assets/images/htth_avt.png'),
                           image: NetworkImage(topicModel.userAvatarUrl ?? ''),

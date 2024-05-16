@@ -49,7 +49,6 @@ class _AddTopicPageState extends State<AddTopicPage> {
           backgroundColor: Colors.black,
           onPressed: () {
             wordModelList.add(WordModel());
-
             setState(() {
               itemWordCount++;
             });

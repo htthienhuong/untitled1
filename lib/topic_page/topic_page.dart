@@ -22,33 +22,15 @@ class _TopicPageState extends State<TopicPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            height: 50,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.black)),
-            child: Row(
-              children: [
-                const Expanded(child: TextField()),
-                const VerticalDivider(
-                  color: Colors.black,
-                ),
-                IconButton(onPressed: () {}, icon: const Icon(Icons.search))
-              ],
-            ),
-          ),
-          const SizedBox(
-            height: 8,
-          ),
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(right: 8.0),
-                child: MyDropdownButton(),
-              ),
-            ],
-          ),
+          // const Row(
+          //   mainAxisAlignment: MainAxisAlignment.end,
+          //   children: [
+          //     Padding(
+          //       padding: EdgeInsets.only(right: 8.0),
+          //       child: MyDropdownButton(),
+          //     ),
+          //   ],
+          // ),
           Expanded(
             child: FutureBuilder(
                 future: TopicService().getTopicsByUserId(AppData.userModel.id),
@@ -180,6 +162,7 @@ class _TopicPageState extends State<TopicPage> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(50),
                         child: FadeInImage(
+                          fit: BoxFit.cover,
                           placeholder:
                           const AssetImage('assets/images/htth_avt.png'),
                           image: NetworkImage(topicModel.userAvatarUrl ?? ''),
@@ -211,43 +194,44 @@ class _TopicPageState extends State<TopicPage> {
   }
 }
 
-const List<String> list = <String>['Last access', 'Two', 'Three', 'Four'];
-
-class MyDropdownButton extends StatefulWidget {
-  const MyDropdownButton({super.key});
-
-  @override
-  State<MyDropdownButton> createState() => _MyDropdownButtonState();
-}
-
-class _MyDropdownButtonState extends State<MyDropdownButton> {
-  String dropdownValue = list.first;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 30,
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8), color: Colors.grey),
-      child: DropdownButton<String>(
-        value: dropdownValue,
-        icon: const Icon(Icons.arrow_drop_down),
-        elevation: 16,
-        style: const TextStyle(color: Colors.black),
-        onChanged: (String? value) {
-          // This is called when the user selects an item.
-          setState(() {
-            dropdownValue = value!;
-          });
-        },
-        items: list.map<DropdownMenuItem<String>>((String value) {
-          return DropdownMenuItem<String>(
-            value: value,
-            child: Text(value),
-          );
-        }).toList(),
-      ),
-    );
-  }
-}
+//
+// const List<String> list = <String>['Last access', 'Two', 'Three', 'Four'];
+//
+// class MyDropdownButton extends StatefulWidget {
+//   const MyDropdownButton({super.key});
+//
+//   @override
+//   State<MyDropdownButton> createState() => _MyDropdownButtonState();
+// }
+//
+// class _MyDropdownButtonState extends State<MyDropdownButton> {
+//   String dropdownValue = list.first;
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       height: 30,
+//       padding: const EdgeInsets.symmetric(horizontal: 8),
+//       decoration: BoxDecoration(
+//           borderRadius: BorderRadius.circular(8), color: Colors.grey),
+//       child: DropdownButton<String>(
+//         value: dropdownValue,
+//         icon: const Icon(Icons.arrow_drop_down),
+//         elevation: 16,
+//         style: const TextStyle(color: Colors.black),
+//         onChanged: (String? value) {
+//           // This is called when the user selects an item.
+//           setState(() {
+//             dropdownValue = value!;
+//           });
+//         },
+//         items: list.map<DropdownMenuItem<String>>((String value) {
+//           return DropdownMenuItem<String>(
+//             value: value,
+//             child: Text(value),
+//           );
+//         }).toList(),
+//       ),
+//     );
+//   }
+// }
