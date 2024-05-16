@@ -194,7 +194,31 @@ class _FolderDetailPageState extends State<FolderDetailPage> {
                       selectedItem = item;
                     });
                   },
-                  itemBuilder: (BuildContext context) =>
+                  itemBuilder: (BuildContext context) => topicModel.isPublic!?
+                  <PopupMenuEntry<String>>[
+                    PopupMenuItem<String>(
+                      onTap: () async {
+                        await FolderService().removeTopicFromFolderByTopicId(widget.folder.documentId, topicModel.id);
+                        setState(() {});
+                      },
+                      value: 'Remove From Folder',
+                      child: const Row(
+                        children: [
+                          Text(
+                            'Remove From Folder',
+                            style: TextStyle(color: Colors.red),
+                          ),
+                          Icon(
+                            Icons.folder_delete_outlined,
+                            color: Colors.deepOrangeAccent,
+                          )
+                        ],
+                      ),
+                    ),
+                    const PopupMenuDivider(
+                      height: 1,
+                    ),
+                  ] :
                   <PopupMenuEntry<String>>[
                     PopupMenuItem<String>(
                       onTap: () async {
