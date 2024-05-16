@@ -84,7 +84,6 @@ class _AddTopicPageState extends State<AddTopicPage> {
                       userAvatarUrl: AppData.userModel.avatarUrl,
                       userName: AppData.userModel.name),
                 );
-                await TopicService().updateTopicName(topicId!, {"id": topicId});
 
                 for (WordModel word in wordModelList) {
                   await WordService()

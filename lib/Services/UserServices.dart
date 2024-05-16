@@ -15,7 +15,7 @@ class UserService {
   final CollectionReference foldersCollection =
   FirebaseFirestore.instance.collection('Folder');
   final CollectionReference topicsCollection =
-  FirebaseFirestore.instance.collection('Topics');
+  FirebaseFirestore.instance.collection('Topic');
   final FirebaseStorage storage = FirebaseStorage.instance;
 
   Future<void> createUser(User user, String name) async {
@@ -48,25 +48,54 @@ class UserService {
     }
   }
 
-  Future<void> updateUserAvatar(String userId, Uint8List imageData) async {
+  Future<String> updateUserAvatar(String userId, Uint8List imageData) async {
     try {
-      // Tạo tham chiếu đến ảnh đại diện trên Firebase Storage
+      DocumentReference userRef = usersCollection.doc(userId);
 
       Reference ref =
-      FirebaseStorage.instance.ref().child('avatars/$userId/avatar.jpg');
+      FirebaseStorage.instance.ref().child('avatars/$userId.jpg');
 
-      // Tải lên ảnh đại diện lên Firebase Storage
       UploadTask uploadTask = ref.putData(imageData);
 
-      // Chờ cho quá trình tải lên hoàn tất và lấy URL của ảnh
       TaskSnapshot snapshot = await uploadTask;
       String downloadUrl = await snapshot.ref.getDownloadURL();
 
-      // Cập nhật URL của ảnh đại diện trong tài liệu người dùng trên Firestore
-      await usersCollection.doc(userId).update({'AvatarUrl': downloadUrl});
+      await userRef.update({'AvatarUrl': downloadUrl});
+      List<DocumentReference> topicRefs =
+          (await userRef.get())['Topics'].cast<DocumentReference>() ?? [];
+      for (DocumentReference topicRef in topicRefs) {
+        print('topicRef: $topicRef');
+        await topicRef.update({'userAvatarUrl': downloadUrl});
+      }
+
+      return downloadUrl;
     } catch (error) {
       print("Error updating user avatar: $error");
       throw error;
+    }
+  }
+
+  Future<void> updateUserName(String userId, String name) async {
+    try {
+      DocumentReference userRef = usersCollection.doc(userId);
+      await userRef.update({'Name': name});
+      List<DocumentReference> topicRefs =
+          (await userRef.get())['Topics'].cast<DocumentReference>() ?? [];
+      for (DocumentReference topicRef in topicRefs) {
+        print('topicRef: $topicRef');
+        await topicRef.update({'userName': name});
+      }
+    } catch (error) {
+      print("Error updateUserName: $error");
+    }
+  }
+
+  Future<void> updateUserEmail(String userId, String email) async {
+    try {
+      DocumentReference userRef = usersCollection.doc(userId);
+      await userRef.update({'Email': email});
+    } catch (error) {
+      print("Error updateUserName: $error");
     }
   }
 }

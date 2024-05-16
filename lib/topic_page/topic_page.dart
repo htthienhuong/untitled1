@@ -97,9 +97,14 @@ class _TopicPageState extends State<TopicPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                Expanded(child:
                 Text(
                   topicModel.topicName!,
-                  style: const TextStyle(fontSize: 20),
+                  maxLines: 1,
+                  overflow: TextOverflow.fade,
+                  softWrap: false,
+                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20.0),
+                ),
                 ),
                 PopupMenuButton<String>(
                   color: const Color(0xffbcc1d0),

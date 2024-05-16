@@ -127,7 +127,6 @@ class _AddFolderDialogState extends State<AddFolderDialog> {
                     userId: AppData.userModel.id,
                   )
               );
-              await FolderService().updateFolder(folderId!, {"id": folderId});
               if(context.mounted){
                 Navigator.pop(context);
               }

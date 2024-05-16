@@ -99,6 +99,47 @@ class WordService {
     }
   }
 
+  Future<bool> getWordStar(String wordId, String userId) async {
+    try {
+      QuerySnapshot querySnapshot =
+      await WordLearnCount.where('userId', isEqualTo: userId)
+          .where('wordId', isEqualTo: wordId)
+          .get();
+
+      if (querySnapshot.size == 0) {
+        await WordLearnCount.doc().set(
+            {'wordId': wordId, 'userId': userId, 'count': 0, 'starred': false});
+        return false;
+      } else {
+        return querySnapshot.docs.first.get('starred');
+      }
+    } catch (error) {
+      print('Error adding word: $error');
+      throw error;
+    }
+  }
+
+  Future<List<WordModel>> getWordStarList(String userId) async {
+    List<WordModel> wordModelList = [];
+    try {
+      QuerySnapshot querySnapshot =
+      await WordLearnCount.where('userId', isEqualTo: userId)
+          .where('starred', isEqualTo: true)
+          .get();
+      for (DocumentSnapshot documentSnapshot in querySnapshot.docs) {
+        Map<String, dynamic> data =
+        documentSnapshot.data() as Map<String, dynamic>;
+        DocumentSnapshot wordSnap = await Words.doc(data['wordId']).get();
+        WordModel wordModel = WordModel.fromFirestore(wordSnap);
+        wordModelList.add(wordModel);
+      }
+      return wordModelList;
+    } catch (error) {
+      print('Error adding word: $error');
+      throw error;
+    }
+  }
+
   Future<void> deleteWord(WordModel wordModel) async {
     try {
       DocumentReference wordRef = Words.doc(wordModel.id);

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:untitled1/Services/TopicServices.dart';
+import 'package:untitled1/folder_page/popup_dialog.dart';
 import '../Services/FolderService.dart';
 import 'package:untitled1/router/router_manager.dart';
 
@@ -20,13 +21,13 @@ class FolderDetailPage extends StatefulWidget {
 }
 
 class _FolderDetailPageState extends State<FolderDetailPage> {
-  final pageController = PageController(viewportFraction: 0.85);
-  final TextStyle listTileTextStyle =
-  const TextStyle(fontWeight: FontWeight.w500, fontSize: 16);
   String? selectedItem;
+  List<TopicModel> topicsNotInFolder = [];
+  List<TopicModel> topicList = [];
 
   @override
   void initState() {
+    _asyncmethodCall();
     super.initState();
   }
 
@@ -37,51 +38,115 @@ class _FolderDetailPageState extends State<FolderDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    // topic = widget.folder.Topics!;
     return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: const Text(
+          "Folder Details",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        actions: [
+          IconButton(
+            onPressed: () async {
+              if(topicsNotInFolder.isNotEmpty){
+                Navigator.pushNamed(context, Routes.folderAddTopicPage,
+                arguments: [widget.folder, topicsNotInFolder]);
+              }else{
+                  await showDialog(
+                  context: context,
+                  builder: (_) => const PopupMessageDialog(message: "You've already added all of your topics to this folder"),
+                  );
+              };
+              },
+            icon: const Icon(
+              Icons.add,
+              size: 40,
+            ),
+          ),
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
+        Text(
+          widget.folder.folderName,
+          style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 24,
+              color: Colors.black87),
+        ),
+        Row(
+          children: [
+            SizedBox(
               height: 50,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.black)),
-              child: Row(
-                children: [
-                  // const Expanded(child: TextField()),
-                  const VerticalDivider(
-                    color: Colors.black,
-                  ),
-                  IconButton(onPressed: () {}, icon: const Icon(Icons.search))
-                ],
+              width: 50,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(50),
+                child: FadeInImage(
+                  placeholder:
+                  const AssetImage('assets/images/htth_avt.png'),
+                  image: const NetworkImage('xxx'),
+                  imageErrorBuilder: (context, error, stackTrace) =>
+                      Image.asset('assets/images/htth_avt.png'),
+                ),
               ),
             ),
             const SizedBox(
-              height: 8,
+              width: 8,
             ),
-            // const Row(
-            //   mainAxisAlignment: MainAxisAlignment.end,
-            //   children: [
-            //     Padding(
-            //       padding: EdgeInsets.only(right: 8.0),
-            //       child: MyDropdownButton(),
-            //     ),
-            //   ],
+            // Text(
+            //   widget.folder.userName!,
+            //   style: const TextStyle(
+            //       fontWeight: FontWeight.w500, color: Colors.black87),
             // ),
+            const SizedBox(
+              height: 20,
+              child: VerticalDivider(
+                thickness: 2,
+                indent: 2,
+                endIndent: 2,
+              ),
+            ),
+            Text(
+              '${widget.folder.Topics!.length} words',
+              style: const TextStyle(
+                  color: Colors.black38, fontWeight: FontWeight.w500),
+            ),
+
+            const SizedBox(
+              height: 15,
+            ),
+            ],
+        ),
             Expanded(
+              // const Row(
+              //   mainAxisAlignment: MainAxisAlignment.end,
+              //   children: [
+              //     Padding(
+              //       padding: EdgeInsets.only(right: 8.0),
+              //       child: MyDropdownButton(),
+              //     ),
+              //   ],
+              // ),
               child: FutureBuilder(
                   future: FolderService().getTopicByFolderId(widget.folder.documentId!),
                   builder: (BuildContext context,
-                      AsyncSnapshot<List<TopicModel>> snapshot) {
+                      AsyncSnapshot<List<DocumentSnapshot>> snapshot) {
                     if (snapshot.hasData) {
-                      List<TopicModel> topicModelList = snapshot.data!;
-                      print(topicModelList.length);
+                      List<DocumentSnapshot> topicModelList = snapshot.data!;
+                      for (DocumentSnapshot documentSnapshot in topicModelList) {
+                        TopicModel topic = TopicModel.fromFirestore(documentSnapshot);
+                        topicList.add(topic);
+                      }
+
+                      print(topicList.length);
                       return ListView.builder(
-                        itemCount: topicModelList.length,
+                        itemCount: topicList.length,
                         itemBuilder: (context, index) {
-                          return _buildTopicItem(context, topicModelList[index]);
+                          return _buildTopicItem(context, topicList[index]);
                         },
                       );
                     } else if (snapshot.hasData) {
@@ -94,11 +159,15 @@ class _FolderDetailPageState extends State<FolderDetailPage> {
                   }),
             )
           ],
-        ),
       ),
+    ),
     );
-
   }
+
+  void _asyncmethodCall() async {
+    topicsNotInFolder = await FolderService().getTopicsNotInFolderByFolderId(AppData.userModel.id, widget.folder.documentId);
+  }
+
   Widget _buildTopicItem(BuildContext context, TopicModel topicModel) {
     print('selectedItem: $selectedItem');
     return GestureDetector(

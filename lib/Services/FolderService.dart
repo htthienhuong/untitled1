@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../Models/Folder.dart';
 import '../Models/TopicModel.dart';
+import 'package:untitled1/Services/TopicServices.dart';
+
 
 class FolderService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -248,18 +250,99 @@ class FolderService {
     }
   }
 
-  Future<List<TopicModel>> getTopicByFolderId(String folderId) async {
+  Future<List<DocumentSnapshot>> getTopicByFolderId(String folderId) async {
     try {
-      QuerySnapshot querySnapshot = await folderCollection
-          .where('folderId', isEqualTo: folderId)
+      DocumentSnapshot folderSnapshot = await _db
+          .collection(_collectionName).doc(folderId).get();
+
+      // Extract the list of topic references from the folder document
+      List<DocumentReference>? topicReferences =
+      List<DocumentReference>.from(folderSnapshot['Topics']);
+      // Get the documents for each topic reference
+      List<Future<DocumentSnapshot>> topicFutures =
+      topicReferences.map((topicRef) => topicRef.get()).toList();
+
+      // Wait for all topic documents to be retrieved
+      List<DocumentSnapshot> topicSnapshots = await Future.wait(topicFutures);
+
+      return topicSnapshots;
+    } catch (error) {
+      print(error.toString());
+      print("Error getting topic by folder ID: $folderId");
+      throw error;
+    }
+  }
+
+  Future<void> addTopicToFolderByTopicId(
+      String? folderId, String topicId) async {
+    try {
+      // Lấy thông tin của thư mục từ Firestore
+      DocumentSnapshot folderSnapshot =
+      await folderCollection.doc(folderId).get();
+
+      // Kiểm tra xem thư mục có tồn tại không
+      if (folderSnapshot.exists) {
+        // Lấy danh sách tham chiếu của các chủ đề từ tài liệu thư mục
+        List<DocumentReference> topicReferences =
+        List<DocumentReference>.from(folderSnapshot['Topics']);
+
+        DocumentReference topicRef = _db.collection("Topics").doc(topicId);
+        // Kiểm tra xem chủ đề đã tồn tại trong thư mục chưa
+        if (!topicReferences.contains(topicRef)) {
+          // Thêm tham chiếu của chủ đề mới vào danh sách
+          topicReferences.add(topicRef);
+
+          // Cập nhật lại danh sách tham chiếu trong tài liệu thư mục
+          await folderCollection
+              .doc(folderId)
+              .update({'Topics': topicReferences});
+
+          // Cập nhật trường folderId trong tài liệu chủ đề
+          await topicRef.update({'folderId': folderId});
+        }
+      } else {
+        throw ('Folder not found');
+      }
+    } catch (error) {
+      print("Error adding topic to folder: $error");
+      throw error;
+    }
+  }
+
+  Future<List<TopicModel>> getTopicsNotInFolderByFolderId(
+      String userId, String? folderId) async {
+    try {
+      DocumentSnapshot folderSnapshot =
+      await folderCollection.doc(folderId).get();
+
+      List<DocumentReference> topicReferences =
+      List<DocumentReference>.from(folderSnapshot['Topics']);
+
+      List<DocumentSnapshot> topicsInFolder = topicReferences.map<DocumentSnapshot>((e) => e.get() as DocumentSnapshot<Map<String, dynamic>>).toList();
+
+      // Lấy danh sách các chủ đề có userId trùng với userId của thư mục
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('Topics')
+          .where('userId', isEqualTo: userId)
           .get();
 
-    List<TopicModel> topics = querySnapshot.docs
-        .map((doc) => TopicModel.fromFirestore(doc))
-        .toList();
-        return topics;
+      // Lọc ra những chủ đề có userId trùng với userId của thư mục nhưng chưa có trong thư mục
+      List<DocumentSnapshot> topicsNotInFolder =
+      querySnapshot.docs.where((topicDoc) {
+        // Lọc ra chủ đề không có trong thư mục
+        return !topicsInFolder
+            .any((topicInFolder) => topicInFolder.id == topicDoc.id);
+      }).toList();
+
+      List<TopicModel> topics = [];
+      for(DocumentSnapshot documentSnapshot in topicsNotInFolder){
+        topics.add(TopicModel.fromFirestore(documentSnapshot));
+      }
+
+      return topics;
     } catch (error) {
-      print("Error getting topic by ID: $folderId");
+      print(error.toString());
+      print("Error getting topics not in folder: $folderId");
       throw error;
     }
   }
