@@ -21,10 +21,29 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  late final SharedPreferences prefs;
+
   final _auth = AuthService();
 
   final _email = TextEditingController();
   final _password = TextEditingController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Future.microtask(() async {
+      prefs = await SharedPreferences.getInstance();
+      String? userId = prefs.getString('userId');
+      if (userId != null) {
+        log("User Logged In");
+        AppData.userModel = (await UserService().getUserById(userId))!;
+        if (mounted) {
+          goToHome(context);
+        }
+      }
+    });
+  }
 
   @override
   void dispose() {
@@ -91,6 +110,8 @@ class _LoginScreenState extends State<LoginScreen> {
     if (user != null) {
       log("User Logged In");
       AppData.userModel = (await UserService().getUserById(user.uid))!;
+      await prefs.setString('userId', user.uid);
+
       if (mounted) {
         goToHome(context);
       }
