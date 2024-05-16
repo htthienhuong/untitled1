@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:untitled1/Services/TopicServices.dart';
 import 'package:untitled1/router/router_manager.dart';
 
@@ -76,71 +78,85 @@ class _TopicPageState extends State<TopicPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  topicModel.topicName!,
-                  style: const TextStyle(fontSize: 20),
-                ),
-                PopupMenuButton<String>(
-                  color: const Color(0xffbcc1d0),
-                  initialValue: selectedItem,
-                  onSelected: (String item) {
-                    setState(() {
-                      selectedItem = item;
-                    });
-                  },
-                  itemBuilder: (BuildContext context) =>
-                      <PopupMenuEntry<String>>[
-                    PopupMenuItem<String>(
-                      onTap: () async {
-                        await Navigator.pushNamed(
-                            context, Routes.updateTopicPage,
-                            arguments: topicModel);
-                        setState(() {});
-                      },
-                      value: 'Edit',
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Edit',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          Icon(
-                            Icons.edit_note_outlined,
-                            color: Colors.white,
-                          )
-                        ],
+            SizedBox(
+              height: 90,
+              width: double.maxFinite,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    width: MediaQuery.of(context).size.width * 0.7,
+                    child: Text(
+                      topicModel.topicName!,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      style: const TextStyle(
+                          fontSize: 24,
+                          color: Color(0xff1b2794),
+                          fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                  PopupMenuButton<String>(
+                    iconColor: const Color(0xff1b2794),
+                    color: const Color(0xffbcc1d0),
+                    initialValue: selectedItem,
+                    onSelected: (String item) {
+                      setState(() {
+                        selectedItem = item;
+                      });
+                    },
+                    itemBuilder: (BuildContext context) =>
+                        <PopupMenuEntry<String>>[
+                      PopupMenuItem<String>(
+                        onTap: () async {
+                          await Navigator.pushNamed(
+                              context, Routes.updateTopicPage,
+                              arguments: topicModel);
+                          setState(() {});
+                        },
+                        value: 'Edit',
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Edit',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            Icon(
+                              Icons.edit_note_outlined,
+                              color: Colors.white,
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                    const PopupMenuDivider(
-                      height: 1,
-                    ),
-                    PopupMenuItem<String>(
-                      onTap: () async {
-                        await TopicService().deleteTopicWithUserReference(
-                            topicModel, AppData.userModel.id);
-                        setState(() {});
-                      },
-                      value: 'Delete',
-                      child: const Row(
-                        children: [
-                          Text(
-                            'Delete',
-                            style: TextStyle(color: Colors.red),
-                          ),
-                          Icon(
-                            Icons.remove_circle_outline,
-                            color: Colors.red,
-                          )
-                        ],
+                      const PopupMenuDivider(
+                        height: 1,
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                      PopupMenuItem<String>(
+                        onTap: () async {
+                          await TopicService().deleteTopicWithUserReference(
+                              topicModel, AppData.userModel.id);
+                          setState(() {});
+                        },
+                        value: 'Delete',
+                        child: const Row(
+                          children: [
+                            Text(
+                              'Delete',
+                              style: TextStyle(color: Colors.red),
+                            ),
+                            Icon(
+                              Icons.remove_circle_outline,
+                              color: Colors.red,
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
             const SizedBox(
               height: 8,
@@ -152,8 +168,8 @@ class _TopicPageState extends State<TopicPage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     SizedBox(
-                      height: 50,
-                      width: 50,
+                      height: 40,
+                      width: 40,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(50),
                         child: FadeInImage(
@@ -169,7 +185,10 @@ class _TopicPageState extends State<TopicPage> {
                     const SizedBox(
                       width: 8,
                     ),
-                    Text(topicModel.userName!),
+                    Text(
+                      topicModel.userName!,
+                      style: const TextStyle(color: Color(0xff647ebb)),
+                    ),
                   ],
                 ),
                 Container(
@@ -177,8 +196,10 @@ class _TopicPageState extends State<TopicPage> {
                   decoration: BoxDecoration(
                       color: const Color(0xffacbdd0),
                       borderRadius: BorderRadius.circular(8)),
-                  child:
-                      Text('${topicModel.wordReferences?.length ?? 0} words'),
+                  child: Text(
+                    '${topicModel.wordReferences?.length ?? 0} words',
+                    style: const TextStyle(color: Colors.white),
+                  ),
                 ),
               ],
             )

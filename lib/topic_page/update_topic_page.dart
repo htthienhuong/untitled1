@@ -43,10 +43,21 @@ class _UpdateTopicPageState extends State<UpdateTopicPage> {
         ),
       ),
       appBar: AppBar(
+        backgroundColor: const Color(0xffe2e9ff),
         centerTitle: true,
         title: const Text(
           "Edit Topic",
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style:
+              TextStyle(fontWeight: FontWeight.bold, color: Color(0xff1b2794)),
+        ),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Color(0xff647ebb),
+          ),
         ),
         actions: [
           IconButton(
@@ -78,6 +89,7 @@ class _UpdateTopicPageState extends State<UpdateTopicPage> {
             icon: const Icon(
               Icons.done,
               size: 32,
+              color: Color(0xff647ebb),
             ),
           ),
         ],
@@ -100,6 +112,7 @@ class _UpdateTopicPageState extends State<UpdateTopicPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TextFormField(
+                      maxLines: null,
                       initialValue: widget.topicModel.topicName,
                       decoration: const InputDecoration.collapsed(
                         hintText: 'Topic',

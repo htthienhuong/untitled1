@@ -25,20 +25,24 @@ class _HomePageState extends State<HomePage> {
             height: 50,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.black)),
+                border: Border.all(color: Color(0xff647ebb))),
             child: Row(
               children: [
                 Expanded(
-                    child: TextField(
-                  controller: searchController,
-                  onSubmitted: (value) {
-                    setState(() {
-                      search = value;
-                    });
-                  },
+                    child: Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: TextField(
+                    decoration: null,
+                    controller: searchController,
+                    onSubmitted: (value) {
+                      setState(() {
+                        search = value;
+                      });
+                    },
+                  ),
                 )),
                 const VerticalDivider(
-                  color: Colors.black,
+                  color: Color(0xff647ebb),
                 ),
                 IconButton(
                     onPressed: () {
@@ -46,13 +50,22 @@ class _HomePageState extends State<HomePage> {
                         search = searchController.text;
                       });
                     },
-                    icon: const Icon(Icons.search))
+                    icon: const Icon(
+                      Icons.search,
+                      color: Color(0xff647ebb),
+                    ))
               ],
             ),
           ),
+          const SizedBox(
+            height: 8,
+          ),
           const Text(
             'Community',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
+            style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.w600,
+                color: Color(0xff1b2794)),
           ),
           Expanded(
             child: FutureBuilder(
@@ -101,10 +114,13 @@ class _HomePageState extends State<HomePage> {
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.85,
-                height: 50,
+                height: 60,
                 child: Text(
                   topicModel.topicName!,
-                  style: const TextStyle(fontSize: 20),
+                  style: const TextStyle(
+                      fontSize: 20,
+                      color: Color(0xff1b2794),
+                      fontWeight: FontWeight.w600),
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,
                 ),
@@ -120,8 +136,8 @@ class _HomePageState extends State<HomePage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     SizedBox(
-                      height: 50,
-                      width: 50,
+                      height: 40,
+                      width: 40,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(50),
                         child: FadeInImage(
@@ -137,7 +153,12 @@ class _HomePageState extends State<HomePage> {
                     const SizedBox(
                       width: 8,
                     ),
-                    Text(topicModel.userName!),
+                    Text(
+                      topicModel.userName!,
+                      style: const TextStyle(
+                        color: Color(0xff647ebb),
+                      ),
+                    )
                   ],
                 ),
                 Container(
@@ -145,8 +166,10 @@ class _HomePageState extends State<HomePage> {
                   decoration: BoxDecoration(
                       color: const Color(0xffacbdd0),
                       borderRadius: BorderRadius.circular(8)),
-                  child:
-                      Text('${topicModel.wordReferences?.length ?? 0} words'),
+                  child: Text(
+                    '${topicModel.wordReferences?.length ?? 0} words',
+                    style: const TextStyle(color: Colors.white),
+                  ),
                 ),
               ],
             )
