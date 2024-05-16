@@ -11,11 +11,11 @@ import '../Models/UserModel.dart';
 
 class UserService {
   final CollectionReference usersCollection =
-  FirebaseFirestore.instance.collection('User');
+      FirebaseFirestore.instance.collection('User');
   final CollectionReference foldersCollection =
-  FirebaseFirestore.instance.collection('Folder');
+      FirebaseFirestore.instance.collection('Folder');
   final CollectionReference topicsCollection =
-  FirebaseFirestore.instance.collection('Topic');
+      FirebaseFirestore.instance.collection('Topic');
   final FirebaseStorage storage = FirebaseStorage.instance;
 
   Future<void> createUser(User user, String name) async {
@@ -24,7 +24,7 @@ class UserService {
       'Name': name,
       'Folders': [],
       'Topics': [],
-      'AvatarUrl': user.photoURL,
+      'AvatarUrl': user.photoURL ?? '',
     });
   }
 
@@ -53,7 +53,7 @@ class UserService {
       DocumentReference userRef = usersCollection.doc(userId);
 
       Reference ref =
-      FirebaseStorage.instance.ref().child('avatars/$userId.jpg');
+          FirebaseStorage.instance.ref().child('avatars/$userId.jpg');
 
       UploadTask uploadTask = ref.putData(imageData);
 
