@@ -83,6 +83,8 @@ class RouteGenerator {
             settings: routeSettings, builder: (context) => const LoginScreen());
       case Routes.learningPage:
         List<dynamic> args = routeSettings.arguments as List<dynamic>;
+        print('arg[0]: ${args[0]}');
+        print('args[1]: ${args[1]}');
         return MaterialPageRoute(
             settings: routeSettings,
             builder: (context) => MultichoiceTestPage(

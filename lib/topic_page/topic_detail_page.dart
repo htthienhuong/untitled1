@@ -474,7 +474,7 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
+            SizedBox(
               width: 85,
               child: FutureBuilder(
                 future: WordService()
@@ -515,7 +515,7 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
             ),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -14,11 +14,11 @@ import 'multiple_choice_game.dart';
 int _timeRemaining = 100;
 
 class MultichoiceTestPage extends StatefulWidget {
-  final String topicId;
+  final String? topicId;
   final List<WordModel> wordModels;
 
   const MultichoiceTestPage(
-      {super.key, required this.wordModels, required this.topicId});
+      {super.key, required this.wordModels, this.topicId});
 
   @override
   State<MultichoiceTestPage> createState() => _MultichoiceTestPageState();
@@ -97,10 +97,12 @@ class _MultichoiceTestPageState extends State<MultichoiceTestPage> {
       for (String wordId in wordIdList) {
         await WordService().updateWordLearnCount(wordId, AppData.userModel.id);
       }
-      await RecordService().saveRecord(
-          userId: AppData.userModel.id,
-          topicId: widget.topicId,
-          point: _timeRemaining + wordIdList.length * 5);
+      if (widget.topicId != null) {
+        await RecordService().saveRecord(
+            userId: AppData.userModel.id,
+            topicId: widget.topicId!,
+            point: _timeRemaining + wordIdList.length * 5);
+      }
       if (mounted) {
         Navigator.pop(context, true);
       }
