@@ -274,7 +274,7 @@ class FolderService {
   }
 
   Future<void> addTopicToFolderByTopicId(
-      String? folderId, String topicId) async {
+      String? folderId, String? topicId) async {
     try {
       // Lấy thông tin của thư mục từ Firestore
       DocumentSnapshot folderSnapshot =
@@ -352,6 +352,43 @@ class FolderService {
     } catch (error) {
       print(error.toString());
       print("Error getting topics not in folder: $folderId");
+      throw error;
+    }
+  }
+
+  Future<void> removeTopicFromFolderByTopicId(
+      String? folderId, String? topicId) async {
+    try {
+      DocumentReference topicRef = _db.collection("Topics").doc(topicId);
+
+      // Lấy thông tin của thư mục từ Firestore
+      DocumentSnapshot folderSnapshot =
+      await folderCollection.doc(folderId).get();
+
+      // Kiểm tra xem thư mục có tồn tại không
+      if (folderSnapshot.exists) {
+        // Lấy danh sách tham chiếu của các chủ đề từ tài liệu thư mục
+        List<DocumentReference> topicReferences =
+        List<DocumentReference>.from(folderSnapshot['Topics']);
+
+        // Kiểm tra xem chủ đề có tồn tại trong thư mục không
+        if (topicReferences.contains(topicRef)) {
+          // Xóa tham chiếu của chủ đề khỏi danh sách
+          topicReferences.remove(topicRef);
+
+          // Cập nhật lại danh sách tham chiếu trong tài liệu thư mục
+          await folderCollection
+              .doc(folderId)
+              .update({'Topics': topicReferences});
+
+          // Cập nhật trường folderId trong tài liệu chủ đề
+          await topicRef.update({'folderId': null});
+        }
+      } else {
+        throw ('Folder not found');
+      }
+    } catch (error) {
+      print("Error removing topic from folder: $error");
       throw error;
     }
   }

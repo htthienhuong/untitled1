@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'package:untitled1/folder_page/add_folder_dialog.dart';
+import 'package:untitled1/folder_page/folder_list_dialog.dart';
+
 import '../Models/TopicModel.dart';
 import '../Services/TopicServices.dart';
 import '../router/router_manager.dart';
@@ -13,6 +16,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String search = '';
+  String? selectedItem;
+
   TextEditingController searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -112,19 +117,55 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.85,
-                height: 60,
+            Expanded(
                 child: Text(
                   topicModel.topicName!,
-                  style: const TextStyle(
-                      fontSize: 20,
-                      color: Color(0xff1b2794),
-                      fontWeight: FontWeight.w600),
+                  style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20.0),
+
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,
+                  softWrap: false,
                 ),
               ),
+              PopupMenuButton<String>(
+                color: const Color(0xffbcc1d0),
+                initialValue: selectedItem,
+                onSelected: (String item) {
+                  setState(() {
+                    selectedItem = item;
+                  });
+                },
+                itemBuilder: (BuildContext context) =>
+                <PopupMenuEntry<String>>[
+                  PopupMenuItem<String>(
+                    onTap: () async {
+                      await showDialog(
+                        context: context,
+                        builder: (_) => FolderListDialog(topic: topicModel),
+                      );
+                      setState(() {});
+                    },
+                    value: 'Add To Folder',
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Add To Folder',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        Icon(
+                          Icons.edit_note_outlined,
+                          color: Colors.white,
+                        )
+                      ],
+                    ),
+                  ),
+                  const PopupMenuDivider(
+                    height: 1,
+                  ),
+                ],
+              ),
+
             ]),
             const SizedBox(
               height: 8,
@@ -171,6 +212,7 @@ class _HomePageState extends State<HomePage> {
                     style: const TextStyle(color: Colors.white),
                   ),
                 ),
+
               ],
             )
           ],

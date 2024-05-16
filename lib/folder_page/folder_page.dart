@@ -191,7 +191,7 @@ class _FolderPageState extends State<FolderPage>
                 decoration: BoxDecoration(
                     color: const Color(0xffacbdd0),
                     borderRadius: BorderRadius.circular(8)),
-                child: const Text('0 words'),
+                child: Text('${folder.Topics?.length ?? 0} topics'),
               ),
             ],
           )

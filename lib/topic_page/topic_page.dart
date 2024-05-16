@@ -68,7 +68,8 @@ class _TopicPageState extends State<TopicPage> {
         Navigator.pushNamed(context, Routes.topicDetailPage,
             arguments: topicModel);
       },
-      child: Container(
+      child:
+      Container(
         margin: const EdgeInsets.only(top: 8),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(

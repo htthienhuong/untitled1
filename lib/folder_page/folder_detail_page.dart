@@ -97,11 +97,11 @@ class _FolderDetailPageState extends State<FolderDetailPage> {
             const SizedBox(
               width: 8,
             ),
-            // Text(
-            //   widget.folder.userName!,
-            //   style: const TextStyle(
-            //       fontWeight: FontWeight.w500, color: Colors.black87),
-            // ),
+            Text(
+              AppData.userModel.name,
+              style: const TextStyle(
+                  fontWeight: FontWeight.w500, color: Colors.black87),
+            ),
             const SizedBox(
               height: 20,
               child: VerticalDivider(
@@ -122,26 +122,20 @@ class _FolderDetailPageState extends State<FolderDetailPage> {
             ],
         ),
             Expanded(
-              // const Row(
-              //   mainAxisAlignment: MainAxisAlignment.end,
-              //   children: [
-              //     Padding(
-              //       padding: EdgeInsets.only(right: 8.0),
-              //       child: MyDropdownButton(),
-              //     ),
-              //   ],
-              // ),
               child: FutureBuilder(
                   future: FolderService().getTopicByFolderId(widget.folder.documentId!),
                   builder: (BuildContext context,
                       AsyncSnapshot<List<DocumentSnapshot>> snapshot) {
                     if (snapshot.hasData) {
                       List<DocumentSnapshot> topicModelList = snapshot.data!;
+                      topicList.clear();
                       for (DocumentSnapshot documentSnapshot in topicModelList) {
                         TopicModel topic = TopicModel.fromFirestore(documentSnapshot);
-                        topicList.add(topic);
+                        if(!topicList.contains(topic)){
+                          print("topic added");
+                          topicList.add(topic);
+                        }
                       }
-
                       print(topicList.length);
                       return ListView.builder(
                         itemCount: topicList.length,
@@ -202,6 +196,28 @@ class _FolderDetailPageState extends State<FolderDetailPage> {
                   },
                   itemBuilder: (BuildContext context) =>
                   <PopupMenuEntry<String>>[
+                    PopupMenuItem<String>(
+                      onTap: () async {
+                        await FolderService().removeTopicFromFolderByTopicId(widget.folder.documentId, topicModel.id);
+                        setState(() {});
+                      },
+                      value: 'Remove From Folder',
+                      child: const Row(
+                        children: [
+                          Text(
+                            'Remove From Folder',
+                            style: TextStyle(color: Colors.red),
+                          ),
+                          Icon(
+                            Icons.folder_delete_outlined,
+                            color: Colors.deepOrangeAccent,
+                          )
+                        ],
+                      ),
+                    ),
+                    const PopupMenuDivider(
+                      height: 1,
+                    ),
                     PopupMenuItem<String>(
                       onTap: () async {
                         await Navigator.pushNamed(
