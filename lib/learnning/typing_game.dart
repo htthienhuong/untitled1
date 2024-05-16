@@ -1,4 +1,5 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../Models/word_model.dart';
@@ -91,7 +92,6 @@ class _TypingGameState extends State<TypingGame> {
       dismissOnTouchOutside: false,
       dialogType: DialogType.success,
       animType: AnimType.rightSlide,
-      title: 'Correct',
       body: SizedBox(
         width: double.maxFinite,
         child: Column(
@@ -113,18 +113,10 @@ class _TypingGameState extends State<TypingGame> {
                     width: 8,
                   ),
                   const Text(
-                    'Good job!',
+                    "Great!",
                     style: TextStyle(color: Colors.white),
                   ),
                 ],
-              ),
-            ),
-            Container(
-              width: double.maxFinite,
-              padding: const EdgeInsets.all(8),
-              child: const Text(
-                'You answer is right',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
               ),
             ),
           ],
@@ -149,7 +141,6 @@ class _TypingGameState extends State<TypingGame> {
       dismissOnTouchOutside: false,
       dialogType: DialogType.error,
       animType: AnimType.rightSlide,
-      title: 'Wrong Answer',
       body: SizedBox(
         width: double.maxFinite,
         child: Column(
@@ -171,13 +162,14 @@ class _TypingGameState extends State<TypingGame> {
                     width: 8,
                   ),
                   const Text(
-                    'Learn this word!',
+                    'Better next time',
                     style: TextStyle(color: Colors.white),
                   ),
                 ],
               ),
             ),
-            Padding(
+            Container(
+              width: double.maxFinite,
               padding: const EdgeInsets.all(8),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -193,18 +185,6 @@ class _TypingGameState extends State<TypingGame> {
                   ),
                   Text(
                     widget.currentWord.vietnam!,
-                    style: const TextStyle(
-                        fontSize: 20, fontWeight: FontWeight.w400),
-                  ),
-                  const Divider(
-                    thickness: 1,
-                  ),
-                  const Text(
-                    'You think',
-                    style: TextStyle(color: Colors.red),
-                  ),
-                  Text(
-                    _textEditingController.text,
                     style: const TextStyle(
                         fontSize: 20, fontWeight: FontWeight.w400),
                   ),
