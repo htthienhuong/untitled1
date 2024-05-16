@@ -79,7 +79,6 @@ class _HomePageState extends State<HomePage> {
                     AsyncSnapshot<List<TopicModel>> snapshot) {
                   if (snapshot.hasData) {
                     List<TopicModel> topicModelList = snapshot.data!;
-                    print(topicModelList.length);
                     return ListView.builder(
                       itemCount: topicModelList.length,
                       itemBuilder: (context, index) {
@@ -117,11 +116,13 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            Expanded(
+              Expanded(
                 child: Text(
                   topicModel.topicName!,
-                  style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20.0),
-
+                  style: const TextStyle(
+                      color: Color(0xff1b2794),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20.0),
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,
                   softWrap: false,
@@ -135,8 +136,7 @@ class _HomePageState extends State<HomePage> {
                     selectedItem = item;
                   });
                 },
-                itemBuilder: (BuildContext context) =>
-                <PopupMenuEntry<String>>[
+                itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
                   PopupMenuItem<String>(
                     onTap: () async {
                       await showDialog(
@@ -165,7 +165,6 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ],
               ),
-
             ]),
             const SizedBox(
               height: 8,
@@ -212,7 +211,6 @@ class _HomePageState extends State<HomePage> {
                     style: const TextStyle(color: Colors.white),
                   ),
                 ),
-
               ],
             )
           ],
