@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:flip_card/flip_card.dart';
 import 'package:flip_card/flip_card_controller.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:swipe_cards/draggable_card.dart';
 import 'package:swipe_cards/swipe_cards.dart';
 import 'package:untitled1/Services/WordServices.dart';
@@ -66,28 +68,23 @@ class _FlashCardPageState extends State<FlashCardPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      backgroundColor: const Color(0xffd0d4ec),
       key: _scaffoldKey,
       appBar: AppBar(
+        backgroundColor: const Color(0xff647ebb),
         leading: IconButton(
-          icon: const Icon(Icons.close),
+          icon: const Icon(
+            Icons.close,
+            color: Colors.white,
+          ),
           onPressed: () {
             Navigator.pop(context, true);
           },
         ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child:
-                IconButton(onPressed: () {}, icon: const Icon(Icons.settings)),
-          )
-        ],
         title: Text(
           '${currentItem + 1}/${widget.wordModels.length}',
-          style: TextStyle(
-              color: Colors.grey[800],
-              fontSize: 16,
-              fontWeight: FontWeight.w600),
+          style: const TextStyle(
+              color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
       ),
@@ -99,15 +96,10 @@ class _FlashCardPageState extends State<FlashCardPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                decoration: BoxDecoration(
-                    color: Colors.orangeAccent.withOpacity(0.25),
-                    border: Border.all(color: Colors.orange.withOpacity(0.6)),
-                    borderRadius: const BorderRadius.horizontal(
-                        right: Radius.circular(50))),
+              Expanded(
                 child: Container(
-                  width: 35,
-                  height: 25,
+                  color: Colors.orangeAccent.withOpacity(0.4),
+                  height: 50,
                   alignment: Alignment.center,
                   child: Text(
                     '$forgotWord',
@@ -116,16 +108,10 @@ class _FlashCardPageState extends State<FlashCardPage> {
                   ),
                 ),
               ),
-              Container(
-                decoration: BoxDecoration(
-                    color: Colors.greenAccent.withOpacity(0.25),
-                    border:
-                        Border.all(color: Colors.greenAccent.withOpacity(0.6)),
-                    borderRadius: const BorderRadius.horizontal(
-                        left: Radius.circular(50))),
+              Expanded(
                 child: Container(
-                  width: 35,
-                  height: 25,
+                  color: Colors.lightGreenAccent.withOpacity(0.4),
+                  height: 50,
                   alignment: Alignment.center,
                   child: Text(
                     '$memoriedNum',
@@ -140,129 +126,109 @@ class _FlashCardPageState extends State<FlashCardPage> {
             child: Container(
               padding: const EdgeInsets.all(24),
               child: Card(
-                child: SwipeCards(
-                  matchEngine: _matchEngine!,
-                  likeTag: const Text(
-                    'Memorized',
-                    style: TextStyle(
-                        color: Colors.green, fontWeight: FontWeight.w600),
+                child: Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(width: 3, color: Color(0xff647ebb))),
+                  child: SwipeCards(
+                    matchEngine: _matchEngine!,
+                    likeTag: const Text(
+                      'Memorized',
+                      style: TextStyle(
+                          color: Colors.green, fontWeight: FontWeight.w600),
+                    ),
+                    nopeTag: const Text(
+                      'Not yet memorized',
+                      style: TextStyle(
+                          color: Colors.orangeAccent,
+                          fontWeight: FontWeight.w600),
+                    ),
+                    itemBuilder: (BuildContext context, int index) {
+                      return _buildCardWordItem(
+                          widget.wordModels[index], index, widget.isBack);
+                    },
+                    onStackFinished: () async {
+                      for (String wordId in memoriedWordIdList) {
+                        await WordService()
+                            .updateWordLearnCount(wordId, AppData.userModel.id);
+                      }
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(const SnackBar(
+                          content: Text("Stack Finished"),
+                          duration: Duration(milliseconds: 500),
+                        ));
+                      }
+                      if (context.mounted) {
+                        Navigator.pop(context);
+                      }
+                    },
+                    itemChanged: (SwipeItem item, int index) {
+                      setState(() {
+                        currentItem = index;
+                      });
+                    },
+                    leftSwipeAllowed: true,
+                    rightSwipeAllowed: true,
+                    upSwipeAllowed: true,
+                    fillSpace: false,
                   ),
-                  nopeTag: const Text(
-                    'Not yet memorized',
-                    style: TextStyle(
-                        color: Colors.orangeAccent,
-                        fontWeight: FontWeight.w600),
-                  ),
-                  itemBuilder: (BuildContext context, int index) {
-                    return _buildCardWordItem(
-                        widget.wordModels[index], index, widget.isBack);
-                  },
-                  onStackFinished: () async {
-                    print('memoriedWordIdList: $memoriedWordIdList');
-                    // await ApiService.learningCount(memoriedWordIdList);s
-                    for (String wordId in memoriedWordIdList) {
-                      await WordService()
-                          .updateWordLearnCount(wordId, AppData.userModel.id);
-                    }
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        content: Text("Stack Finished"),
-                        duration: Duration(milliseconds: 500),
-                      ));
-                    }
-                    if (context.mounted) {
-                      Navigator.pop(context);
-                    }
-                  },
-                  itemChanged: (SwipeItem item, int index) {
-                    setState(() {
-                      currentItem = index;
-                    });
-                  },
-                  leftSwipeAllowed: true,
-                  rightSwipeAllowed: true,
-                  upSwipeAllowed: true,
-                  fillSpace: false,
                 ),
               ),
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.reply,
-                size: 35,
-                color: Colors.grey[400],
-              ),
-              const SizedBox(
-                width: 20,
-              ),
-              const SizedBox(
-                width: 200,
-                child: Text(
-                  'Click the Play icon to start surfing automatically',
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              const SizedBox(
-                width: 20,
-              ),
-              isAuto
-                  ? IconButton(
-                      onPressed: () {
-                        timer?.cancel();
+          isAuto
+              ? IconButton(
+                  onPressed: () {
+                    timer?.cancel();
 
-                        setState(() {
-                          isAuto = !isAuto;
-                        });
-                      },
-                      icon: const Icon(
-                        Icons.pause,
-                        size: 35,
-                      ))
-                  : IconButton(
-                      onPressed: () {
+                    setState(() {
+                      isAuto = !isAuto;
+                    });
+                  },
+                  icon: const Icon(
+                    Icons.pause,
+                    size: 75,
+                    color: Colors.white,
+                  ))
+              : IconButton(
+                  onPressed: () {
+                    Future.delayed(const Duration(seconds: 1), () {
+                      if (mounted) {
+                        print('flip $currentItem');
+
+                        _flipCardControllerList[currentItem].toggleCard();
+                      }
+                    });
+
+                    setState(() {
+                      isAuto = !isAuto;
+                    });
+                    timer = Timer.periodic(const Duration(seconds: 3), (timer) {
+                      if (currentItem < widget.wordModels.length - 1) {
                         Future.delayed(const Duration(seconds: 1), () {
                           if (mounted) {
                             print('flip $currentItem');
-
                             _flipCardControllerList[currentItem].toggleCard();
                           }
                         });
-
+                        _matchEngine!.currentItem!.like();
+                        print('currentItem: $currentItem');
+                      } else {
+                        _matchEngine!.currentItem!.like();
+                        timer.cancel();
                         setState(() {
                           isAuto = !isAuto;
                         });
-                        timer =
-                            Timer.periodic(const Duration(seconds: 3), (timer) {
-                          if (currentItem < widget.wordModels.length - 1) {
-                            Future.delayed(const Duration(seconds: 1), () {
-                              if (mounted) {
-                                print('flip $currentItem');
-                                _flipCardControllerList[currentItem]
-                                    .toggleCard();
-                              }
-                            });
-                            _matchEngine!.currentItem!.like();
-                            print('currentItem: $currentItem');
-                          } else {
-                            _matchEngine!.currentItem!.like();
-                            timer.cancel();
-                            setState(() {
-                              isAuto = !isAuto;
-                            });
-                          }
-                        });
-                      },
-                      icon: Icon(
-                        Icons.play_arrow_rounded,
-                        size: 35,
-                        color: Colors.grey[600],
-                      ),
-                    )
-            ],
-          ),
+                      }
+                    });
+                  },
+                  icon: const Icon(
+                    Icons.play_arrow_rounded,
+                    size: 75,
+                    color: Colors.white,
+                  ),
+                ),
           const SizedBox(
             height: 20,
           ),
@@ -274,12 +240,8 @@ class _FlashCardPageState extends State<FlashCardPage> {
   Widget _buildCardWordItem(WordModel wordModel, int index, [bool? isBack]) {
     return FlipCard(
       controller: _flipCardControllerList[index],
-      // fill: Fill
-      //     .fillBack, // Fill the back side of the card to make in the same size as the front.
-      direction: FlipDirection.HORIZONTAL, // default
-      side: (isBack != null && isBack == true)
-          ? CardSide.BACK
-          : CardSide.FRONT, // The side to initially display.
+      direction: FlipDirection.HORIZONTAL,
+      side: (isBack != null && isBack == true) ? CardSide.BACK : CardSide.FRONT,
       front: Container(
         child: _buildCardWord(wordModel.english!, index),
       ),
@@ -289,7 +251,7 @@ class _FlashCardPageState extends State<FlashCardPage> {
 
   Widget _buildCardWord(String word, int index) {
     return Card(
-      color: Colors.white,
+      color: const Color(0xff647ebb),
       child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15.0),
@@ -297,7 +259,7 @@ class _FlashCardPageState extends State<FlashCardPage> {
           alignment: Alignment.center,
           child: Text(
             word,
-            style: const TextStyle(fontSize: 30),
+            style: const TextStyle(fontSize: 30, color: Colors.white),
           )),
     );
   }

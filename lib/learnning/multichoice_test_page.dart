@@ -13,18 +13,18 @@ import 'multiple_choice_game.dart';
 
 int _timeRemaining = 100;
 
-class LearningPage extends StatefulWidget {
+class MultichoiceTestPage extends StatefulWidget {
   final String topicId;
   final List<WordModel> wordModels;
 
-  const LearningPage(
+  const MultichoiceTestPage(
       {super.key, required this.wordModels, required this.topicId});
 
   @override
-  State<LearningPage> createState() => _LearningPageState();
+  State<MultichoiceTestPage> createState() => _MultichoiceTestPageState();
 }
 
-class _LearningPageState extends State<LearningPage> {
+class _MultichoiceTestPageState extends State<MultichoiceTestPage> {
   int currentItem = 0;
   final List<String> wordIdList = [];
 
@@ -53,32 +53,24 @@ class _LearningPageState extends State<LearningPage> {
     shuffle(randomWordList);
 
     return Scaffold(
+      backgroundColor: const Color(0xffd0d4ec),
       appBar: AppBar(
-        title: Text(
-          'Learning Page',
+        backgroundColor: const Color(0xff647ebb),
+        title: const Text(
+          'Multi-choice Test',
           style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-              color: Colors.grey[800]),
+              fontSize: 20, fontWeight: FontWeight.w600, color: Colors.white),
         ),
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: Icon(
+          icon: const Icon(
             Icons.close,
-            color: Colors.grey[800],
+            color: Colors.white,
             size: 30,
           ),
         ),
-        actions: [
-          IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.settings,
-                color: Colors.grey[800],
-              ))
-        ],
         centerTitle: true,
       ),
       body: Column(
@@ -101,9 +93,7 @@ class _LearningPageState extends State<LearningPage> {
     if (result) {
       wordIdList.add(widget.wordModels[currentItem].id!);
     }
-    print('currentItem: $currentItem');
     if (currentItem == widget.wordModels.length - 1) {
-      print('wordIdList: $wordIdList');
       for (String wordId in wordIdList) {
         await WordService().updateWordLearnCount(wordId, AppData.userModel.id);
       }

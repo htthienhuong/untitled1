@@ -4,16 +4,17 @@ import 'package:flutter/material.dart';
 import '../Models/word_model.dart';
 import '../utilities/tts_uti.dart';
 
-class EssayGame extends StatefulWidget {
+class TypingGame extends StatefulWidget {
   final WordModel currentWord;
   final Function? handleOnOkClick;
-  const EssayGame({super.key, required this.currentWord, this.handleOnOkClick});
+  const TypingGame(
+      {super.key, required this.currentWord, this.handleOnOkClick});
 
   @override
-  State<EssayGame> createState() => _EssayGameState();
+  State<TypingGame> createState() => _TypingGameState();
 }
 
-class _EssayGameState extends State<EssayGame> {
+class _TypingGameState extends State<TypingGame> {
   bool result = false;
   final TextEditingController _textEditingController = TextEditingController();
   FocusNode focusNode = FocusNode();
@@ -44,22 +45,20 @@ class _EssayGameState extends State<EssayGame> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
-                  child: IconButton(
+                IconButton(
                     onPressed: () {
                       speak(widget.currentWord.english, true);
                     },
-                    icon: const ImageIcon(
-                      AssetImage('assets/images/volume_icon.png'),
+                    icon: const Icon(
+                      Icons.volume_up,
                       size: 64,
-                    ),
-                  ),
-                ),
+                      color: Colors.white,
+                    )),
                 Container(
                   alignment: Alignment.center,
                   child: Text(
                     widget.currentWord.english!,
-                    style: const TextStyle(fontSize: 64),
+                    style: const TextStyle(fontSize: 64, color: Colors.white),
                   ),
                 ),
               ],

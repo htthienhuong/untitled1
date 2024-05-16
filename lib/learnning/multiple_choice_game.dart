@@ -1,4 +1,5 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../Models/word_model.dart';
@@ -30,34 +31,41 @@ class _MultipleChoiceGameState extends State<MultipleChoiceGame> {
     return Expanded(
       child: Column(
         children: [
+          const SizedBox(
+            height: 16,
+          ),
           Expanded(
-            child: Stack(
-              children: [
-                Align(
-                  alignment: Alignment.topRight,
-                  child: Padding(
+            child: Card(
+              color: const Color(0xff647ebb),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
                     padding: const EdgeInsets.all(10),
                     child: IconButton(
                       icon: const Icon(
                         Icons.volume_up,
-                        color: Colors.grey,
-                        size: 25,
+                        color: Colors.white,
+                        size: 50,
                       ),
                       onPressed: () async {
                         await speak(widget.currentWord.english!, true);
                       },
                     ),
                   ),
-                ),
-                Container(
-                  alignment: Alignment.center,
-                  child: Text(
-                    widget.currentWord.english!,
-                    style: const TextStyle(fontSize: 32),
+                  Container(
+                    alignment: Alignment.center,
+                    child: Text(
+                      widget.currentWord.english!,
+                      style: const TextStyle(fontSize: 50, color: Colors.white),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
+          ),
+          const SizedBox(
+            height: 8,
           ),
           ListView.builder(
             padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -209,11 +217,12 @@ class _MultipleChoiceGameState extends State<MultipleChoiceGame> {
       style: TextButton.styleFrom(
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(5),
-            side: BorderSide(color: Colors.grey[400]!)),
+            side: const BorderSide(color: Color(0xff647ebb))),
       ),
       child: Text(
         text,
-        style: TextStyle(color: Colors.grey[800], fontWeight: FontWeight.w400),
+        style: const TextStyle(
+            color: Color(0xff647ebb), fontWeight: FontWeight.w600),
       ),
     );
   }

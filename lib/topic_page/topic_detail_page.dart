@@ -205,18 +205,17 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                           body: Column(
                             children: [
                               const Text(
-                                'Setting for FlashCard',
+                                'Choose The Number To Learn',
                                 style: TextStyle(
                                     fontStyle: FontStyle.italic,
                                     fontSize: 24,
                                     fontWeight: FontWeight.bold),
                               ),
-                              const Text('Choose the number of words to learn'),
                               MySlider(
                                 getSize: _getSize,
                                 max: wordModelList.length.toDouble(),
                               ),
-                              MyRBtn(getValue: _getSide),
+                              MySwitchWidget(getValue: _getSide),
                             ],
                           ),
                           btnOkOnPress: () async {
@@ -264,13 +263,12 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                           body: Column(
                             children: [
                               const Text(
-                                'Setting for Learning',
+                                'Choose The Number To Learn',
                                 style: TextStyle(
                                     fontStyle: FontStyle.italic,
                                     fontSize: 24,
                                     fontWeight: FontWeight.bold),
                               ),
-                              const Text('Choose the number of words to learn'),
                               MySlider(
                                 getSize: _getSize,
                                 max: wordModelList.length.toDouble(),
@@ -297,7 +295,7 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                         padding: const EdgeInsets.all(8.0),
                         child: ListTile(
                           title: Text(
-                            'Learning',
+                            'Multichoice Test',
                             style: listTileTextStyle,
                           ),
                           trailing: Image.asset('assets/images/learning.png',
@@ -319,13 +317,12 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                           body: Column(
                             children: [
                               const Text(
-                                'Setting for Typing',
+                                'Choose The Number To Learn',
                                 style: TextStyle(
                                     fontStyle: FontStyle.italic,
                                     fontSize: 24,
                                     fontWeight: FontWeight.bold),
                               ),
-                              const Text('Choose the number of words to learn'),
                               MySlider(
                                 getSize: _getSize,
                                 max: wordModelList.length.toDouble(),
@@ -502,9 +499,6 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                           radius: 16.0,
                           lineWidth: 2.0,
                           percent: count < 20 ? (count / 20) : 1,
-                          // center: _getWordProcess(
-                          //   (count / 20) * 100,
-                          // ),
                           progressColor: Colors.green,
                         ),
                       ],
@@ -687,6 +681,8 @@ class MySliderState extends State<MySlider> {
           ),
         ),
         Slider(
+          inactiveColor: const Color(0xffd0d4ec),
+          activeColor: const Color(0xff647ebb),
           value: currentSliderValue,
           max: widget.max,
           divisions: widget.max.toInt(),
@@ -707,43 +703,40 @@ class MySliderState extends State<MySlider> {
   }
 }
 
-class MyRBtn extends StatefulWidget {
+class MySwitchWidget extends StatefulWidget {
   final Function getValue;
-  const MyRBtn({super.key, required this.getValue});
+  const MySwitchWidget({super.key, required this.getValue});
 
   @override
-  State<MyRBtn> createState() => _MyRBtnState();
+  State<MySwitchWidget> createState() => _MySwitchWidgetState();
 }
 
-class _MyRBtnState extends State<MyRBtn> {
+class _MySwitchWidgetState extends State<MySwitchWidget> {
   bool selectedValue = false;
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        RadioListTile(
-          title: const Text('FRONT'),
-          value: false,
-          groupValue: selectedValue,
-          onChanged: (value) {
-            setState(() {
-              selectedValue = value!;
-            });
-            widget.getValue(selectedValue);
-          },
-        ),
-        RadioListTile(
-          title: const Text('BACK'),
-          value: true,
-          groupValue: selectedValue,
-          onChanged: (value) {
-            setState(() {
-              selectedValue = value!;
-            });
-            widget.getValue(selectedValue);
-          },
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.only(left: 20.0),
+      child: Row(
+        children: [
+          Text(selectedValue ? 'Back Side' : 'Front Side'),
+          const SizedBox(
+            width: 8,
+          ),
+          Switch(
+            activeColor: Colors.blueAccent,
+            value: selectedValue,
+            onChanged: (value) {
+              setState(() {
+                setState(() {
+                  selectedValue = value;
+                });
+                widget.getValue(selectedValue);
+              });
+            },
+          ),
+        ],
+      ),
     );
   }
 }

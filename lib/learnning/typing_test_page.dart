@@ -4,44 +4,40 @@ import 'package:untitled1/Services/WordServices.dart';
 import 'package:untitled1/app_data/app_data.dart';
 
 import '../Models/word_model.dart';
-import 'essay_questions.dart';
+import 'typing_game.dart';
 
-class TypingPage extends StatefulWidget {
+class TypingTestPage extends StatefulWidget {
   final List<WordModel> wordModels;
 
-  const TypingPage({super.key, required this.wordModels});
+  const TypingTestPage({super.key, required this.wordModels});
 
   @override
-  State<TypingPage> createState() => _TypingPageState();
+  State<TypingTestPage> createState() => _TypingTestPageState();
 }
 
-class _TypingPageState extends State<TypingPage> {
+class _TypingTestPageState extends State<TypingTestPage> {
   int currentItem = 0;
   final List<String> wordIdList = [];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xffd0d4ec),
       appBar: AppBar(
+        backgroundColor: const Color(0xff647ebb),
         leading: IconButton(
-          icon: const Icon(Icons.close),
+          icon: const Icon(
+            Icons.close,
+            color: Colors.white,
+          ),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child:
-                IconButton(onPressed: () {}, icon: const Icon(Icons.settings)),
-          )
-        ],
         title: Text(
           '${currentItem + 1}/${widget.wordModels.length}',
-          style: TextStyle(
-              color: Colors.grey[800],
-              fontSize: 16,
-              fontWeight: FontWeight.w600),
+          style: const TextStyle(
+              color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
       ),
@@ -54,7 +50,7 @@ class _TypingPageState extends State<TypingPage> {
           progressColor: Colors.deepPurple,
           backgroundColor: Colors.grey,
         ),
-        EssayGame(
+        TypingGame(
           currentWord: widget.wordModels[currentItem],
           handleOnOkClick: _nextWord,
         ),
@@ -69,7 +65,6 @@ class _TypingPageState extends State<TypingPage> {
     if (result) {
       wordIdList.add(widget.wordModels[currentItem].id!);
     }
-    print('currentItem: $currentItem');
     if (currentItem == widget.wordModels.length - 1) {
       for (String wordId in wordIdList) {
         await WordService().updateWordLearnCount(wordId, AppData.userModel.id);
