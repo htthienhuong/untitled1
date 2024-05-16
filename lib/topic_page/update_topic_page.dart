@@ -107,70 +107,71 @@ class _UpdateTopicPageState extends State<UpdateTopicPage> {
             }
             return Form(
               key: _formKey,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  padding: EdgeInsets.all(15.0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    color: Color.fromARGB(150, 255, 204, 204),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      TextFormField(
-                        maxLines: null,
-                        initialValue: widget.topicModel.topicName,
-                        decoration: const InputDecoration.collapsed(
-                          hintText: 'Topic',
-                          border: UnderlineInputBorder(),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter some text';
-                          }
-                          return null;
-                        },
-                        onSaved: (newValue) {
-                          widget.topicModel.topicName = newValue!;
-                        },
-                      ),
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      const Text(
-                        'Topic',
-                        style:
-                            TextStyle(fontSize: 8, fontWeight: FontWeight.bold),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        height: 50,
-                        width: double.maxFinite,
-                        child: DropdownButtonFormField(
-                          value: dropDownValue, // this
-                          items: ["Private", "Public"]
-                              .map<DropdownMenuItem<String>>((String value) =>
-                                  DropdownMenuItem<String>(
-                                      value:
-                                          value, // add this property an pass the _value to it
-                                      child: Text(
-                                        value,
-                                      )))
-                              .toList(),
-                          onChanged: (value) {
-                            if (value == 'Public') {
-                              public = true;
-                            } else {
-                              public = false;
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    padding: EdgeInsets.all(15.0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      color: Color.fromARGB(150, 255, 204, 204),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextFormField(
+                          maxLines: null,
+                          initialValue: widget.topicModel.topicName,
+                          decoration: const InputDecoration.collapsed(
+                            hintText: 'Topic',
+                            border: UnderlineInputBorder(),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter some text';
                             }
-                            print("public: $public");
+                            return null;
+                          },
+                          onSaved: (newValue) {
+                            widget.topicModel.topicName = newValue!;
                           },
                         ),
-                      ),
-                      Expanded(
-                        child: ListView.builder(
-                            shrinkWrap: false,
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        const Text(
+                          'Topic',
+                          style: TextStyle(
+                              fontSize: 8, fontWeight: FontWeight.bold),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          height: 50,
+                          width: double.maxFinite,
+                          child: DropdownButtonFormField(
+                            value: dropDownValue, // this
+                            items: ["Private", "Public"]
+                                .map<DropdownMenuItem<String>>((String value) =>
+                                    DropdownMenuItem<String>(
+                                        value:
+                                            value, // add this property an pass the _value to it
+                                        child: Text(
+                                          value,
+                                        )))
+                                .toList(),
+                            onChanged: (value) {
+                              if (value == 'Public') {
+                                public = true;
+                              } else {
+                                public = false;
+                              }
+                              print("public: $public");
+                            },
+                          ),
+                        ),
+                        ListView.builder(
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
                             itemCount: wordModelList.length,
                             itemBuilder: (context, index) {
                               return Dismissible(
@@ -230,8 +231,8 @@ class _UpdateTopicPageState extends State<UpdateTopicPage> {
                                   key: UniqueKey(),
                                   child: _buildItemWord(index));
                             }),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),

@@ -51,8 +51,9 @@ class _AddTopicPageState extends State<AddTopicPage> {
           shape: const CircleBorder(),
           onPressed: () {
             wordModelList.add(WordModel());
+            _formKey.currentState?.save();
             setState(() {
-              itemWordCount++;
+              wordModelList.add(WordModel());
             });
           },
           child: const Icon(
@@ -81,7 +82,7 @@ class _AddTopicPageState extends State<AddTopicPage> {
         actions: [
           IconButton(
             onPressed: () {
-              _pickFile();
+              _importCsv();
             },
             icon: const Icon(FontAwesomeIcons.fileCsv),
             color: const Color(0xff647ebb),
@@ -199,7 +200,10 @@ class _AddTopicPageState extends State<AddTopicPage> {
                             return Dismissible(
                                 direction: DismissDirection.endToStart,
                                 onDismissed: (direction) {
-                                  wordModelList.removeAt(index);
+                                  _formKey.currentState?.save();
+                                  setState(() {
+                                    wordModelList.removeAt(index);
+                                  });
                                 },
                                 confirmDismiss: (direction) async {
                                   return await showDialog(
@@ -362,7 +366,7 @@ class _AddTopicPageState extends State<AddTopicPage> {
     );
   }
 
-  void _pickFile() async {
+  void _importCsv() async {
     setState(() {
       wordModelList.clear();
     });
@@ -372,10 +376,7 @@ class _AddTopicPageState extends State<AddTopicPage> {
       allowedExtensions: ['csv'],
     );
 
-    // if no file is picked
     if (result == null || !result.files.first.name.endsWith('.csv')) return;
-    // we will log the name, size and path of the
-    // first picked file (if multiple are selected)
     print(result.files.first.name);
     filePath = result.files.first.path!;
 
@@ -385,9 +386,7 @@ class _AddTopicPageState extends State<AddTopicPage> {
         .transform(const CsvToListConverter())
         .toList();
     print(fields);
-    if (fields[0][0] == 'Word' && fields[0][1] == 'Definition') {
-      print('length: ${wordModelList.length}');
-
+    if (fields[0][0] == 'English' && fields[0][1] == 'Vietnamese') {
       for (int i = 1; i < fields.length; i++) {
         wordModelList.add(WordModel());
 
@@ -395,9 +394,6 @@ class _AddTopicPageState extends State<AddTopicPage> {
           wordModelList[wordModelList.length - 1].english = fields[i][0];
           wordModelList[wordModelList.length - 1].vietnam = fields[i][1];
         });
-
-        print('field: ${fields[i]}');
-        print('wordModelList: ${wordModelList[i - 1].english}');
       }
     }
   }
