@@ -183,7 +183,9 @@ class _FolderPageState extends State<FolderPage>
                   const SizedBox(
                     width: 8,
                   ),
-                  const Text('Thien Huong'),
+                  Text(AppData.userModel.name,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w500, color: Color(0xff647ebb))),
                 ],
               ),
               Container(
@@ -191,7 +193,9 @@ class _FolderPageState extends State<FolderPage>
                 decoration: BoxDecoration(
                     color: const Color(0xffacbdd0),
                     borderRadius: BorderRadius.circular(8)),
-                child: Text('${folder.Topics?.length ?? 0} topics'),
+                child: Text('${folder.Topics?.length ?? 0} topics',
+                  style: const TextStyle(color: Colors.white),
+                ),
               ),
             ],
           )
