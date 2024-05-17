@@ -49,7 +49,7 @@ class _UpdateTopicPageState extends State<UpdateTopicPage> {
         title: const Text(
           "Edit Topic",
           style:
-              TextStyle(fontWeight: FontWeight.bold, color: Color(0xff1b2794)),
+          TextStyle(fontWeight: FontWeight.bold, color: Color(0xff1b2794)),
         ),
         leading: IconButton(
           onPressed: () {
@@ -97,7 +97,7 @@ class _UpdateTopicPageState extends State<UpdateTopicPage> {
       ),
       body: FutureBuilder(
         future:
-            WordService().getWordListFromRef(widget.topicModel.wordReferences!),
+        WordService().getWordListFromRef(widget.topicModel.wordReferences!),
         builder:
             (BuildContext context, AsyncSnapshot<List<WordModel>> snapshot) {
           if (snapshot.hasData) {
@@ -109,7 +109,7 @@ class _UpdateTopicPageState extends State<UpdateTopicPage> {
               key: _formKey,
               child: SingleChildScrollView(
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(15.0),
                   child: Container(
                     padding: EdgeInsets.all(15.0),
                     decoration: BoxDecoration(
@@ -120,11 +120,17 @@ class _UpdateTopicPageState extends State<UpdateTopicPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         TextFormField(
+                          style: TextStyle(
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: "Epilogue"),
                           maxLines: null,
                           initialValue: widget.topicModel.topicName,
                           decoration: const InputDecoration.collapsed(
-                            hintText: 'Topic',
-                            border: UnderlineInputBorder(),
+                              hintText: 'Topic',
+                              border: UnderlineInputBorder(),
+                              hintStyle:
+                              TextStyle(height: 2.5, fontFamily: "Epilogue")
                           ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -142,22 +148,25 @@ class _UpdateTopicPageState extends State<UpdateTopicPage> {
                         const Text(
                           'Topic',
                           style: TextStyle(
-                              fontSize: 8, fontWeight: FontWeight.bold),
+                              fontSize: 10, fontWeight: FontWeight.w600),
+                        ),
+                        const SizedBox(
+                          height: 12,
                         ),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
                           height: 50,
                           width: double.maxFinite,
                           child: DropdownButtonFormField(
                             value: dropDownValue, // this
                             items: ["Private", "Public"]
                                 .map<DropdownMenuItem<String>>((String value) =>
-                                    DropdownMenuItem<String>(
-                                        value:
-                                            value, // add this property an pass the _value to it
-                                        child: Text(
-                                          value,
-                                        )))
+                                DropdownMenuItem<String>(
+                                    value:
+                                    value, // add this property an pass the _value to it
+                                    child: Text(
+                                      value,
+                                    )))
                                 .toList(),
                             onChanged: (value) {
                               if (value == 'Public') {
@@ -169,6 +178,10 @@ class _UpdateTopicPageState extends State<UpdateTopicPage> {
                             },
                           ),
                         ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+
                         ListView.builder(
                             physics: const NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
@@ -251,9 +264,9 @@ class _UpdateTopicPageState extends State<UpdateTopicPage> {
 
   Widget _buildItemWord(int index) {
     TextEditingController defController =
-        TextEditingController(text: wordModelList[index].vietnam);
+    TextEditingController(text: wordModelList[index].vietnam);
     TextEditingController wordController =
-        TextEditingController(text: wordModelList[index].english);
+    TextEditingController(text: wordModelList[index].english);
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
@@ -265,11 +278,24 @@ class _UpdateTopicPageState extends State<UpdateTopicPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const SizedBox(
+            height: 10,
+          ),
           TextFormField(
             controller: wordController,
+            style: TextStyle(
+                fontSize: 20,
+                height: 2,
+                fontWeight: FontWeight.w500,
+                fontFamily: "Epilogue"),
             decoration: const InputDecoration.collapsed(
               hintText: 'Word',
               border: UnderlineInputBorder(),
+              hintStyle: TextStyle(
+                  fontSize: 20,
+                  height: 2,
+                  fontWeight: FontWeight.w500,
+                  fontFamily: "Epilogue"),
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -284,14 +310,25 @@ class _UpdateTopicPageState extends State<UpdateTopicPage> {
             },
           ),
           const SizedBox(
-            height: 8,
+            height: 6,
           ),
           const Text(
             'Word',
-            style: TextStyle(fontSize: 8, fontWeight: FontWeight.bold),
+            style: TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w500,
+                fontFamily: "Epilogue"),
+          ),
+          const SizedBox(
+            height: 25,
           ),
           TextFormField(
             controller: defController,
+            style: TextStyle(
+                fontSize: 20,
+                height: 2,
+                fontWeight: FontWeight.w500,
+                fontFamily: "Epilogue"),
             onTap: () {
               defController.selection = TextSelection(
                   baseOffset: 0, extentOffset: defController.value.text.length);
@@ -299,6 +336,11 @@ class _UpdateTopicPageState extends State<UpdateTopicPage> {
             decoration: const InputDecoration.collapsed(
               hintText: 'Definition',
               border: UnderlineInputBorder(),
+              hintStyle: TextStyle(
+                  fontSize: 20,
+                  height: 2,
+                  fontWeight: FontWeight.w500,
+                  fontFamily: "Epilogue"),
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -313,11 +355,14 @@ class _UpdateTopicPageState extends State<UpdateTopicPage> {
             },
           ),
           const SizedBox(
-            height: 8,
+            height: 6,
           ),
           const Text(
-            'Definition',
-            style: TextStyle(fontSize: 8, fontWeight: FontWeight.bold),
+              'Definition',
+              style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w500,
+                  fontFamily: "Epilogue")
           ),
         ],
       ),

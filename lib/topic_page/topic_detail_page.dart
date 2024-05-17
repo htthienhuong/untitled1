@@ -40,7 +40,7 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
 
   final pageController = PageController(viewportFraction: 0.85);
   final TextStyle listTileTextStyle = const TextStyle(
-      fontWeight: FontWeight.w500, fontSize: 24, color: Colors.white);
+      fontWeight: FontWeight.w500, fontSize: 20, color: Colors.white);
 
   @override
   void initState() {
@@ -103,7 +103,7 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                     content:
-                                        Text('Csv was exported to Download'),
+                                    Text('Csv was exported to Download'),
                                   ),
                                 );
 
@@ -166,255 +166,258 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
   Widget _buildBody() {
     return FutureBuilder(
         future:
-            WordService().getWordListFromRef(widget.topicModel.wordReferences!),
+        WordService().getWordListFromRef(widget.topicModel.wordReferences!),
         builder:
             (BuildContext context, AsyncSnapshot<List<WordModel>> snapshot) {
           if (snapshot.hasData) {
             wordModelList = snapshot.data!;
             return SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: 250,
-                    child: PageView.builder(
-                      controller: pageController,
-                      itemBuilder: (context, index) =>
-                          CardWordWidget(wordModel: wordModelList[index]),
-                      itemCount: wordModelList.length,
-                      scrollDirection: Axis.horizontal,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  const Text(
-                    "Let's Study",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 24,
-                        color: Colors.blueAccent),
-                  ),
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      if (wordModelList.isNotEmpty) {
-                        AwesomeDialog(
-                          context: context,
-                          animType: AnimType.scale,
-                          dialogType: DialogType.info,
-                          body: Column(
-                            children: [
-                              const Text(
-                                'Choose The Number To Learn',
-                                style: TextStyle(
-                                    fontStyle: FontStyle.italic,
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              SliderWidget(
-                                getSize: _getSize,
-                                max: wordModelList.length.toDouble(),
-                              ),
-                              SwitchWidget(getValue: _getSide),
-                            ],
-                          ),
-                          btnOkOnPress: () async {
-                            await Navigator.pushNamed(
-                                context, Routes.flashCardPage,
-                                arguments: [
-                                  _getRandomWordList(
-                                    size,
+                child: Padding(
+                  padding: EdgeInsetsDirectional.symmetric(horizontal: 1),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: 300,
+                        child: PageView.builder(
+                          controller: pageController,
+                          itemBuilder: (context, index) =>
+                              CardWordWidget(wordModel: wordModelList[index]),
+                          itemCount: wordModelList.length,
+                          scrollDirection: Axis.horizontal,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 16,
+                      ),
+                      const Text(
+                        "Let's Study",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 24,
+                            color: Colors.blueAccent),
+                      ),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          if (wordModelList.isNotEmpty) {
+                            AwesomeDialog(
+                              context: context,
+                              animType: AnimType.scale,
+                              dialogType: DialogType.info,
+                              body: Column(
+                                children: [
+                                  const Text(
+                                    'Choose The Number To Learn',
+                                    style: TextStyle(
+                                        fontStyle: FontStyle.italic,
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.bold),
                                   ),
-                                  isBack
-                                ]);
-                            setState(() {});
-                          },
-                          btnCancelOnPress: () {},
-                        ).show();
-                      }
-                    },
-                    child: Card(
-                      color: wordModelList.isEmpty
-                          ? const Color(0xffd0d4ec)
-                          : const Color(0xff647ebb),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ListTile(
-                          title: Text(
-                            'Flash Card',
-                            style: listTileTextStyle,
-                          ),
-                          trailing: Image.asset('assets/images/flash_card.png',
-                              height: 60),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      if (wordModelList.isNotEmpty) {
-                        AwesomeDialog(
-                          context: context,
-                          animType: AnimType.scale,
-                          dialogType: DialogType.info,
-                          body: Column(
-                            children: [
-                              const Text(
-                                'Choose The Number To Learn',
-                                style: TextStyle(
-                                    fontStyle: FontStyle.italic,
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold),
+                                  SliderWidget(
+                                    getSize: _getSize,
+                                    max: wordModelList.length.toDouble(),
+                                  ),
+                                  SwitchWidget(getValue: _getSide),
+                                ],
                               ),
-                              SliderWidget(
-                                getSize: _getSize,
-                                max: wordModelList.length.toDouble(),
+                              btnOkOnPress: () async {
+                                await Navigator.pushNamed(
+                                    context, Routes.flashCardPage,
+                                    arguments: [
+                                      _getRandomWordList(
+                                        size,
+                                      ),
+                                      isBack
+                                    ]);
+                                setState(() {});
+                              },
+                              btnCancelOnPress: () {},
+                            ).show();
+                          }
+                        },
+                        child: Card(
+                          color: wordModelList.isEmpty
+                              ? const Color(0xffd0d4ec)
+                              : const Color(0xff647ebb),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ListTile(
+                              title: Text(
+                                'Flash Card',
+                                style: listTileTextStyle,
                               ),
-                            ],
-                          ),
-                          btnOkOnPress: () async {
-                            await Navigator.pushNamed(
-                                context, Routes.learningPage, arguments: [
-                              _getRandomWordList(size),
-                              widget.topicModel.id
-                            ]);
-                            setState(() {});
-                          },
-                          btnCancelOnPress: () {},
-                        ).show();
-                      }
-                    },
-                    child: Card(
-                      color: wordModelList.isEmpty
-                          ? const Color(0xffd0d4ec)
-                          : const Color(0xff647ebb),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ListTile(
-                          title: Text(
-                            'Multichoice Test',
-                            style: listTileTextStyle,
-                          ),
-                          trailing: Image.asset('assets/images/learning.png',
-                              height: 60),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      if (wordModelList.isNotEmpty) {
-                        AwesomeDialog(
-                          context: context,
-                          animType: AnimType.scale,
-                          dialogType: DialogType.info,
-                          body: Column(
-                            children: [
-                              const Text(
-                                'Choose The Number To Learn',
-                                style: TextStyle(
-                                    fontStyle: FontStyle.italic,
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              SliderWidget(
-                                getSize: _getSize,
-                                max: wordModelList.length.toDouble(),
-                              ),
-                            ],
-                          ),
-                          btnOkOnPress: () async {
-                            await Navigator.pushNamed(
-                              context,
-                              Routes.typingPage,
-                              arguments: _getRandomWordList(size),
-                            );
-                            setState(() {});
-                          },
-                          btnCancelOnPress: () {},
-                        ).show();
-                      }
-                    },
-                    child: Card(
-                      color: wordModelList.isEmpty
-                          ? const Color(0xffd0d4ec)
-                          : const Color(0xff647ebb),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ListTile(
-                          title: Text(
-                            'Typing',
-                            style: listTileTextStyle,
-                          ),
-                          trailing: Image.asset('assets/images/typing_icon.png',
-                              height: 60),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  widget.topicModel.isPublic!
-                      ? GestureDetector(
-                          onTap: () {
-                            if (wordModelList.isNotEmpty) {
-                              Navigator.pushNamed(
-                                  context, Routes.leaderBoardPage,
-                                  arguments: widget.topicModel.id);
-                            }
-                          },
-                          child: Card(
-                            color: wordModelList.isEmpty
-                                ? const Color(0xffd0d4ec)
-                                : const Color(0xff647ebb),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: ListTile(
-                                title: Text(
-                                  'Leading Board',
-                                  style: listTileTextStyle,
-                                ),
-                                trailing: Image.asset(
-                                    'assets/images/leading_board_icon.png',
-                                    height: 60),
-                              ),
+                              trailing: Image.asset('assets/images/flash_card.png',
+                                  height: 60),
                             ),
                           ),
-                        )
-                      : const SizedBox(),
-                  const SizedBox(
-                    height: 8,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          if (wordModelList.isNotEmpty) {
+                            AwesomeDialog(
+                              context: context,
+                              animType: AnimType.scale,
+                              dialogType: DialogType.info,
+                              body: Column(
+                                children: [
+                                  const Text(
+                                    'Choose The Number To Learn',
+                                    style: TextStyle(
+                                        fontStyle: FontStyle.italic,
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  SliderWidget(
+                                    getSize: _getSize,
+                                    max: wordModelList.length.toDouble(),
+                                  ),
+                                ],
+                              ),
+                              btnOkOnPress: () async {
+                                await Navigator.pushNamed(
+                                    context, Routes.learningPage, arguments: [
+                                  _getRandomWordList(size),
+                                  widget.topicModel.id
+                                ]);
+                                setState(() {});
+                              },
+                              btnCancelOnPress: () {},
+                            ).show();
+                          }
+                        },
+                        child: Card(
+                          color: wordModelList.isEmpty
+                              ? const Color(0xffd0d4ec)
+                              : const Color(0xff647ebb),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ListTile(
+                              title: Text(
+                                'Multichoice Test',
+                                style: listTileTextStyle,
+                              ),
+                              trailing: Image.asset('assets/images/learning.png',
+                                  height: 60),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          if (wordModelList.isNotEmpty) {
+                            AwesomeDialog(
+                              context: context,
+                              animType: AnimType.scale,
+                              dialogType: DialogType.info,
+                              body: Column(
+                                children: [
+                                  const Text(
+                                    'Choose The Number To Learn',
+                                    style: TextStyle(
+                                        fontStyle: FontStyle.italic,
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  SliderWidget(
+                                    getSize: _getSize,
+                                    max: wordModelList.length.toDouble(),
+                                  ),
+                                ],
+                              ),
+                              btnOkOnPress: () async {
+                                await Navigator.pushNamed(
+                                  context,
+                                  Routes.typingPage,
+                                  arguments: _getRandomWordList(size),
+                                );
+                                setState(() {});
+                              },
+                              btnCancelOnPress: () {},
+                            ).show();
+                          }
+                        },
+                        child: Card(
+                          color: wordModelList.isEmpty
+                              ? const Color(0xffd0d4ec)
+                              : const Color(0xff647ebb),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ListTile(
+                              title: Text(
+                                'Typing',
+                                style: listTileTextStyle,
+                              ),
+                              trailing: Image.asset('assets/images/typing_icon.png',
+                                  height: 60),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      widget.topicModel.isPublic!
+                          ? GestureDetector(
+                        onTap: () {
+                          if (wordModelList.isNotEmpty) {
+                            Navigator.pushNamed(
+                                context, Routes.leaderBoardPage,
+                                arguments: widget.topicModel.id);
+                          }
+                        },
+                        child: Card(
+                          color: wordModelList.isEmpty
+                              ? const Color(0xffd0d4ec)
+                              : const Color(0xff647ebb),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ListTile(
+                              title: Text(
+                                'Leading Board',
+                                style: listTileTextStyle,
+                              ),
+                              trailing: Image.asset(
+                                  'assets/images/leading_board_icon.png',
+                                  height: 60),
+                            ),
+                          ),
+                        ),
+                      )
+                          : const SizedBox(),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      Text(
+                        "Total: ${widget.topicModel.wordReferences?.length ?? 0} words",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 24,
+                            color: Colors.blueAccent),
+                      ),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      ListView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: wordModelList.length,
+                        itemBuilder: (context, index) {
+                          return _buildCardWords(wordModelList[index]);
+                        },
+                      )
+                    ],
                   ),
-                  Text(
-                    "Total: ${widget.topicModel.wordReferences?.length ?? 0} words",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 24,
-                        color: Colors.blueAccent),
-                  ),
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  ListView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: wordModelList.length,
-                    itemBuilder: (context, index) {
-                      return _buildCardWords(wordModelList[index]);
-                    },
-                  )
-                ],
-              ),
+                )
             );
           } else if (snapshot.hasData) {
             return const Text('error');
@@ -476,120 +479,123 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
   }
 
   Widget _buildCardWords(WordModel wordModel) {
-    return Card(
-      color: const Color(0xffd0d4ec),
+    return FittedBox(
+      child:
+        Card(
+        color: const Color(0xffd0d4ec),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            SizedBox(
-              width: 85,
-              child: FutureBuilder(
-                future: WordService()
-                    .getWordLearnCount(wordModel.id!, AppData.userModel.id),
-                builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-                  if (snapshot.hasData) {
-                    int count = snapshot.data!;
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          alignment: Alignment.center,
-                          child: _getWordProcess(
-                            (count / 20) * 100,
-                          ),
+        children: [
+          SizedBox(
+            width: 85,
+            child: FutureBuilder(
+              future: WordService()
+                  .getWordLearnCount(wordModel.id!, AppData.userModel.id),
+              builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+                if (snapshot.hasData) {
+                  int count = snapshot.data!;
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        alignment: Alignment.center,
+                        child: _getWordProcess(
+                          (count / 20) * 100,
                         ),
-                        const SizedBox(
-                          height: 4,
-                        ),
-                        CircularPercentIndicator(
-                          backgroundColor: Colors.white,
-                          radius: 16.0,
-                          lineWidth: 2.0,
-                          percent: count < 20 ? (count / 20) : 1,
-                          progressColor: Colors.green,
-                        ),
-                      ],
-                    );
-                  } else if (snapshot.hasError) {
-                    return const Text('error');
-                  } else {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                },
-              ),
+                      ),
+                      const SizedBox(
+                        height: 4,
+                      ),
+                      CircularPercentIndicator(
+                        backgroundColor: Colors.white,
+                        radius: 16.0,
+                        lineWidth: 2.0,
+                        percent: count < 20 ? (count / 20) : 1,
+                        progressColor: Colors.green,
+                      ),
+                    ],
+                  );
+                } else if (snapshot.hasError) {
+                  return const Text('error');
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              },
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      '${wordModel.english}',
-                      style: const TextStyle(
-                          fontSize: 20, color: Color(0xff647ebb)),
-                    ),
-                  ],
-                ),
-                Text(
-                  '${wordModel.vietnam}',
-                  style:
-                      const TextStyle(fontSize: 20, color: Color(0xff647ebb)),
-                )
-              ],
-            ),
-            Row(
-              children: [
-                IconButton(
-                  onPressed: () async {
-                    await speak(wordModel.english, true);
-                  },
-                  icon: const Icon(
-                    Icons.volume_up,
-                    color: Colors.white,
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '${wordModel.english}', style: const TextStyle( fontSize: 20, color: Color(0xff647ebb)),
                   ),
-                ),
-                FutureBuilder(
-                  future: WordService()
-                      .getWordStar(wordModel.id!, AppData.userModel.id),
-                  builder:
-                      (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                    if (snapshot.hasData) {
-                      bool starred = snapshot.data!;
-                      return IconButton(
-                          onPressed: () async {
-                            await WordService().updateWordStatus(
-                                wordModel.id!, AppData.userModel.id, !starred);
-                            setState(() {});
-                          },
-                          icon: starred
-                              ? const Icon(
-                                  Icons.star,
-                                  color: Colors.yellow,
-                                )
-                              : const Icon(
-                                  Icons.star_outline,
-                                  color: Colors.white,
-                                ));
-                    } else if (snapshot.hasError) {
-                      return const Text('error');
-                    } else {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-                  },
-                )
-              ],
-            )
-          ],
+                ],
+              ),
+              Text(
+                '${wordModel.vietnam}',
+                style:
+                  const TextStyle( fontSize: 20, color: Color.fromARGB(255, 28, 22, 120),
+                  ),
+              )
+            ],
+          ),
+          Row(
+            children: [
+              IconButton(
+              onPressed: () async {
+              await speak(wordModel.english, true);
+              },
+              icon: const Icon(
+              Icons.volume_up,
+              color: Colors.white,
+              ),
+              ),
+              FutureBuilder(
+              future: WordService()
+                  .getWordStar(wordModel.id!, AppData.userModel.id),
+              builder:
+              (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+              if (snapshot.hasData) {
+              bool starred = snapshot.data!;
+              return IconButton(
+              onPressed: () async {
+              await WordService().updateWordStatus(
+              wordModel.id!, AppData.userModel.id, !starred);
+              setState(() {});
+              },
+              icon: starred
+              ? const Icon(
+              Icons.star,
+              color: Colors.yellow,
+              )
+                  : const Icon(
+              Icons.star_outline,
+              color: Colors.white,
+              ));
+              } else if (snapshot.hasError) {
+              return const Text('error');
+              } else {
+              return const Center(
+              child: CircularProgressIndicator(),
+              );
+              }
+              },
+              )
+            ],
+          )
+        ],
         ),
-      ),
-    );
+        ),
+      )
+     );
+
   }
 }

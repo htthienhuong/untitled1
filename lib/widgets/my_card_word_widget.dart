@@ -65,9 +65,10 @@ class _CardWordWidgetState extends State<CardWordWidget> {
             ),
             Container(
                 alignment: Alignment.center,
+                padding: EdgeInsets.symmetric(horizontal: 20),
                 child: Text(
                   word,
-                  style: const TextStyle(color: Colors.white, fontSize: 30),
+                  style: const TextStyle(color: Colors.black, fontSize: 30, fontFamily: "Epilogue"),
                 )),
           ],
         ),

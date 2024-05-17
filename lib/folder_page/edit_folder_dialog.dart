@@ -32,7 +32,7 @@ class _EditFolderDialogState extends State<EditFolderDialog> {
         title: const Text(
           'Edit Folder',
           textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, fontFamily: "Epilogue"),
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, fontFamily: "Epilogue"),
         ),
         content: Form(
           key: _formKey,
@@ -48,15 +48,15 @@ class _EditFolderDialogState extends State<EditFolderDialog> {
                   ),
 
                   const SizedBox(
-                    height: 10,
+                    height: 8,
                   ),
                   TextFormField(
                     controller: _folderNameController,
-                    style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold, fontFamily: "Epilogue"),
+                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, fontFamily: "Epilogue"),
                     decoration: const InputDecoration.collapsed(
                         hintText: 'Folder Name',
                         border: UnderlineInputBorder(),
-                        hintStyle: TextStyle(height: 2.5, fontFamily: "Epilogue")
+                        hintStyle: TextStyle(height: 2, fontFamily: "Epilogue")
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -69,7 +69,7 @@ class _EditFolderDialogState extends State<EditFolderDialog> {
                     },
                   ),
                   const SizedBox(
-                    height: 10,
+                    height: 15,
                   ),
 
                   const Text(
@@ -78,7 +78,7 @@ class _EditFolderDialogState extends State<EditFolderDialog> {
                   ),
 
                   const SizedBox(
-                    height: 12,
+                    height: 8,
                   ),
 
                   Expanded(
@@ -94,12 +94,9 @@ class _EditFolderDialogState extends State<EditFolderDialog> {
                       decoration: const InputDecoration.collapsed(
                           hintText: 'Description',
                           border: UnderlineInputBorder(),
-                          hintStyle: TextStyle(height: 2.5, fontFamily: "Epilogue")
+                          hintStyle: TextStyle(height: 1.5, fontFamily: "Epilogue")
                       ),
                       validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter some text';
-                        }
                         return null;
                       },
                       onSaved: (newValue) {

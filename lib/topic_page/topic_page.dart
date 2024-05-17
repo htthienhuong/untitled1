@@ -80,20 +80,20 @@ class _TopicPageState extends State<TopicPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-              height: 90,
-              width: double.maxFinite,
-              child: Row(
+              height: 60,
+              child:
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
                     padding: const EdgeInsets.all(8),
-                    width: MediaQuery.of(context).size.width * 0.7,
+                    width: MediaQuery.of(context).size.width * 0.6,
                     child: Text(
                       topicModel.topicName!,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
                       style: const TextStyle(
-                          fontSize: 24,
+                          fontSize: 22,
                           color: Color(0xff1b2794),
                           fontWeight: FontWeight.w500),
                     ),

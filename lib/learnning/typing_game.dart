@@ -59,7 +59,7 @@ class _TypingGameState extends State<TypingGame> {
                   alignment: Alignment.center,
                   child: Text(
                     widget.currentWord.english!,
-                    style: const TextStyle(fontSize: 64, color: Colors.white),
+                    style: const TextStyle(fontSize: 64, color: Color.fromARGB(255, 28, 22, 120)),
                   ),
                 ),
               ],

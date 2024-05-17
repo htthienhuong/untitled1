@@ -24,16 +24,16 @@ class _AddFolderDialogState extends State<AddFolderDialog> {
   Widget build(BuildContext context) {
     return
       AlertDialog(
-      title: Text(
+      title: const Text(
         'Create New Folder',
         textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, fontFamily: "Epilogue"),
+        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, fontFamily: "Epilogue"),
       ),
       content: Form(
         key: _formKey,
         child:
         ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: 500, maxHeight: 300, minWidth: 500, minHeight: 100),
+            constraints: const BoxConstraints(maxWidth: 500, maxHeight: 300, minWidth: 500, minHeight: 300),
             child:       Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -43,15 +43,15 @@ class _AddFolderDialogState extends State<AddFolderDialog> {
                 ),
 
                 const SizedBox(
-                  height: 10,
+                  height: 8,
                 ),
                 TextFormField(
                   controller: _folderNameController,
-                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, fontFamily: "Epilogue"),
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, fontFamily: "Epilogue"),
                   decoration: const InputDecoration.collapsed(
                       hintText: 'Folder Name',
                       border: UnderlineInputBorder(),
-                      hintStyle: TextStyle(height: 2.5, fontFamily: "Epilogue")
+                      hintStyle: TextStyle(height: 2, fontFamily: "Epilogue")
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -64,7 +64,7 @@ class _AddFolderDialogState extends State<AddFolderDialog> {
                   },
                 ),
                 const SizedBox(
-                  height: 10,
+                  height: 15,
                 ),
 
                 const Text(
@@ -73,7 +73,7 @@ class _AddFolderDialogState extends State<AddFolderDialog> {
                 ),
 
                 const SizedBox(
-                  height: 12,
+                  height: 8,
                 ),
 
                 Expanded(
@@ -89,12 +89,9 @@ class _AddFolderDialogState extends State<AddFolderDialog> {
                     decoration: const InputDecoration.collapsed(
                         hintText: 'Description',
                         border: UnderlineInputBorder(),
-                        hintStyle: TextStyle(height: 2.5, fontFamily: "Epilogue")
+                        hintStyle: TextStyle(height: 1.5, fontFamily: "Epilogue")
                     ),
                     validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter some text';
-                      }
                       return null;
                     },
                     onSaved: (newValue) {

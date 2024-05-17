@@ -28,43 +28,37 @@ class _FolderPageState extends State<FolderPage>
       padding: const EdgeInsets.all(16.0),
       child: Column(
         children: [
-          TabBar(
-            labelColor: Colors.green,
-            indicatorColor: Colors.green,
-            controller: _tabController,
-            tabs: const <Tab>[
-              Tab(text: "Folder"),
-              Tab(text: "Starred"),
-            ],
-          ),
+          // TabBar(
+          //   labelColor: Colors.green,
+          //   indicatorColor: Colors.green,
+          //   controller: _tabController,
+          //   tabs: const <Tab>[
+          //     Tab(text: "Folder"),
+          //     Tab(text: "Starred"),
+          //   ],
+          // ),
           Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: <Widget>[
-                FutureBuilder(
-                    future: FolderService().getAllFoldersOfUser(AppData.userModel.id),
-                    builder: (BuildContext context,
-                        AsyncSnapshot<List<Folder>> snapshot) {
-                      if (snapshot.hasData) {
-                        List<Folder> folderList = snapshot.data!;
-                        print(folderList.length);
-                        return ListView.builder(
-                          itemCount: folderList.length,
-                          itemBuilder: (context, index) {
-                            return _buildFolderItem(context, folderList[index]);
-                          },
-                        );
-                      } else if (snapshot.hasData) {
-                        return const Text('Error');
-                      } else {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      }
-                    }),
-                Container(color: Colors.green),
-              ],
-            ),
+            child: FutureBuilder(
+                future: FolderService().getAllFoldersOfUser(AppData.userModel.id),
+                builder: (BuildContext context,
+                    AsyncSnapshot<List<Folder>> snapshot) {
+                  if (snapshot.hasData) {
+                    List<Folder> folderList = snapshot.data!;
+                    print(folderList.length);
+                    return ListView.builder(
+                      itemCount: folderList.length,
+                      itemBuilder: (context, index) {
+                        return _buildFolderItem(context, folderList[index]);
+                      },
+                    );
+                  } else if (snapshot.hasData) {
+                    return const Text('Error');
+                  } else {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                }),
           ),
         ],
       ),
@@ -92,9 +86,18 @@ class _FolderPageState extends State<FolderPage>
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                folder.folderName,
-                style: const TextStyle(fontSize: 20),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.6,
+                child: Text(
+                  folder.folderName,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  softWrap: false,
+                  style: const TextStyle(
+                      fontSize: 20,
+                      color: Color(0xff1b2794),
+                      fontWeight: FontWeight.w500),
+                ),
               ),
               PopupMenuButton<String>(
                 color: const Color(0xffbcc1d0),
@@ -156,7 +159,7 @@ class _FolderPageState extends State<FolderPage>
               ),
             ],
           ),
-          Text(folder.description!),
+          folder.description != ""? Text(folder.description!) : const SizedBox(height: 0.1,),
           const SizedBox(
             height: 8,
           ),
@@ -172,9 +175,10 @@ class _FolderPageState extends State<FolderPage>
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(50),
                       child: FadeInImage(
+                        fit: BoxFit.cover,
                         placeholder:
-                            const AssetImage('assets/images/htth_avt.png'),
-                        image: const NetworkImage('xxx'),
+                        const AssetImage('assets/images/htth_avt.png'),
+                        image: NetworkImage(AppData.userModel.avatarUrl ?? ''),
                         imageErrorBuilder: (context, error, stackTrace) =>
                             Image.asset('assets/images/htth_avt.png'),
                       ),

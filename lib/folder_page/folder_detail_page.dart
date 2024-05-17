@@ -88,7 +88,7 @@ class _FolderDetailPageState extends State<FolderDetailPage> {
                 child: FadeInImage(
                   placeholder:
                   const AssetImage('assets/images/htth_avt.png'),
-                  image: const NetworkImage('xxx'),
+                  image: NetworkImage(AppData.userModel.avatarUrl ?? ''),
                   imageErrorBuilder: (context, error, stackTrace) =>
                       Image.asset('assets/images/htth_avt.png'),
                 ),
@@ -117,7 +117,7 @@ class _FolderDetailPageState extends State<FolderDetailPage> {
             ),
 
             const SizedBox(
-              height: 15,
+              height: 30,
             ),
             ],
         ),
@@ -169,7 +169,8 @@ class _FolderDetailPageState extends State<FolderDetailPage> {
         Navigator.pushNamed(context, Routes.topicDetailPage,
             arguments: topicModel);
       },
-      child: Container(
+      child:
+      Container(
         margin: const EdgeInsets.only(top: 8),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -179,117 +180,130 @@ class _FolderDetailPageState extends State<FolderDetailPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  topicModel.topicName!,
-                  style: const TextStyle(fontSize: 20),
-                ),
-                PopupMenuButton<String>(
-                  color: const Color(0xffbcc1d0),
-                  initialValue: selectedItem,
-                  onSelected: (String item) {
-                    setState(() {
-                      selectedItem = item;
-                    });
-                  },
-                  itemBuilder: (BuildContext context) => topicModel.isPublic!?
-                  <PopupMenuEntry<String>>[
-                    PopupMenuItem<String>(
-                      onTap: () async {
-                        await FolderService().removeTopicFromFolderByTopicId(widget.folder.documentId, topicModel.id);
-                        setState(() {});
-                      },
-                      value: 'Remove From Folder',
-                      child: const Row(
-                        children: [
-                          Text(
-                            'Remove From Folder',
-                            style: TextStyle(color: Colors.red),
-                          ),
-                          Icon(
-                            Icons.folder_delete_outlined,
-                            color: Colors.deepOrangeAccent,
-                          )
-                        ],
+            SizedBox(
+              height: 60,
+              child:
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    width: MediaQuery.of(context).size.width * 0.6,
+                    child: Text(
+                      topicModel.topicName!,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      style: const TextStyle(
+                          fontSize: 22,
+                          color: Color(0xff1b2794),
+                          fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                  PopupMenuButton<String>(
+                    color: const Color(0xffbcc1d0),
+                    initialValue: selectedItem,
+                    onSelected: (String item) {
+                      setState(() {
+                        selectedItem = item;
+                      });
+                    },
+                    itemBuilder: (BuildContext context) => topicModel.isPublic!?
+                    <PopupMenuEntry<String>>[
+                      PopupMenuItem<String>(
+                        onTap: () async {
+                          await FolderService().removeTopicFromFolderByTopicId(widget.folder.documentId, topicModel.id);
+                          setState(() {});
+                        },
+                        value: 'Remove From Folder',
+                        child: const Row(
+                          children: [
+                            Text(
+                              'Remove From Folder',
+                              style: TextStyle(color: Colors.red),
+                            ),
+                            Icon(
+                              Icons.folder_delete_outlined,
+                              color: Colors.deepOrangeAccent,
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                    const PopupMenuDivider(
-                      height: 1,
-                    ),
-                  ] :
-                  <PopupMenuEntry<String>>[
-                    PopupMenuItem<String>(
-                      onTap: () async {
-                        await FolderService().removeTopicFromFolderByTopicId(widget.folder.documentId, topicModel.id);
-                        setState(() {});
-                      },
-                      value: 'Remove From Folder',
-                      child: const Row(
-                        children: [
-                          Text(
-                            'Remove From Folder',
-                            style: TextStyle(color: Colors.red),
-                          ),
-                          Icon(
-                            Icons.folder_delete_outlined,
-                            color: Colors.deepOrangeAccent,
-                          )
-                        ],
+                      const PopupMenuDivider(
+                        height: 1,
                       ),
-                    ),
-                    const PopupMenuDivider(
-                      height: 1,
-                    ),
-                    PopupMenuItem<String>(
-                      onTap: () async {
-                        await Navigator.pushNamed(
-                            context, Routes.updateTopicPage,
-                            arguments: topicModel);
-                        setState(() {});
-                      },
-                      value: 'Edit',
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Edit',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          Icon(
-                            Icons.edit_note_outlined,
-                            color: Colors.white,
-                          )
-                        ],
+                    ] :
+                    <PopupMenuEntry<String>>[
+                      PopupMenuItem<String>(
+                        onTap: () async {
+                          await FolderService().removeTopicFromFolderByTopicId(widget.folder.documentId, topicModel.id);
+                          setState(() {});
+                        },
+                        value: 'Remove From Folder',
+                        child: const Row(
+                          children: [
+                            Text(
+                              'Remove From Folder',
+                              style: TextStyle(color: Colors.red),
+                            ),
+                            Icon(
+                              Icons.folder_delete_outlined,
+                              color: Colors.deepOrangeAccent,
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                    const PopupMenuDivider(
-                      height: 1,
-                    ),
-                    PopupMenuItem<String>(
-                      onTap: () async {
-                        await TopicService().deleteTopicWithUserReference(
-                            topicModel, AppData.userModel.id);
-                        setState(() {});
-                      },
-                      value: 'Delete',
-                      child: const Row(
-                        children: [
-                          Text(
-                            'Delete',
-                            style: TextStyle(color: Colors.red),
-                          ),
-                          Icon(
-                            Icons.remove_circle_outline,
-                            color: Colors.red,
-                          )
-                        ],
+                      const PopupMenuDivider(
+                        height: 1,
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                      PopupMenuItem<String>(
+                        onTap: () async {
+                          await Navigator.pushNamed(
+                              context, Routes.updateTopicPage,
+                              arguments: topicModel);
+                          setState(() {});
+                        },
+                        value: 'Edit',
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Edit',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            Icon(
+                              Icons.edit_note_outlined,
+                              color: Colors.white,
+                            )
+                          ],
+                        ),
+                      ),
+                      const PopupMenuDivider(
+                        height: 1,
+                      ),
+                      PopupMenuItem<String>(
+                        onTap: () async {
+                          await TopicService().deleteTopicWithUserReference(
+                              topicModel, AppData.userModel.id);
+                          setState(() {});
+                        },
+                        value: 'Delete',
+                        child: const Row(
+                          children: [
+                            Text(
+                              'Delete',
+                              style: TextStyle(color: Colors.red),
+                            ),
+                            Icon(
+                              Icons.remove_circle_outline,
+                              color: Colors.red,
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
             const SizedBox(
               height: 8,
@@ -301,11 +315,12 @@ class _FolderDetailPageState extends State<FolderDetailPage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     SizedBox(
-                      height: 50,
-                      width: 50,
+                      height: 40,
+                      width: 40,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(50),
                         child: FadeInImage(
+                          fit: BoxFit.cover,
                           placeholder:
                           const AssetImage('assets/images/htth_avt.png'),
                           image: NetworkImage(topicModel.userAvatarUrl ?? ''),
@@ -317,7 +332,10 @@ class _FolderDetailPageState extends State<FolderDetailPage> {
                     const SizedBox(
                       width: 8,
                     ),
-                    Text(topicModel.userName!),
+                    Text(
+                      topicModel.userName!,
+                      style: const TextStyle(color: Color(0xff647ebb)),
+                    ),
                   ],
                 ),
                 Container(
@@ -325,8 +343,10 @@ class _FolderDetailPageState extends State<FolderDetailPage> {
                   decoration: BoxDecoration(
                       color: const Color(0xffacbdd0),
                       borderRadius: BorderRadius.circular(8)),
-                  child:
-                  Text('${topicModel.wordReferences?.length ?? 0} words'),
+                  child: Text(
+                    '${topicModel.wordReferences?.length ?? 0} words',
+                    style: const TextStyle(color: Colors.white),
+                  ),
                 ),
               ],
             )

@@ -38,7 +38,7 @@ class _StarredWordPageState extends State<StarredWordPage> {
 
   final pageController = PageController(viewportFraction: 0.85);
   final TextStyle listTileTextStyle =
-      const TextStyle(fontWeight: FontWeight.w500, fontSize: 16);
+      const TextStyle(fontWeight: FontWeight.w500, fontSize: 20, color: Colors.white);
 
   @override
   void initState() {
@@ -172,7 +172,7 @@ class _StarredWordPageState extends State<StarredWordPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(
-                    height: 250,
+                    height: 300,
                     child: PageView.builder(
                       controller: pageController,
                       itemBuilder: (context, index) =>
@@ -436,106 +436,43 @@ class _StarredWordPageState extends State<StarredWordPage> {
   }
 
   Widget _buildCardWords(WordModel wordModel) {
-    return Card(
-      color: const Color(0xffd0d4ec),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            SizedBox(
-              width: 85,
-              child: FutureBuilder(
-                future: WordService()
-                    .getWordLearnCount(wordModel.id!, AppData.userModel.id),
-                builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-                  if (snapshot.hasData) {
-                    int count = snapshot.data!;
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          alignment: Alignment.center,
-                          child: _getWordProcess(
-                            (count / 20) * 100,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 4,
-                        ),
-                        CircularPercentIndicator(
-                          backgroundColor: Colors.white,
-                          radius: 16.0,
-                          lineWidth: 2.0,
-                          percent: count < 20 ? (count / 20) : 1,
-                          progressColor: Colors.green,
-                        ),
-                      ],
-                    );
-                  } else if (snapshot.hasError) {
-                    return const Text('error');
-                  } else {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                },
-              ),
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      '${wordModel.english}',
-                      style: const TextStyle(
-                          fontSize: 20, color: Color(0xff647ebb)),
-                    ),
-                  ],
-                ),
-                Text(
-                  '${wordModel.vietnam}',
-                  style:
-                      const TextStyle(fontSize: 20, color: Color(0xff647ebb)),
-                )
-              ],
-            ),
-            Row(
-              children: [
-                IconButton(
-                  onPressed: () async {
-                    await speak(wordModel.english, true);
-                  },
-                  icon: const Icon(
-                    Icons.volume_up,
-                    color: Colors.white,
-                  ),
-                ),
-                FutureBuilder(
+    return FittedBox(
+      child: Card(
+        color: const Color(0xffd0d4ec),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(
+                width: 85,
+                child: FutureBuilder(
                   future: WordService()
-                      .getWordStar(wordModel.id!, AppData.userModel.id),
-                  builder:
-                      (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                      .getWordLearnCount(wordModel.id!, AppData.userModel.id),
+                  builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
                     if (snapshot.hasData) {
-                      bool starred = snapshot.data!;
-                      return IconButton(
-                          onPressed: () async {
-                            await WordService().updateWordStatus(
-                                wordModel.id!, AppData.userModel.id, !starred);
-                            setState(() {});
-                          },
-                          icon: starred
-                              ? const Icon(
-                                  Icons.star,
-                                  color: Colors.yellow,
-                                )
-                              : const Icon(
-                                  Icons.star_outline,
-                                  color: Colors.white,
-                                ));
+                      int count = snapshot.data!;
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            alignment: Alignment.center,
+                            child: _getWordProcess(
+                              (count / 20) * 100,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 4,
+                          ),
+                          CircularPercentIndicator(
+                            backgroundColor: Colors.white,
+                            radius: 16.0,
+                            lineWidth: 2.0,
+                            percent: count < 20 ? (count / 20) : 1,
+                            progressColor: Colors.green,
+                          ),
+                        ],
+                      );
                     } else if (snapshot.hasError) {
                       return const Text('error');
                     } else {
@@ -544,12 +481,77 @@ class _StarredWordPageState extends State<StarredWordPage> {
                       );
                     }
                   },
-                )
-              ],
-            )
-          ],
+                ),
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '${wordModel.english}', style: const TextStyle( fontSize: 20, color: Color(0xff647ebb)),
+                      ),
+                    ],
+                  ),
+                  Text(
+                    '${wordModel.vietnam}',
+                    style:
+                    const TextStyle( fontSize: 20, color: Color.fromARGB(255, 28, 22, 120),
+                    ),
+                  )
+                ],
+              ),
+              Row(
+                children: [
+                  IconButton(
+                    onPressed: () async {
+                      await speak(wordModel.english, true);
+                    },
+                    icon: const Icon(
+                      Icons.volume_up,
+                      color: Colors.white,
+                    ),
+                  ),
+                  FutureBuilder(
+                    future: WordService()
+                        .getWordStar(wordModel.id!, AppData.userModel.id),
+                    builder:
+                        (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                      if (snapshot.hasData) {
+                        bool starred = snapshot.data!;
+                        return IconButton(
+                            onPressed: () async {
+                              await WordService().updateWordStatus(
+                                  wordModel.id!, AppData.userModel.id, !starred);
+                              setState(() {});
+                            },
+                            icon: starred
+                                ? const Icon(
+                              Icons.star,
+                              color: Colors.yellow,
+                            )
+                                : const Icon(
+                              Icons.star_outline,
+                              color: Colors.white,
+                            ));
+                      } else if (snapshot.hasError) {
+                        return const Text('error');
+                      } else {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                    },
+                  )
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
+
   }
 }
