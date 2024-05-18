@@ -117,7 +117,10 @@ class _AddTopicToFolderPageState extends State<AddTopicToFolderPage> {
                         children: [
                           Text(
                             topics[index].topicName!,
-                            style: const TextStyle(fontSize: 20),
+                            style: const TextStyle(
+                                fontSize: 22,
+                                color: Color(0xff1b2794),
+                                fontWeight: FontWeight.w500),
                           ),
                         ],
                       ),
@@ -131,11 +134,12 @@ class _AddTopicToFolderPageState extends State<AddTopicToFolderPage> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               SizedBox(
-                                height: 50,
-                                width: 50,
+                                height: 40,
+                                width: 40,
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(50),
                                   child: FadeInImage(
+                                    fit: BoxFit.cover,
                                     placeholder: const AssetImage(
                                         'assets/images/htth_avt.png'),
                                     image: NetworkImage(
@@ -153,13 +157,18 @@ class _AddTopicToFolderPageState extends State<AddTopicToFolderPage> {
                               Text(topics[index].userName!),
                             ],
                           ),
-                          Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                                color: const Color(0xffacbdd0),
-                                borderRadius: BorderRadius.circular(8)),
-                            child: Text(
-                                '${topics[index].wordReferences?.length ?? 0} words'),
+                          const SizedBox(
+                            height: 20,
+                            child: VerticalDivider(
+                              thickness: 2,
+                              indent: 2,
+                              endIndent: 2,
+                            ),
+                          ),
+                          Text(
+                            '${topics[index].wordReferences?.length ?? 0} words',
+                            style: const TextStyle(
+                                color: Colors.black38, fontWeight: FontWeight.w500),
                           ),
                         ],
                       )
@@ -167,7 +176,7 @@ class _AddTopicToFolderPageState extends State<AddTopicToFolderPage> {
                   ),
                 )),
               ]),
-              SizedBox(
+              const SizedBox(
                 height: 15,
               )
             ],

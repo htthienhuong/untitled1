@@ -55,43 +55,105 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 25),
-        child: Column(
-          children: [
-            const Spacer(),
-            const Text("Login",
-                style: TextStyle(fontSize: 40, fontWeight: FontWeight.w500)),
-            const SizedBox(height: 50),
-            CustomTextField(
-              hint: "Enter Email",
-              label: "Email",
-              controller: _email,
-            ),
-            const SizedBox(height: 20),
-            CustomTextField(
-              hint: "Enter Password",
-              label: "Password",
-              controller: _password,
-            ),
-            const SizedBox(height: 30),
-            CustomButton(
-              label: "Login",
-              onPressed: _login,
-            ),
-            const SizedBox(height: 5),
-            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              const Text("Already have an account? "),
-              InkWell(
-                onTap: () => goToSignup(context),
-                child:
-                    const Text("Signup", style: TextStyle(color: Colors.red)),
+      body: CustomScrollView(
+          slivers: [
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: Container(
+                padding: EdgeInsetsDirectional.all(20),
+                alignment: AlignmentDirectional.center,
+                child: Column(
+                  children: [
+                    const Spacer(),
+                    const Text("Login",
+                        style: TextStyle(fontSize: 40, fontWeight: FontWeight.w500)),
+                    const SizedBox(height: 40),
+                    CustomTextField(
+                      hint: "Enter Email",
+                      label: "Email",
+                      controller: _email,
+                    ),
+                    const SizedBox(height: 20),
+                    CustomTextField(
+                      hint: "Enter Password",
+                      label: "Password",
+                      isPassword: true,
+                      controller: _password,
+                    ),
+                    const SizedBox(height: 30),
+                    CustomButton(
+                      label: "Login",
+                      onPressed: _login,
+                    ),
+                    const SizedBox(height: 20),
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                      const Text("Don't have any account? "),
+                      InkWell(
+                        onTap: () => goToSignup(context),
+                        child:
+                        const Text("Signup", style: TextStyle(color: Colors.red)),
+                      )
+                    ]),
+                    const Spacer()
+                  ],
+                ),
               )
-            ]),
-            const Spacer()
-          ],
-        ),
-      ),
+
+
+              // Column(
+              //   children: [
+              //     // const Spacer(),
+              //     Stack(
+              //       children: [
+              //         Container(
+              //           margin: EdgeInsetsDirectional.only(top: 300),
+              //           padding: EdgeInsets.all(20),
+              //           height: MediaQuery.of(context).size.height * 0.65,
+              //           alignment: AlignmentDirectional.center,
+              //           decoration: BoxDecoration(
+              //               color: Colors.white,
+              //               shape: BoxShape.rectangle,
+              //               border: Border.all(width: 2, color: Colors.black),
+              //               borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))
+              //           ),
+              //           child:
+              //
+              //         ),
+              //         // Container(
+              //         //   margin: const EdgeInsets.only(top: 50),
+              //         //   height: 250,
+              //         //   child: Align(
+              //         //     alignment: Alignment.topCenter,
+              //         //     child:
+              //         //     Container(
+              //         //       height: 300,
+              //         //       width: MediaQuery.of(context).size.width,
+              //         //       alignment: Alignment.center,
+              //         //       child:SizedBox(
+              //         //         height: 300,
+              //         //         width: 250,
+              //         //         child: FadeInImage(
+              //         //           fit: BoxFit.contain,
+              //         //           placeholder: const NetworkImage("https://i.giphy.com/media/l2Jeev6AvurRQMgEM/200.gif"),
+              //         //           image: const NetworkImage("https://i.giphy.com/media/l2Jeev6AvurRQMgEM/200.gif"),
+              //         //           imageErrorBuilder:
+              //         //               (context, error, stackTrace) => Image.asset(
+              //         //             'assets/images/login.png',
+              //         //             fit: BoxFit.contain,
+              //         //           ),
+              //         //         ),
+              //         //       ),
+              //         //     ),
+              //         //   ),
+              //         // ),
+              //       ],
+              //     )
+              //   ],
+              // ),
+            ),
+          ]
+      )
+
     );
   }
 

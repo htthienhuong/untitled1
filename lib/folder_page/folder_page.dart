@@ -28,15 +28,6 @@ class _FolderPageState extends State<FolderPage>
       padding: const EdgeInsets.all(16.0),
       child: Column(
         children: [
-          // TabBar(
-          //   labelColor: Colors.green,
-          //   indicatorColor: Colors.green,
-          //   controller: _tabController,
-          //   tabs: const <Tab>[
-          //     Tab(text: "Folder"),
-          //     Tab(text: "Starred"),
-          //   ],
-          // ),
           Expanded(
             child: FutureBuilder(
                 future: FolderService().getAllFoldersOfUser(AppData.userModel.id),

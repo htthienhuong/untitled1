@@ -86,6 +86,7 @@ class _FolderDetailPageState extends State<FolderDetailPage> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(50),
                 child: FadeInImage(
+                  fit: BoxFit.cover,
                   placeholder:
                   const AssetImage('assets/images/htth_avt.png'),
                   image: NetworkImage(AppData.userModel.avatarUrl ?? ''),
