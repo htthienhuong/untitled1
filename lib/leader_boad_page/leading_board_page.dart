@@ -40,6 +40,17 @@ class _LeadingBoardPageState extends State<LeadingBoardPage> {
             AsyncSnapshot<List<LeadingBoardModel>> snapshot) {
           if (snapshot.hasData) {
             List<LeadingBoardModel> leadingBoardModelList = snapshot.data!;
+            leadingBoardModelList.sort((a, b) {
+              if(a.point < b.point){
+                return 1;
+              }
+              else if(a.point == b.point){
+                return 0;
+              }
+              else{
+                return -1;
+              }
+            },);
             print('data: $leadingBoardModelList');
 
             return MyBoard(leadingBoardModelList: leadingBoardModelList);
@@ -116,7 +127,10 @@ class _MyBoardState extends State<MyBoard> {
                               placeholder: const AssetImage(
                                   'assets/images/default_profile.png'),
                               image: NetworkImage(widget
-                                  .leadingBoardModelList[index].userAvatar)),
+                                  .leadingBoardModelList[index].userAvatar),
+                            imageErrorBuilder: (context, error, stackTrace) =>
+                                Image.asset('assets/images/htth_avt.png'),),
+
                         ),
                       ),
                     ),
