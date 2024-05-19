@@ -38,7 +38,7 @@ class RecordService {
   Future<List<LeadingBoardModel>> getRecordsByTopicId(String topicId) async {
     print('getRecordsByTopicId');
     List<LeadingBoardModel> list = [];
-    // try {
+    try {
     final querySnapshot =
         await RecordCollection.where('topicId', isEqualTo: topicId)
             .orderBy('point')
@@ -47,21 +47,22 @@ class RecordService {
     for (DocumentSnapshot doc in querySnapshot.docs) {
       String userId = doc.get('userId');
       DocumentSnapshot userDoc = await UserCollection.doc(userId).get();
+
       Map<String, dynamic> data = userDoc.data() as Map<String, dynamic>;
-      double point = doc.get('point');
+      num point = doc.get('point');
       print('point: $point');
       LeadingBoardModel leadingBoardModel = LeadingBoardModel(
           userName: data['Name'],
-          point: point.toDouble(),
+          point: double.parse(point.toString()),
           userAvatar: data['AvatarUrl']);
       print('leadingBoardModel: $leadingBoardModel');
       list.add(leadingBoardModel);
       print('list: $list');
     }
     return list;
-    // } catch (e) {
-    //   print('Error getting records: $e');
-    //   return [];
-    // }
+    } catch (e) {
+      print('Error getting records: $e');
+      return [];
+    }
   }
 }

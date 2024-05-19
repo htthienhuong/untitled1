@@ -399,7 +399,7 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                       ),
                       Text(
                         "Total: ${widget.topicModel.wordReferences?.length ?? 0} words",
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 24,
                             color: Colors.blueAccent),

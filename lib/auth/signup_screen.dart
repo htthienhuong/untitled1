@@ -39,51 +39,93 @@ class _SignupScreenState extends State<SignupScreen> {
         slivers: [
           SliverFillRemaining(
             hasScrollBody: false,
-            child: Container(
-              alignment: AlignmentDirectional.center,
-              padding: EdgeInsets.all(20),
-              child: Column(
+            child: Column(
+              children: [
+                Stack(
                 children: [
-                  const Spacer(),
-                  const Text("Signup",
-                      style: TextStyle(fontSize: 40, fontWeight: FontWeight.w500)),
-                  const SizedBox(
-                    height: 30,
+                  Container(
+                    margin: EdgeInsetsDirectional.only(top: 300),
+                    padding: EdgeInsets.all(20),
+                    height: MediaQuery.of(context).size.height * 0.65,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.rectangle,
+                        border: Border.all(width: 2, color: Colors.black),
+                        borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))
+                    ),
+                    child: Column(
+                      children: [
+                        // const Spacer(),
+                        const Text("Signup",
+                            style: TextStyle(fontSize: 40, fontWeight: FontWeight.w500)),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        CustomTextField(
+                          hint: "Enter Name",
+                          label: "Name",
+                          controller: _name,
+                        ),
+                        const SizedBox(height: 20),
+                        CustomTextField(
+                          hint: "Enter Email",
+                          label: "Email",
+                          controller: _email,
+                        ),
+                        const SizedBox(height: 20),
+                        CustomTextField(
+                          hint: "Enter Password",
+                          label: "Password",
+                          isPassword: true,
+                          controller: _password,
+                        ),
+                        const SizedBox(height: 30),
+                        CustomButton(
+                          label: "Signup",
+                          onPressed: _signup,
+                        ),
+                        const SizedBox(height: 20),
+                        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                          const Text("Already have an account? "),
+                          InkWell(
+                            onTap: () => goToLogin(context),
+                            child: const Text("Login", style: TextStyle(color: Colors.red)),
+                          )
+                        ]),
+                        const Spacer()
+                      ],
+                    ),
                   ),
-                  CustomTextField(
-                    hint: "Enter Name",
-                    label: "Name",
-                    controller: _name,
+                  Container(
+                    margin: const EdgeInsets.only(top: 50),
+                    height: 250,
+                    child: Align(
+                      alignment: Alignment.topCenter,
+                      child:
+                      Container(
+                        height: 300,
+                        width: MediaQuery.of(context).size.width,
+                        alignment: Alignment.center,
+                        child:SizedBox(
+                          height: 300,
+                          width: 200,
+                          child: FadeInImage(
+                            fit: BoxFit.contain,
+                            placeholder: const NetworkImage("https://i.giphy.com/media/9Dk2vkAmYs5dsSRu3B/200.gif"),
+                            image: const NetworkImage("https://i.giphy.com/media/9Dk2vkAmYs5dsSRu3B/200.gif"),
+                            imageErrorBuilder:
+                                (context, error, stackTrace) => Image.asset(
+                              'assets/images/login.png',
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
-                  const SizedBox(height: 20),
-                  CustomTextField(
-                    hint: "Enter Email",
-                    label: "Email",
-                    controller: _email,
-                  ),
-                  const SizedBox(height: 20),
-                  CustomTextField(
-                    hint: "Enter Password",
-                    label: "Password",
-                    isPassword: true,
-                    controller: _password,
-                  ),
-                  const SizedBox(height: 30),
-                  CustomButton(
-                    label: "Signup",
-                    onPressed: _signup,
-                  ),
-                  const SizedBox(height: 20),
-                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                    const Text("Already have an account? "),
-                    InkWell(
-                      onTap: () => goToLogin(context),
-                      child: const Text("Login", style: TextStyle(color: Colors.red)),
-                    )
-                  ]),
-                  const Spacer()
-                ],
-              ),
+
+                ])
+              ],
             ),
           )
         ]
